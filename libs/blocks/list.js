@@ -10,7 +10,7 @@ const blocks = [
 
 window.milo.load = async (blockName) => {
   if (blocks.indexOf(blockName)) {
-    return import(`http://localhost:6456/libs/blocks/${blockName}/${blockName}.js`);
+    return import(`https://central--milo--adobecom.hlx.page/libs/blocks/${blockName}/${blockName}.js`);
   }
   return null;
 };
