@@ -49,8 +49,7 @@ export async function loadBlock(block) {
   const scriptLoaded = new Promise((resolve) => {
     (async () => {
       try {
-        const prom = import(`/libs/blocks/${blockName}/${blockName}.js`);
-        console.log(prom);
+        const { default: init } = await import(`/libs/blocks/${blockName}/${blockName}.js`);
         await init(block);
       } catch (err) {
         // eslint-disable-next-line no-console
@@ -87,7 +86,6 @@ function decorateAutoBlock(a) {
   return AUTO_BLOCKS.find((candidate) => {
     const key = Object.keys(candidate)[0];
     const match = href.startsWith(candidate[key]);
-    // Can we detect hash instead?
     const canAutoBlock = url.searchParams.get('autoblock') !== 'off';
     if (match && canAutoBlock) {
       // Modals
