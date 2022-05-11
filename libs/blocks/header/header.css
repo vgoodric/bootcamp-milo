@@ -1,5 +1,5 @@
 header.header nav {
-  width: calc(var(--container-size) + 20px);
+  width: calc(var(--grid-container-width) + 20px);
   margin: 0 auto;
   display: flex;
   align-content: stretch;
@@ -22,7 +22,7 @@ header nav ul li {
   align-content: stretch;
 }
 
-header nav ul li > a:any-link {
+header nav ul li > a {
   display: flex;
   justify-content: center;
   flex-direction: column;

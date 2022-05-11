@@ -11,7 +11,7 @@
  */
 
 /*
- * Marquee - v1.0.0
+ * Marquee - v5.1
  */
 
 function decorateButtons(el, isLarge) {
@@ -19,7 +19,7 @@ function decorateButtons(el, isLarge) {
   buttons.forEach((button) => {
     const parent = button.parentElement;
     const buttonType = parent.nodeName === 'STRONG' ? 'blue' : 'outline';
-    const buttonSize = isLarge ? 'button-XL' : 'button-M';
+    const buttonSize = isLarge ? 'button-xl' : 'button-l';
     button.classList.add('con-button', buttonType, buttonSize);
     parent.insertAdjacentElement('afterend', button);
     parent.remove();
@@ -29,19 +29,33 @@ function decorateButtons(el, isLarge) {
     actionArea.classList.add('action-area');
     actionArea.nextElementSibling?.classList.add('supplemental-text', 'body-XL');
   }
+  const link = el.querySelector('a:not([class]');
+  if (link) {
+    link.classList.add('con-link', 'body-m');
+  }
 }
 
 function decorateText(el, isLarge) {
   const headings = el.querySelectorAll('h1, h2, h3, h4, h5, h6');
   const heading = headings[headings.length - 1];
-  heading.className = isLarge ? 'heading-XXL' : 'heading-XL';
-  heading.nextElementSibling.className = isLarge ? 'body-XL' : 'body-M';
+  heading.className = isLarge ? 'heading-xxl' : 'heading-xl';
+  heading.nextElementSibling.className = isLarge ? 'body-xl' : 'body-m';
   if (heading.previousElementSibling) {
-    heading.previousElementSibling.className = isLarge ? 'detail-L' : 'detail-M';
+    heading.previousElementSibling.className = isLarge ? 'detail-l' : 'detail-m';
+  }
+  const detailImg = el.querySelector('picture');
+  if (detailImg) {
+    detailImg.classList.add('detail-img');
+    const imgPara = detailImg.closest('p');
+    imgPara.parentElement.replaceChild(detailImg, imgPara);
   }
 }
 
 export default function init(el) {
+  // default to dark
+  if (!el.classList.contains('light') && !el.classList.contains('dark')) {
+    el.classList.add('dark');
+  }
   const children = el.querySelectorAll(':scope > div');
   const foreground = children[children.length - 1];
   if (children.length > 1) {

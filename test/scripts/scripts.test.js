@@ -51,7 +51,7 @@ describe('Decorating', () => {
 
   it('Decorates auto blocks', async () => {
     const autoBlock = document.querySelector('a[class]');
-    expect(autoBlock.className).to.equal('youtube link-block');
+    expect(autoBlock.className).to.equal('youtube auto-block');
   });
 
   it('Decorates modal link', async () => {

@@ -49,7 +49,8 @@ export async function loadBlock(block) {
   const scriptLoaded = new Promise((resolve) => {
     (async () => {
       try {
-        const { default: init } = await import(`/libs/blocks/${blockName}/${blockName}.js`);
+        const prom = import(`/libs/blocks/${blockName}/${blockName}.js`);
+        console.log(prom);
         await init(block);
       } catch (err) {
         // eslint-disable-next-line no-console
@@ -86,7 +87,9 @@ function decorateAutoBlock(a) {
   return AUTO_BLOCKS.find((candidate) => {
     const key = Object.keys(candidate)[0];
     const match = href.startsWith(candidate[key]);
-    if (match) {
+    // Can we detect hash instead?
+    const canAutoBlock = url.searchParams.get('autoblock') !== 'off';
+    if (match && canAutoBlock) {
       // Modals
       if (key === 'fragment' && url.hash !== '') {
         a.dataset.modalPath = url.pathname;
@@ -94,7 +97,11 @@ function decorateAutoBlock(a) {
         a.href = url.hash;
         return false;
       }
-      a.className = `${key} link-block`;
+      // Linking to an external youtube video
+      if (key === 'youtube' && a.textContent !== a.href) {
+        return false;
+      }
+      a.className = `${key} auto-block`;
       return true;
     }
     return false;
