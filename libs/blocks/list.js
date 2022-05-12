@@ -5,6 +5,7 @@ const blocks = [
   'how-to',
   'modal',
   'marquee',
+  'grey-hat-brigade',
 ];
 
 export default blocks;
