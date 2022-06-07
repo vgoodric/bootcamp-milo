@@ -10,8 +10,16 @@ function formatExcelDate(string) {
 
 export default async function init(el) {
   await loadScript('/libs/deps/echarts.min.js');
-  const fqdnPath = el.querySelector(':scope > div > div').textContent;
-  const path = makeRelative(fqdnPath);
+  const link = el.querySelector('a[href$="json"]');
+  if (!link) return;
+
+  // Cosmetics
+  const parent = link.closest('div');
+  parent.className = 'data-viz';
+  parent.parentElement.className = 'chart-container';
+
+  // Data
+  const path = makeRelative(link.href);
   const resp = await fetch(path);
   if (!resp.ok) return;
   const json = await resp.json();
@@ -37,6 +45,6 @@ export default async function init(el) {
     tooltip: { valueFormatter: value => `${value} ${unit}` },
   }];
 
-  const chart = echarts.init(el);
+  const chart = echarts.init(parent);
   chart.setOption(options);
 }

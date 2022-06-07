@@ -1,6 +1,13 @@
 .chart {
   max-width: var(--grid-container-width);
   margin: 0 auto;
+}
+
+.chart a[href$="json"] {
+  display: none;
+}
+
+.data-viz {
   width: 600px;
   height: 400px;
 }
