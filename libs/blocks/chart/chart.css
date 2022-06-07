@@ -1,0 +1,6 @@
+.chart {
+  max-width: var(--grid-container-width);
+  margin: 0 auto;
+  width: 600px;
+  height: 400px;
+}
