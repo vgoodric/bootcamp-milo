@@ -7,11 +7,9 @@ const faq = {
 };
 
 function setSEO(questions) {
-  const script = document.createElement('script');
-  script.type = 'application/ld+json';
   faq.mainEntity.push(questions.map(({ name, text }) => (
     { '@type': 'Question', name, acceptedAnswer: { text, '@type': 'Answer' } })));
-  script.innerHTML = JSON.stringify(faq);
+  const script = createTag('script', { type: 'application/ld+json' }, JSON.stringify(faq));
   document.head.append(script);
 }
 
@@ -26,6 +24,16 @@ function handleClick(el, dt, dd) {
   }
   dt.classList.toggle('is-open');
   dd.classList.toggle('is-open');
+}
+
+function handleFocus(dt, dd) {
+  dt.classList.add('has-focus');
+  dd.classList.add('has-focus');
+}
+
+function handleFocusOut(dt, dd) {
+  dt.classList.remove('has-focus');
+  dd.classList.remove('has-focus');
 }
 
 function createItem(accordion, id, heading, num) {
@@ -48,6 +56,10 @@ function createItem(accordion, id, heading, num) {
   const dd = createTag('dd', { role: 'region', 'aria-labelledby': triggerId, id: panelId, hidden: true }, panel);
 
   button.addEventListener('click', (e) => { handleClick(e.target, dt, dd); });
+  dt.addEventListener('focusin', () => { handleFocus(dt, dd); });
+  dd.addEventListener('focusin', () => { handleFocus(dt, dd); });
+  dt.addEventListener('focusout', () => { handleFocusOut(dt, dd); });
+  dd.addEventListener('focusout', () => { handleFocusOut(dt, dd); });
   accordion.append(dt, dd);
   return { name: heading.textContent, text };
 }
@@ -59,7 +71,7 @@ function getUniqueId(el) {
 
 export default function init(el) {
   const id = getUniqueId(el);
-  const accordion = createTag('dl', { id: `accordion-${id}`, role: 'presentation' });
+  const accordion = createTag('dl', { class: 'accordion', id: `accordion-${id}`, role: 'presentation' });
   const seo = el.classList.contains('seo');
 
   const headings = el.querySelectorAll(':scope > div:nth-child(odd)');
@@ -67,6 +79,6 @@ export default function init(el) {
 
   if (seo) { setSEO(items); }
   el.innerHTML = '';
-  el.classList.add('decorated');
+  el.className = 'accordion-container';
   el.append(accordion);
 }

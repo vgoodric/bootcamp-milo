@@ -1,27 +1,22 @@
-.accordion {
+div.accordion {
   display: none;
 }
 
-.accordion.decorated {
-  display: unset;
-}
-
-.accordion dl {
+dl.accordion {
   max-width: calc(var(--grid-column-width) * 10);
   margin: 0 auto;
+  border-bottom: 1px solid #E1E1E1;
 }
 
 .accordion dt {
   border-top: 1px solid #E1E1E1;
+  border-left: 2px solid transparent;
 }
 
 .accordion dd {
   margin: 0;
+  border-left: 2px solid transparent;
   padding: 0 var(--spacing-s) var(--spacing-s) var(--spacing-s);
-}
-
-.accordion dt:last-of-type {
-  border-bottom: 1px solid #E1E1E1;
 }
 
 .accordion dt button {
@@ -36,14 +31,30 @@
   text-align: left;
 }
 
-.accordion dt.is-open button {
-  padding: var(--spacing-s) var(--spacing-s) var(--spacing-xxs) var(--spacing-s);
+.accordion dt.is-open,
+.accordion dd.is-open,
+.accordion dt.has-focus,
+.accordion dd.has-focus {
+  border-left: 2px solid #e34850;
+}
+
+.accordion dt.has-focus,
+.accordion dd.has-focus {
+  background-color: rgb(206 206 206 / 20%);
+}
+
+.accordion button:focus {
+  outline: none;
+}
+
+.accordion dd p:first-child {
+  margin-top: 0;
 }
 
 .accordion dt.is-open:last-of-type {
   border-bottom: none;
 }
 
-.accordion dd.is-open:last-of-type {
-  border-bottom: 1px solid #E1E1E1;
+.accordion dt.is-open button {
+  padding-bottom: 6px;
 }
