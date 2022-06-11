@@ -1,10 +1,6 @@
 import createTag from '../../utils/utils.js';
 
-const faq = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [],
-};
+const faq = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: [] };
 
 function setSEO(questions) {
   faq.mainEntity.push(questions.map(({ name, text }) => (
@@ -55,11 +51,11 @@ function createItem(accordion, id, heading, num) {
   const dt = createTag('dt', { role: 'heading', 'aria-level': 3 }, button);
   const dd = createTag('dd', { role: 'region', 'aria-labelledby': triggerId, id: panelId, hidden: true }, panel);
 
-  button.addEventListener('click', (e) => { handleClick(e.target, dt, dd); });
-  dt.addEventListener('focusin', () => { handleFocus(dt, dd); });
-  dd.addEventListener('focusin', () => { handleFocus(dt, dd); });
-  dt.addEventListener('focusout', () => { handleFocusOut(dt, dd); });
-  dd.addEventListener('focusout', () => { handleFocusOut(dt, dd); });
+  // button.addEventListener('click', (e) => { handleClick(e.target, dt, dd); });
+  // dt.addEventListener('focusin', () => { handleFocus(dt, dd); });
+  // dd.addEventListener('focusin', () => { handleFocus(dt, dd); });
+  // dt.addEventListener('focusout', () => { handleFocusOut(dt, dd); });
+  // dd.addEventListener('focusout', () => { handleFocusOut(dt, dd); });
   accordion.append(dt, dd);
   return { name: heading.textContent, text };
 }

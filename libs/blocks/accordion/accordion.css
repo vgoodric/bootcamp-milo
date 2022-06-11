@@ -3,7 +3,7 @@ div.accordion {
 }
 
 dl.accordion {
-  max-width: calc(var(--grid-column-width) * 10);
+  max-width: var(--grid-container-width);
   margin: 0 auto;
   border-bottom: 1px solid #E1E1E1;
 }
@@ -57,4 +57,10 @@ dl.accordion {
 
 .accordion dt.is-open button {
   padding-bottom: 6px;
+}
+
+@media screen and (min-width: 900px) {
+  dl.accordion {
+    max-width: calc(var(--grid-column-width) * 10);
+  }
 }
