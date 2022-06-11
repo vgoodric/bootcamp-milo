@@ -1,0 +1,41 @@
+.accordion {
+  display: none;
+}
+
+.accordion.decorated {
+  display: unset;
+}
+
+.accordion dl {
+  max-width: calc(var(--grid-column-width) * 10);
+  margin: 0 auto;
+}
+
+.accordion dt {
+  border-top: 1px solid #E1E1E1;
+}
+
+.accordion dd {
+  margin: 0;
+  padding: 0 var(--spacing-s) var(--spacing-s) var(--spacing-s);
+}
+
+.accordion dt:last-of-type {
+  border-bottom: 1px solid #E1E1E1;
+}
+
+.accordion dt button {
+  background: none;
+  border: none;
+  font-family: var(--body-font-family);
+  font-weight: 700;
+  font-size: var(--type-heading-m-size);
+  line-height: 25px;
+  padding: var(--spacing-s);
+  width: 100%;
+  text-align: left;
+}
+
+.accordion dt button[aria-expanded="true"] {
+  padding: var(--spacing-s) var(--spacing-s) var(--spacing-xxs) var(--spacing-s);
+}
