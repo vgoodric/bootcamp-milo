@@ -50,7 +50,7 @@ async function loadPage() {
   const navs = decorateNavs();
   await loadLCP(blocks);
   loadStyle('/fonts/fonts.css');
-  await loadLazy([...navs, ...blocks]);
+  await loadLazy([navs[0], ...blocks, navs[1]]);
   const { default: loadModals } = await import('../blocks/modals/modals.js');
   loadModals();
   loadDelayed();

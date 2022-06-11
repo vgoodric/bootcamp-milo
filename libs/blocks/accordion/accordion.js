@@ -15,7 +15,7 @@ function setSEO(questions) {
   document.head.append(script);
 }
 
-function handleClick(el, dd) {
+function handleClick(el, dt, dd) {
   const expanded = el.getAttribute('aria-expanded') === 'true';
   if (expanded) {
     el.setAttribute('aria-expanded', 'false');
@@ -24,6 +24,8 @@ function handleClick(el, dd) {
     el.setAttribute('aria-expanded', 'true');
     dd.removeAttribute('hidden');
   }
+  dt.classList.toggle('is-open');
+  dd.classList.toggle('is-open');
 }
 
 function createItem(accordion, id, heading, num) {
@@ -45,7 +47,7 @@ function createItem(accordion, id, heading, num) {
   const dt = createTag('dt', { role: 'heading', 'aria-level': 3 }, button);
   const dd = createTag('dd', { role: 'region', 'aria-labelledby': triggerId, id: panelId, hidden: true }, panel);
 
-  button.addEventListener('click', (e) => { handleClick(e.target, dd); });
+  button.addEventListener('click', (e) => { handleClick(e.target, dt, dd); });
   accordion.append(dt, dd);
   return { name: heading.textContent, text };
 }

@@ -36,6 +36,14 @@
   text-align: left;
 }
 
-.accordion dt button[aria-expanded="true"] {
+.accordion dt.is-open button {
   padding: var(--spacing-s) var(--spacing-s) var(--spacing-xxs) var(--spacing-s);
+}
+
+.accordion dt.is-open:last-of-type {
+  border-bottom: none;
+}
+
+.accordion dd.is-open:last-of-type {
+  border-bottom: 1px solid #E1E1E1;
 }
