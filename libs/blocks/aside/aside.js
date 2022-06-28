@@ -14,7 +14,7 @@
 * Aside - v5.1
 */
 
-import { decorateBlockBg, decorateButtons, decorateIcons } from '../../utils/decorate.js';
+import { decorateBlockBg, decorateButtons, initIcons } from '../../utils/decorate.js';
 import { decorateBlockAnalytics, decorateLinkAnalytics } from '../../utils/analytics.js';
 
 function decorateLayout(el) {
@@ -36,6 +36,7 @@ function decorateContent(el) {
         heading?.previousElementSibling?.classList.add('detail-M');
         el.querySelector(':scope > div:not([class])')?.classList.add('image');
         decorateLinkAnalytics(el, heading);
+        initIcons(el);
     }
 }
 
@@ -44,5 +45,4 @@ export default function init(el) {
     decorateBlockAnalytics(el);
     decorateContent(foreground);
     decorateButtons(foreground);
-    decorateIcons(el, false);
 }

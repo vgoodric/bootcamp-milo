@@ -8,6 +8,11 @@
     overflow: hidden;
 }
 
+.aside .detail-M {
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
 .aside p {
     margin: 0;
 }
@@ -99,6 +104,10 @@
     height: 56px;
     max-width: 234px;
     margin-bottom: var(--spacing-s);
+}
+
+.aside .foreground.container .icon-area .icon {
+    color: transparent;
 }
 
 .aside .foreground.container .icon-area img {
