@@ -9,6 +9,7 @@
     overflow: hidden;
 }
 
+
 .icon-block p {
     margin: 0;
 }
@@ -58,10 +59,6 @@
     height: 80px;
     max-width: 234px;
     overflow: hidden;
-}
-
-.icon-block .foreground.container .icon-area .icon {
-    color: transparent;
 }
 
 .icon-block .foreground.container .icon-area img {
