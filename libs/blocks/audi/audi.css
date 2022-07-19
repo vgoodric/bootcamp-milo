@@ -1,0 +1,13 @@
+.audi {
+  background-color: #000;
+}
+
+.audi h1 {
+  color: #FFF;
+}
+
+.audi .foreground-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
