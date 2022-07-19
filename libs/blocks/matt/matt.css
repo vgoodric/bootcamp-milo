@@ -1,0 +1,9 @@
+.matt .content-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  max-width: 600px;
+  margin: 0px auto;
+  justify-content: center;
+  gap: 24px;
+}
