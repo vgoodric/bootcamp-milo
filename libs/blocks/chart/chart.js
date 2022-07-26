@@ -162,6 +162,7 @@ const handleIntersect = (chart, chartOptions) => (entries, observer) => {
 
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
+      console.log('loaded chart', entry.target);
       chart?.setOption(chartOptions);
       observer.unobserve(entry.target);
     }
@@ -274,6 +275,7 @@ const init = async (el) => {
   container.className = 'chart-container';
   container.append(...children);
   el.appendChild(container);
+  console.log('added chart', el);
 
   const chartStyles = el.parentElement.classList;
   const authoredSize = Array.from(chartStyles)?.find((style) => (
