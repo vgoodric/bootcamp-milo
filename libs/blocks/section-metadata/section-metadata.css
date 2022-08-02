@@ -63,11 +63,34 @@
   text-align: center;
 }
 
+/*
+  Section Metadata: wrapper
+  optional values: (sidebar-left, sidebar-right)
+*/
 .section-wrapper {
   display: block;
 }
 
-.section-wrapper > .content {
+.section-wrapper.sidebar-left > .content,
+.section-wrapper.sidebar-right > .content {
   max-width: var(--grid-container-width);
   margin: 0 auto;
+}
+
+@media screen and (min-width: 1200px) {
+  .section-wrapper.sidebar-left > .content,
+  .section-wrapper.sidebar-right > .content {
+    display: flex;
+    gap: var(--spacing-xl);
+  }
+
+  .section-wrapper.sidebar-left > .content .section-1,
+  .section-wrapper.sidebar-right > .content .section-2 {
+    width: 30%;
+  }
+
+  .section-wrapper.sidebar-left .content .section-2,
+  .section-wrapper.sidebar-right .content .section-1 {
+    width: 70%;
+  }
 }

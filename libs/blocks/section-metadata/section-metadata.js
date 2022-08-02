@@ -25,8 +25,8 @@ function handleStyle(div, section) {
 function handleWrapper(div, section) {
   const sectionSibling = section.previousElementSibling;
   if (!sectionSibling) return;
-  sectionSibling.classList.add('section-one');
-  section.classList.add('section-two');
+  sectionSibling.classList.add('section-1');
+  section.classList.add('section-2');
   const textClass = div.textContent.trim().replaceAll( ' ', '-');
   const content = createTag('div', {class: `content`});
   const sectionWrapper = createTag('div', {class: `section-wrapper ${textClass}`}, content);
