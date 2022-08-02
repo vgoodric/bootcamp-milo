@@ -32,7 +32,7 @@ function handleWrapper(div, section) {
   const sectionWrapper = createTag('div', {class: `section-wrapper ${textClass}`}, content);
   section.insertAdjacentElement( 'afterend', sectionWrapper );
   content.insertAdjacentElement('afterbegin', sectionSibling );
-  content.insertAdjacentElement('afterbegin', section );
+  content.insertAdjacentElement('beforeend', section );
 }
 
 export default function init(el) {
