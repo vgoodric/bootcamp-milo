@@ -1,3 +1,5 @@
+import createTag from '../../utils/utils.js';
+
 function handleBackground(div, section) {
   const pic = div.querySelector('picture');
   if (pic) {
@@ -20,6 +22,19 @@ function handleStyle(div, section) {
   }
 }
 
+function handleWrapper(div, section) {
+  const sectionSibling = section.previousElementSibling;
+  if (!sectionSibling) return;
+  sectionSibling.classList.add('section-one');
+  section.classList.add('section-two');
+  const textClass = div.textContent.trim().replaceAll( ' ', '-');
+  const content = createTag('div', {class: `content`});
+  const sectionWrapper = createTag('div', {class: `section-wrapper ${textClass}`}, content);
+  section.insertAdjacentElement( 'afterend', sectionWrapper );
+  content.insertAdjacentElement('afterbegin', sectionSibling );
+  content.insertAdjacentElement('afterbegin', section );
+}
+
 export default function init(el) {
   const section = el.closest('main > div');
   if (!section) return;
@@ -32,6 +47,9 @@ export default function init(el) {
     }
     if (div.textContent === 'background') {
       handleBackground(valueDiv, section);
+    }
+    if (div.textContent === 'wrapper') {
+      handleWrapper(valueDiv, section);
     }
   });
 }
