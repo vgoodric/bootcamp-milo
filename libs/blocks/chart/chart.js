@@ -1,4 +1,4 @@
-import { makeRelative, loadScript, throttle, isNullish } from '../../utils/utils.js';
+import { makeRelative, loadScript, throttle, isNullish, waitForLoaded } from '../../utils/utils.js';
 import getTheme from './chartLightTheme.js';
 
 export const SMALL = 'small';
@@ -443,20 +443,24 @@ const init = async (el) => {
   if (chartType !== 'oversizedNumber') {
     loadScript('/libs/deps/echarts.common.min.js')
       .then(() => {
-        const observerOptions = {
-          root: null,
-          rootMargin: '0px',
-          threshold: 0.5,
-        };
-
         if (!(window.IntersectionObserver)) {
           initChart(chartWrapper, chartType, data, colors, size);
         } else {
-          const observer = new IntersectionObserver(
-            handleIntersect(chartWrapper, chartType, data, colors, size),
-            observerOptions,
-          );
-          observer.observe(el);
+          waitForLoaded('chart').then(() => {
+            const observerOptions = {
+              root: null,
+              rootMargin: '0px',
+              threshold: 0.5,
+            };
+
+            const observer = new IntersectionObserver(
+              handleIntersect(chartWrapper, chartType, data, colors, size),
+              observerOptions,
+            );
+            observer.observe(el);
+          }).catch(() => {
+            initChart(chartWrapper, chartType, data, colors, size);
+          });
         }
 
         window.addEventListener('resize', throttle(
