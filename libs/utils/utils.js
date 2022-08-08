@@ -236,6 +236,33 @@ export async function loadLazy(blocks, el = document) {
   await Promise.all(loaded);
 }
 
+export function waitForLoaded(blockName) {
+  const selector = blockName ? `.${blockName}[data-status="loading"]` : '[data-status="loading"]';
+  return new Promise((resolve, reject) => {
+    if (document.querySelectorAll(selector).length === 0) {
+      resolve();
+      return;
+    }
+    if (!(window.MutationObserver)) {
+      reject();
+      return;
+    }
+
+    const observer = new MutationObserver(() => {
+      if (document.querySelectorAll(selector).length === 0) {
+        resolve();
+        observer.disconnect();
+      }
+    });
+
+    observer.observe(document.body, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+    });
+  });
+}
+
 export const loadScript = (url, type) => new Promise((resolve, reject) => {
   let script = document.querySelector(`head > script[src="${url}"]`);
   if (!script) {

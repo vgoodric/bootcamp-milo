@@ -1,4 +1,4 @@
-import { makeRelative, loadScript, throttle, isNullish } from '../../utils/utils.js';
+import { makeRelative, loadScript, throttle, isNullish, waitForLoaded } from '../../utils/utils.js';
 import getTheme from './chartLightTheme.js';
 
 export const SMALL = 'small';
@@ -293,6 +293,7 @@ const handleIntersect = (chartWrapper, chartType, data, colors, size) => (entrie
 
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
+      console.log('observer');
       initChart(chartWrapper, chartType, data, colors, size);
       observer.unobserve(entry.target);
     }
@@ -446,17 +447,22 @@ const init = async (el) => {
         if (!(window.IntersectionObserver)) {
           initChart(chartWrapper, chartType, data, colors, size);
         } else {
-          const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.5,
-          };
+          waitForLoaded('chart')
+            .catch(() => { })
+            .finally(() => {
+              console.log('wait');
+              const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.5,
+              };
 
-          const observer = new IntersectionObserver(
-            handleIntersect(chartWrapper, chartType, data, colors, size),
-            observerOptions,
-          );
-          observer.observe(el);
+              const observer = new IntersectionObserver(
+                handleIntersect(chartWrapper, chartType, data, colors, size),
+                observerOptions,
+              );
+              observer.observe(el);
+            });
         }
 
         window.addEventListener('resize', throttle(
