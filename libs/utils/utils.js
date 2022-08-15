@@ -277,27 +277,29 @@ function decorateDefaults(el) {
   });
 }
 
-export function decorateNavs(el = document) {
-  const selectors = ['header', 'footer'];
+async function loadHeader() {
+  const header = document.querySelector('header');
   if (getMetadata('header') === 'off') {
     document.body.classList.add('nav-off');
-    selectors.shift();
+    header.remove();
+    return null;
   }
-  const navs = el.querySelectorAll(selectors.toString());
-  return [...navs].map((nav) => {
-    nav.dataset.status = 'decorated';
-    const navType = nav.nodeName.toLowerCase();
-    if (navType === 'header') {
-      nav.className = getMetadata('header') || 'gnav';
-      return nav;
-    }
-    nav.className = navType;
-    return nav;
-  });
+  header.dataset.status = 'decorated';
+  header.className = getMetadata('header') || 'gnav';
+  await loadBlock(header);
+  return header;
 }
 
-function decorateSections(el) {
-  return [...el.querySelectorAll('body > main > div')].map((section, idx) => {
+async function loadFooter() {
+  const footer = document.querySelector('footer');
+  footer.className = 'footer';
+  await loadBlock(footer);
+  return footer;
+}
+
+function decorateSections(el, isDoc) {
+  const selector = isDoc ? 'body > main > div' : ':scope > div';
+  return [...el.querySelectorAll(selector)].map((section, idx) => {
     decorateDefaults(section);
     const links = decorateLinks(section);
     const blocks = decorateBlocks(section);
@@ -308,42 +310,49 @@ function decorateSections(el) {
   });
 }
 
-export function decorateArea(el = document) {
-  decoratePictures(el);
-  return decorateSections(el);
-}
+async function loadPostLCP() {
+  loadHeader();
 
-async function loadPostLCP(navs) {
   const { locale } = getConfig();
-  navs.forEach((nav) => { loadBlock(nav); });
   const { default: loadFonts } = await import('./fonts.js');
   loadFonts(locale, loadStyle);
 }
 
-export async function loadArea(area = document) {
-  const isDoc = area === document;
-  const sections = decorateArea();
-  const navs = isDoc ? decorateNavs() : [];
-
-  // For loops correctly handle awaiting inside them.
-  // eslint-disable-next-line no-restricted-syntax
-  for (const section of sections) {
-    const loaded = section.blocks.map((block) => loadBlock(block));
-    // Specifically only move on to the next section when all blocks are loaded.
-    // eslint-disable-next-line no-await-in-loop
-    await Promise.all(loaded);
-    // Post LCP operations.
-    if (isDoc && section.el.dataset.idx === '0') {
-      loadPostLCP(navs);
-    }
-    delete section.el.dataset.status;
-    delete section.el.dataset.idx;
-  }
+async function loadDeferred(area) {
   if (getMetadata('nofollow-links') === 'on') {
     const path = getMetadata('nofollow-path') || '/seo/nofollow.json';
     const { default: nofollow } = await import('../features/nofollow.js');
     nofollow(path, area);
   }
+}
+
+export async function loadArea(area = document) {
+  const isDoc = area === document;
+  const sections = decorateSections(area, isDoc);
+  decoratePictures(area);
+
+  // For loops correctly handle awaiting inside them.
+  // eslint-disable-next-line no-restricted-syntax
+  for (const section of sections) {
+    const loaded = section.blocks.map((block) => loadBlock(block));
+
+    // Specifically only move on to the next section when all blocks are loaded.
+    // eslint-disable-next-line no-await-in-loop
+    await Promise.all(loaded);
+
+    // Post LCP operations.
+    if (isDoc && section.el.dataset.idx === '0') { loadPostLCP(); }
+
+    // Show the section when all blocks inside are done.
+    delete section.el.dataset.status;
+    delete section.el.dataset.idx;
+  }
+
+  // Load the footer after all sections have shown
+  if (isDoc) { loadFooter(); }
+
+  // Load everything that can be deferred until after all blocks load.
+  loadDeferred(area);
 }
 
 /**

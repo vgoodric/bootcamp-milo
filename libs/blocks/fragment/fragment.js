@@ -1,4 +1,4 @@
-import { decorateArea, loadArea, makeRelative } from '../../utils/utils.js';
+import { loadArea, makeRelative, createTag } from '../../utils/utils.js';
 import Tree from '../../utils/tree.js';
 
 const fragMap = {};
@@ -39,13 +39,12 @@ export default async function init(a, parent) {
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, 'text/html');
 
-      const fragment = doc.querySelector('div');
-      fragment.className = 'fragment';
+      const fragment = createTag('div', { class: 'fragment' });
+      fragment.append(...doc.querySelectorAll('div'));
 
       updateFragMap(fragment, a, relHref);
 
-      const blocks = decorateArea(fragment);
-      await loadArea({ blocks, area: fragment });
+      await loadArea(fragment);
 
       if (parent) {
         a.remove();
