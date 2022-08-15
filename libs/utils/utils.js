@@ -1,6 +1,5 @@
 const PROJECT_NAME = 'milo--adobecom';
 const PRODUCTION_DOMAINS = ['milo.adobe.com'];
-const LCP_BLOCKS = ['hero', 'home', 'marquee', 'section-metadata'];
 const MILO_TEMPLATES = [];
 const MILO_BLOCKS = [
   'adobetv',
@@ -38,6 +37,9 @@ const ENVS = {
     account: 'account.adobe.com',
   },
 };
+
+const lcpImg = document.querySelector('img');
+lcpImg.setAttribute('loading', 'eager');
 
 function getEnv() {
   const { host, href } = window.location;
@@ -165,7 +167,7 @@ export async function loadBlock(block) {
         console.log(`Failed loading ${name}`, err);
         if (getEnv() !== 'prod') {
           block.dataset.failed = 'true';
-          block.dataset.reason = `Failed loading ${name ? name.toUpperCase() : ''} block - ${err}`;
+          block.dataset.reason = `Failed loading ${name || ''} block.`;
         }
       }
       resolve();
@@ -173,32 +175,7 @@ export async function loadBlock(block) {
   });
   await Promise.all([styleLoaded, scriptLoaded]);
   delete block.dataset.status;
-  const section = block.closest('.section[data-status]');
-  if (section) {
-    const decoratedBlock = section.querySelector(':scope > [data-status]');
-    if (!decoratedBlock) { delete section.dataset.status; }
-  }
   return block;
-}
-
-export async function loadLCP({ blocks = [], lcpList = LCP_BLOCKS }) {
-  const lcpBlock = blocks.find((block) => lcpList.includes(block.classList[0]));
-  if (lcpBlock) {
-    const lcpIdx = blocks.indexOf(lcpBlock);
-    blocks.splice(lcpIdx, 1);
-    await loadBlock(lcpBlock, true);
-  }
-  const lcpImg = document.querySelector('main img');
-  return new Promise((resolve) => {
-    if (lcpImg && !lcpImg.complete) {
-      /* c8 ignore next 3 */
-      lcpImg.setAttribute('loading', 'eager');
-      lcpImg.addEventListener('load', () => resolve(lcpImg));
-      lcpImg.addEventListener('error', () => resolve(lcpImg));
-    } else {
-      resolve(lcpImg);
-    }
-  });
 }
 
 export function decorateSVG(a) {
@@ -261,7 +238,7 @@ function decoratePictures(el) {
 }
 
 function decorateBlocks(el) {
-  const blocks = el.querySelectorAll('div[class]');
+  const blocks = el.querySelectorAll('div[class]:not(.content)');
   return [...blocks].map((block) => {
     block.dataset.status = 'decorated';
     return block;
@@ -308,6 +285,7 @@ export function decorateNavs(el = document) {
   }
   const navs = el.querySelectorAll(selectors.toString());
   return [...navs].map((nav) => {
+    nav.dataset.status = 'decorated';
     const navType = nav.nodeName.toLowerCase();
     if (navType === 'header') {
       nav.className = getMetadata('header') || 'gnav';
@@ -319,32 +297,40 @@ export function decorateNavs(el = document) {
 }
 
 function decorateSections(el) {
-  el.querySelectorAll('body > main > div').forEach((section) => {
+  return [...el.querySelectorAll('body > main > div')].map((section, idx) => {
     decorateDefaults(section);
+    decorateBlocks(section);
     section.className = 'section';
+    section.dataset.idx = idx;
+    // TODO: Simplify. This should not be needed.
     // Only mark as decorated if blocks are still loading inside
     const decoratedBlock = section.querySelector(':scope > [data-status]');
     if (decoratedBlock) { section.dataset.status = 'decorated'; }
+    return section;
   });
 }
 
 export function decorateArea(el = document) {
-  const linkBlocks = decorateLinks(el);
-  const blocks = decorateBlocks(el);
+  decorateLinks(el);
   decoratePictures(el);
-  decorateSections(el);
-  return [...linkBlocks, ...blocks];
+  return decorateSections(el);
 }
 
-export async function loadArea({ blocks, area, noFollowPath }) {
+export async function loadArea({ area, sections, noFollowPath }) {
   const el = area || document;
   if (getMetadata('nofollow-links') === 'on') {
     const path = noFollowPath || '/seo/nofollow.json';
     const { default: nofollow } = await import('../features/nofollow.js');
     nofollow(path, el);
   }
-  const loaded = blocks.map((block) => loadBlock(block));
-  await Promise.all(loaded);
+  sections.forEach(async (section) => {
+    console.log(section.dataset.idx);
+    const blocks = [...section.querySelectorAll('[data-status="decorated"')];
+    console.log(blocks);
+    const loaded = blocks.map((block) => loadBlock(block));
+    await Promise.all(loaded);
+    if (section.dataset.status) { delete section.dataset.status; }
+  });
 }
 
 /**
