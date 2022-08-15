@@ -301,8 +301,8 @@ function decorateSections(el) {
     decorateDefaults(section);
     decorateBlocks(section);
     section.className = 'section';
-    section.dataset.idx = idx;
     section.dataset.status = 'decorated';
+    section.dataset.idx = idx;
     return section;
   });
 }
@@ -313,13 +313,20 @@ export function decorateArea(el = document) {
   return decorateSections(el);
 }
 
-export async function loadArea({ area, sections, noFollowPath }) {
-  const el = area || document;
-  if (getMetadata('nofollow-links') === 'on') {
-    const path = noFollowPath || '/seo/nofollow.json';
-    const { default: nofollow } = await import('../features/nofollow.js');
-    nofollow(path, el);
-  }
+async function loadPostLCP(navs) {
+  const { locale } = getConfig();
+  console.log(locale);
+  navs.forEach((nav) => { loadBlock(nav); });
+  const { default: loadFonts } = await import('./fonts.js');
+  loadFonts(locale, loadStyle);
+}
+
+export async function loadArea({ area = document, noFollowPath }) {
+  const isDoc = area === document;
+  const sections = decorateArea();
+  const navs = isDoc ? decorateNavs() : [];
+
+  // For loops correctly handle awaiting inside them.
   // eslint-disable-next-line no-restricted-syntax
   for (const section of sections) {
     const blocks = [...section.querySelectorAll('[data-status="decorated"')];
@@ -327,7 +334,17 @@ export async function loadArea({ area, sections, noFollowPath }) {
     // Specifically only move on to the next section when all blocks are loaded.
     // eslint-disable-next-line no-await-in-loop
     await Promise.all(loaded);
-    if (section.dataset.status) { delete section.dataset.status; }
+    // Only load navs after LCP Section (0) has finished.
+    if (isDoc && section.dataset.idx === '0') {
+      loadPostLCP(navs);
+    }
+    delete section.dataset.status;
+    delete section.dataset.idx;
+  }
+  if (getMetadata('nofollow-links') === 'on') {
+    const path = noFollowPath || '/seo/nofollow.json';
+    const { default: nofollow } = await import('../features/nofollow.js');
+    nofollow(path, area);
   }
 }
 

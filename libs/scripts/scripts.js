@@ -11,8 +11,6 @@
  */
 
 import {
-  decorateArea,
-  decorateNavs,
   loadArea,
   loadDelayed,
   loadTemplate,
@@ -32,10 +30,7 @@ const config = {
 
 (async function loadPage() {
   setConfig(config);
-  const sections = decorateArea();
-  const navs = decorateNavs();
-  await loadArea({ sections, navs });
-  import('../utils/fonts.js');
+  await loadArea({ area: document });
   loadTemplate();
   const { default: loadModals } = await import('../blocks/modals/modals.js');
   loadModals();
