@@ -238,7 +238,7 @@ function decoratePictures(el) {
 }
 
 function decorateBlocks(el) {
-  const blocks = el.querySelectorAll('div[class]:not(.content)');
+  const blocks = el.querySelectorAll('div[class]:not(.content, .section-metadata)');
   return [...blocks].map((block) => {
     block.dataset.status = 'decorated';
     return block;
@@ -296,16 +296,47 @@ export function decorateNavs(el = document) {
   });
 }
 
+function handleBackground(div, section) {
+  const pic = div.querySelector('picture');
+  if (pic) {
+    section.classList.add('has-background');
+    pic.classList.add('section-background');
+    section.insertAdjacentElement('afterbegin', pic);
+  } else {
+    const color = div.textContent;
+    if (color) {
+      section.style.backgroundColor = color;
+    }
+  }
+}
+
+function handleStyle(div, section) {
+  const value = div.textContent.toLowerCase();
+  const styles = value.split(', ').map((style) => style.replaceAll(' ', '-'));
+  if (section) {
+    section.classList.add(...styles);
+  }
+}
+
 function decorateSections(el) {
   return [...el.querySelectorAll('body > main > div')].map((section, idx) => {
     decorateDefaults(section);
     decorateBlocks(section);
     section.className = 'section';
     section.dataset.idx = idx;
-    // TODO: Simplify. This should not be needed.
-    // Only mark as decorated if blocks are still loading inside
-    const decoratedBlock = section.querySelector(':scope > [data-status]');
-    if (decoratedBlock) { section.dataset.status = 'decorated'; }
+
+    const keyDivs = section.querySelectorAll('.section-metadata > div > div:first-child');
+    keyDivs.forEach((div) => {
+      const valueDiv = div.nextElementSibling;
+      if (div.textContent === 'style') {
+        handleStyle(valueDiv, section);
+      }
+      if (div.textContent === 'background') {
+        handleBackground(valueDiv, section);
+      }
+    });
+
+    section.dataset.status = 'decorated';
     return section;
   });
 }
@@ -323,14 +354,12 @@ export async function loadArea({ area, sections, noFollowPath }) {
     const { default: nofollow } = await import('../features/nofollow.js');
     nofollow(path, el);
   }
-  sections.forEach(async (section) => {
-    console.log(section.dataset.idx);
+  for (const section of sections) {
     const blocks = [...section.querySelectorAll('[data-status="decorated"')];
-    console.log(blocks);
     const loaded = blocks.map((block) => loadBlock(block));
     await Promise.all(loaded);
     if (section.dataset.status) { delete section.dataset.status; }
-  });
+  }
 }
 
 /**
