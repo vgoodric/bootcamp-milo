@@ -30,7 +30,7 @@ const config = {
 
 (async function loadPage() {
   setConfig(config);
-  await loadArea({ area: document });
+  await loadArea();
   loadTemplate();
   const { default: loadModals } = await import('../blocks/modals/modals.js');
   loadModals();

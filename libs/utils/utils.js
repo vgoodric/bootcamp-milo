@@ -299,16 +299,16 @@ export function decorateNavs(el = document) {
 function decorateSections(el) {
   return [...el.querySelectorAll('body > main > div')].map((section, idx) => {
     decorateDefaults(section);
-    decorateBlocks(section);
+    const links = decorateLinks(section);
+    const blocks = decorateBlocks(section);
     section.className = 'section';
     section.dataset.status = 'decorated';
     section.dataset.idx = idx;
-    return section;
+    return { el: section, blocks: [...links, ...blocks] };
   });
 }
 
 export function decorateArea(el = document) {
-  decorateLinks(el);
   decoratePictures(el);
   return decorateSections(el);
 }
@@ -320,7 +320,7 @@ async function loadPostLCP(navs) {
   loadFonts(locale, loadStyle);
 }
 
-export async function loadArea({ area = document, noFollowPath }) {
+export async function loadArea(area = document) {
   const isDoc = area === document;
   const sections = decorateArea();
   const navs = isDoc ? decorateNavs() : [];
@@ -328,20 +328,19 @@ export async function loadArea({ area = document, noFollowPath }) {
   // For loops correctly handle awaiting inside them.
   // eslint-disable-next-line no-restricted-syntax
   for (const section of sections) {
-    const blocks = [...section.querySelectorAll('[data-status="decorated"')];
-    const loaded = blocks.map((block) => loadBlock(block));
+    const loaded = section.blocks.map((block) => loadBlock(block));
     // Specifically only move on to the next section when all blocks are loaded.
     // eslint-disable-next-line no-await-in-loop
     await Promise.all(loaded);
     // Post LCP operations.
-    if (isDoc && section.dataset.idx === '0') {
+    if (isDoc && section.el.dataset.idx === '0') {
       loadPostLCP(navs);
     }
-    delete section.dataset.status;
-    delete section.dataset.idx;
+    delete section.el.dataset.status;
+    delete section.el.dataset.idx;
   }
   if (getMetadata('nofollow-links') === 'on') {
-    const path = noFollowPath || '/seo/nofollow.json';
+    const path = getMetadata('nofollow-path') || '/seo/nofollow.json';
     const { default: nofollow } = await import('../features/nofollow.js');
     nofollow(path, area);
   }
