@@ -315,7 +315,6 @@ export function decorateArea(el = document) {
 
 async function loadPostLCP(navs) {
   const { locale } = getConfig();
-  console.log(locale);
   navs.forEach((nav) => { loadBlock(nav); });
   const { default: loadFonts } = await import('./fonts.js');
   loadFonts(locale, loadStyle);
@@ -334,7 +333,7 @@ export async function loadArea({ area = document, noFollowPath }) {
     // Specifically only move on to the next section when all blocks are loaded.
     // eslint-disable-next-line no-await-in-loop
     await Promise.all(loaded);
-    // Only load navs after LCP Section (0) has finished.
+    // Post LCP operations.
     if (isDoc && section.dataset.idx === '0') {
       loadPostLCP(navs);
     }
