@@ -4,10 +4,12 @@ const MILO_TEMPLATES = [];
 const MILO_BLOCKS = [
   'adobetv',
   'caas',
-  'faas',
   'columns',
+  'faas',
   'faq',
   'fragment',
+  'footer',
+  'gnav',
   'how-to',
   'modal',
   'marquee',
