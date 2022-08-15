@@ -40,7 +40,7 @@ export default async function init(a, parent) {
       const doc = parser.parseFromString(html, 'text/html');
 
       const fragment = createTag('div', { class: 'fragment' });
-      fragment.append(...doc.querySelectorAll('div'));
+      fragment.append(...doc.querySelectorAll('body > div'));
 
       updateFragMap(fragment, a, relHref);
 
