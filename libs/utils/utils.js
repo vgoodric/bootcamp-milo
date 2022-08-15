@@ -238,7 +238,7 @@ function decoratePictures(el) {
 }
 
 function decorateBlocks(el) {
-  const blocks = el.querySelectorAll('div[class]:not(.content, .section-metadata)');
+  const blocks = el.querySelectorAll('div[class]:not(.content)');
   return [...blocks].map((block) => {
     block.dataset.status = 'decorated';
     return block;
@@ -296,46 +296,12 @@ export function decorateNavs(el = document) {
   });
 }
 
-function handleBackground(div, section) {
-  const pic = div.querySelector('picture');
-  if (pic) {
-    section.classList.add('has-background');
-    pic.classList.add('section-background');
-    section.insertAdjacentElement('afterbegin', pic);
-  } else {
-    const color = div.textContent;
-    if (color) {
-      section.style.backgroundColor = color;
-    }
-  }
-}
-
-function handleStyle(div, section) {
-  const value = div.textContent.toLowerCase();
-  const styles = value.split(', ').map((style) => style.replaceAll(' ', '-'));
-  if (section) {
-    section.classList.add(...styles);
-  }
-}
-
 function decorateSections(el) {
   return [...el.querySelectorAll('body > main > div')].map((section, idx) => {
     decorateDefaults(section);
     decorateBlocks(section);
     section.className = 'section';
     section.dataset.idx = idx;
-
-    const keyDivs = section.querySelectorAll('.section-metadata > div > div:first-child');
-    keyDivs.forEach((div) => {
-      const valueDiv = div.nextElementSibling;
-      if (div.textContent === 'style') {
-        handleStyle(valueDiv, section);
-      }
-      if (div.textContent === 'background') {
-        handleBackground(valueDiv, section);
-      }
-    });
-
     section.dataset.status = 'decorated';
     return section;
   });
@@ -354,9 +320,12 @@ export async function loadArea({ area, sections, noFollowPath }) {
     const { default: nofollow } = await import('../features/nofollow.js');
     nofollow(path, el);
   }
+  // eslint-disable-next-line no-restricted-syntax
   for (const section of sections) {
     const blocks = [...section.querySelectorAll('[data-status="decorated"')];
     const loaded = blocks.map((block) => loadBlock(block));
+    // Specifically only move on to the next section when all blocks are loaded.
+    // eslint-disable-next-line no-await-in-loop
     await Promise.all(loaded);
     if (section.dataset.status) { delete section.dataset.status; }
   }
