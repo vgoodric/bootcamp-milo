@@ -4,8 +4,10 @@ const LCP_BLOCKS = ['hero', 'home', 'marquee', 'section-metadata'];
 const MILO_TEMPLATES = [];
 const MILO_BLOCKS = [
   'adobetv',
+  'blockquote',
   'caas',
   'faas',
+  'card-metadata',
   'columns',
   'faq',
   'fragment',
