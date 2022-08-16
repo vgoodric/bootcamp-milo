@@ -13,7 +13,6 @@
 import {
   loadArea,
   loadDelayed,
-  loadTemplate,
   setConfig,
 } from '../utils/utils.js';
 
@@ -31,7 +30,6 @@ const config = {
 (async function loadPage() {
   setConfig(config);
   await loadArea();
-  loadTemplate();
   const { default: loadModals } = await import('../blocks/modals/modals.js');
   loadModals();
   loadDelayed();

@@ -313,8 +313,8 @@ function decorateSections(el, isDoc) {
 }
 
 async function loadPostLCP() {
+  loadTemplate();
   loadHeader();
-
   const { locale } = getConfig();
   const { default: loadFonts } = await import('./fonts.js');
   loadFonts(locale, loadStyle);
