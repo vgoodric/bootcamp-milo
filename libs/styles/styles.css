@@ -46,9 +46,15 @@ header {
   display: flex;
   align-content: stretch;
   font-weight: 700;
+  flex-wrap: wrap;
 }
 
-header nav {
+header.has-breadcrumbs {
+  min-height: 97px;
+}
+
+header nav,
+.breadcrumbs {
   display: none;
 }
 

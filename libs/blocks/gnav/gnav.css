@@ -12,6 +12,46 @@ header nav.gnav {
   z-index: 99;
 }
 
+.breadcrumbs {
+  width: 100%;
+  border-bottom: 1px solid #EAEAEA;
+  font-size: 12px;
+  font-weight: 400;
+  color: #707070;
+}
+
+.breadcrumbs a {
+  color: #707070;
+}
+
+.gnav-wrapper + .breadcrumbs {
+  display: block;
+}
+
+.breadcrumbs > div > div {
+  max-width: 1440px;
+  display: flex;
+  margin: 0 auto;
+}
+
+.breadcrumbs ul {
+  padding: 0;
+  margin: 0 0 0 10px;
+  list-style: none;
+  display: flex;
+}
+
+.breadcrumbs li {
+  padding: 0 10px;
+  position: relative;
+}
+
+.breadcrumbs li:not(:first-of-type):before {
+  position: absolute;
+  left: 0;
+  content: '/';
+}
+
 nav.gnav {
   visibility: unset;
   display: grid;

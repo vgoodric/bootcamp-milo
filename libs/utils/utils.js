@@ -282,7 +282,7 @@ function decorateDefaults(el) {
   });
 }
 
-async function loadHeader() {
+function decorateHeader() {
   const header = document.querySelector('header');
   if (getMetadata('header') === 'off') {
     document.body.classList.add('nav-off');
@@ -291,7 +291,12 @@ async function loadHeader() {
   }
   header.dataset.status = 'decorated';
   header.className = getMetadata('header') || 'gnav';
-  await loadBlock(header);
+  const breadcrumbs = document.querySelector('.breadcrumbs');
+  if (breadcrumbs) {
+    header.classList.add('has-breadcrumbs');
+    header.append(breadcrumbs);
+  }
+
   return header;
 }
 
@@ -315,8 +320,8 @@ function decorateSections(el, isDoc) {
   });
 }
 
-async function loadPostLCP() {
-  loadHeader();
+async function loadPostLCP(header) {
+  if (header) { loadBlock(header); }
   loadTemplate();
   const { locale } = getConfig();
   const { default: loadFonts } = await import('./fonts.js');
@@ -333,6 +338,7 @@ export async function loadDeferred(area) {
 
 export async function loadArea(area = document) {
   const isDoc = area === document;
+  const header = decorateHeader();
   const sections = decorateSections(area, isDoc);
   // For loops correctly handle awaiting inside them.
   // eslint-disable-next-line no-restricted-syntax
@@ -344,7 +350,7 @@ export async function loadArea(area = document) {
     await Promise.all(loaded);
 
     // Post LCP operations.
-    if (isDoc && section.el.dataset.idx === '0') { loadPostLCP(); }
+    if (isDoc && section.el.dataset.idx === '0') { loadPostLCP(header); }
 
     // Show the section when all blocks inside are done.
     delete section.el.dataset.status;
