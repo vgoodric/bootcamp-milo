@@ -30,7 +30,7 @@ export default function init(config, loadScript, getMetadata) {
     adobe: {
       launch: { url, controlPageLoad: true },
       alloy: { edgeConfigId },
-      target: getMetadata('target') === 'on',
+      target: true,
     },
   };
 

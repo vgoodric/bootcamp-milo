@@ -334,10 +334,12 @@ function decorateSections(el, isDoc) {
   });
 }
 
-async function loadPostLCP() {
-  const config = getConfig();
-  const { default: loadMartech } = await import('./martech.js');
-  loadMartech(config, loadScript, getMetadata);
+async function loadMartech(config) {
+  const { default: martech } = await import('./martech.js');
+  martech(config, loadScript, getMetadata);
+}
+
+async function loadPostLCP(config) {
   loadHeader();
   loadTemplate();
   const { default: loadFonts } = await import('./fonts.js');
@@ -353,9 +355,12 @@ export async function loadDeferred(area) {
 }
 
 export async function loadArea(area = document) {
+  const config = getConfig();
   const isDoc = area === document;
+
+  if (isDoc) { loadMartech(config); }
+
   const sections = decorateSections(area, isDoc);
-  // For loops correctly handle awaiting inside them.
   // eslint-disable-next-line no-restricted-syntax
   for (const section of sections) {
     const loaded = section.blocks.map((block) => loadBlock(block));
@@ -365,7 +370,7 @@ export async function loadArea(area = document) {
     await Promise.all(loaded);
 
     // Post LCP operations.
-    if (isDoc && section.el.dataset.idx === '0') { loadPostLCP(); }
+    if (isDoc && section.el.dataset.idx === '0') { loadPostLCP(config); }
 
     // Show the section when all blocks inside are done.
     delete section.el.dataset.status;
