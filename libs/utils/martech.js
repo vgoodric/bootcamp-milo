@@ -14,7 +14,7 @@ function getDetails(env) {
   };
 }
 
-export default function init(config, loadScript, getMetadata) {
+export default function init(config, loadScript) {
   const { url, edgeConfigId } = getDetails(config.env);
   window.alloy_load = window.alloy_load || {};
   window.alloy_load.data = window.alloy_load.data || {};
