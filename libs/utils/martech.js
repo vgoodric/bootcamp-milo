@@ -1,3 +1,4 @@
+/* global _satellite */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 
@@ -14,7 +15,7 @@ function getDetails(env) {
   };
 }
 
-export default function init(config, loadScript) {
+export default async function init(config, loadScript) {
   const { url, edgeConfigId } = getDetails(config.env);
   window.alloy_load = window.alloy_load || {};
   window.alloy_load.data = window.alloy_load.data || {};
@@ -34,5 +35,6 @@ export default function init(config, loadScript) {
     },
   };
 
-  loadScript('https://www.adobe.com/marketingtech/main.standard.min.js');
+  await loadScript('https://www.adobe.com/marketingtech/main.standard.min.js');
+  _satellite.track('pageload');
 }
