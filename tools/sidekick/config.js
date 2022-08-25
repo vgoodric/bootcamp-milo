@@ -58,7 +58,7 @@ const sendToCaaS = async (_, sk) => {
         id: 'rayyan',
         condition: (s) => s.isEditor(),
         button: {
-          text: 'Rayyan',
+          text: 'TestRayChange',
           action: (_, s) => {
             console.log('Rayyon is awesome!');
           },
