@@ -72,7 +72,7 @@ const sendToCaaS = async (_, sk) => {
               (
                 document.documentElement.textContent || document.documentElement.innerText
 
-              ).indexOf('Lorem') > -1) {
+              ).indexOf('Wiki') > -1) {
               alert("Lorem Ipsum");
             } else {
               alert("No lorem Ipsum");
