@@ -58,7 +58,7 @@ const sendToCaaS = async (_, sk) => {
         id: 'rayyan',
         condition: (s) => s.isEditor() || s.isHelix(),
         button: {
-          text: 'TestRayChange',
+          text: 'TestTitleChange',
           action: (_, s) => {
            console.log(document.title);
           },
