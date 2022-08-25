@@ -60,7 +60,7 @@ const sendToCaaS = async (_, sk) => {
         button: {
           text: 'TestRayChange',
           action: (_, s) => {
-            console.log('Rayyon is awesome!');
+           console.log(document.title);
           },
         },
       },
