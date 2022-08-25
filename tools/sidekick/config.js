@@ -60,7 +60,7 @@ const sendToCaaS = async (_, sk) => {
         button: {
           text: 'TestTitleChange',
           action: (_, s) => {
-           console.log(document.title);
+           fetch(window.location.href).then(response => console.log(response.status));
           },
         },
       },
