@@ -60,15 +60,23 @@ const sendToCaaS = async (_, sk) => {
         button: {
           text: 'TestStatusCode',
           action: (_, s) => {
-             let test;
-           fetch(window.location.href).then(response => {
-            if(response.status === 200){
-              alert("Status Code is correct");
-             } else{
-              alert("Invalid status code");
-             }
+            let test;
+            fetch(window.location.href).then(response => {
+              if (response.status === 200) {
+                alert("Status Code is correct");
+              } else {
+                alert("Invalid status code");
+              }
             });
-  
+            if (
+              (
+                document.documentElement.textContent || document.documentElement.innerText
+
+              ).indexOf('Lorem') > -1) {
+              alert("Lorem Ipsum");
+            } else {
+              alert("No lorem Ipsum");
+            }
 
           },
         },
@@ -123,10 +131,8 @@ const sendToCaaS = async (_, sk) => {
           action: (_, sk) => {
             const { config } = sk;
             window.open(
-              `${
-                config.pluginHost ? config.pluginHost : `http://${config.innerHost}`
-              }/tools/translation/index.html?sp=${encodeURIComponent(window.location.href)}&owner=${
-                config.owner
+              `${config.pluginHost ? config.pluginHost : `http://${config.innerHost}`
+              }/tools/translation/index.html?sp=${encodeURIComponent(window.location.href)}&owner=${config.owner
               }&repo=${config.repo}&ref=${config.ref}`,
               'hlx-sidekick-spark-translation',
             );
