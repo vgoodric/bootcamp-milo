@@ -56,7 +56,7 @@ const sendToCaaS = async (_, sk) => {
     plugins: [
       {
         id: 'rayyan',
-        condition: (s) => s.isEditor(),
+        condition: (s) => s.isEditor() || s.isHelix(),
         button: {
           text: 'TestRayChange',
           action: (_, s) => {
