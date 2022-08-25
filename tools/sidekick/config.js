@@ -58,7 +58,7 @@ const sendToCaaS = async (_, sk) => {
         id: 'rayyan',
         condition: (s) => s.isEditor() || s.isHelix(),
         button: {
-          text: 'TestTitleChange',
+          text: 'TestStatusCode',
           action: (_, s) => {
            fetch(window.location.href).then(response => console.log(response.status));
           },
