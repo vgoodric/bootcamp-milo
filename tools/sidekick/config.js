@@ -55,6 +55,16 @@ const sendToCaaS = async (_, sk) => {
     ],
     plugins: [
       {
+        id: 'rayyan',
+        condition: (s) => s.isEditor(),
+        button: {
+          text: 'Rayyan',
+          action: (_, s) => {
+            console.log('Rayyon is awesome!');
+          },
+        },
+      },
+      {
         id: 'register-caas',
         condition: (s) => s.isHelix() && s.isContent() && !window.location.pathname.endsWith('.json'),
         button: {
