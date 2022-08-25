@@ -60,7 +60,14 @@ const sendToCaaS = async (_, sk) => {
         button: {
           text: 'TestStatusCode',
           action: (_, s) => {
-           fetch(window.location.href).then(response => console.log(response.status));
+             let test;
+           fetch(window.location.href).then(response => test =response.status);
+           if(test === 200){
+            alert("Status Code is correct");
+           } else{
+            alert("Invalid status code");
+           }
+
           },
         },
       },
