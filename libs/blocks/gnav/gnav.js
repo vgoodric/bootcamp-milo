@@ -56,7 +56,14 @@ class Gnav {
       nav.append(logo);
     }
 
-    this.el.append(this.curtain, createTag('div', { class: 'gnav-wrapper' }, nav));
+    const wrapper = createTag('div', { class: 'gnav-wrapper' }, nav);
+
+    const breadcrumbs = this.decorateBreadcrumbs();
+    if (breadcrumbs) {
+      wrapper.append(breadcrumbs);
+    }
+
+    this.el.append(this.curtain, wrapper);
   };
 
   loadSearch = async () => {
@@ -69,17 +76,17 @@ class Gnav {
     const toggle = createTag('button', { class: 'gnav-toggle', 'aria-label': 'Navigation menu', 'aria-expanded': false });
     const onMediaChange = (e) => {
       if (e.matches) {
-        nav.classList.remove(IS_OPEN);
+        nav.parentElement.classList.remove(IS_OPEN);
         this.curtain.classList.remove(IS_OPEN);
       }
     };
     toggle.addEventListener('click', async () => {
-      if (nav.classList.contains(IS_OPEN)) {
-        nav.classList.remove(IS_OPEN);
+      if (nav.parentElement.classList.contains(IS_OPEN)) {
+        nav.parentElement.classList.remove(IS_OPEN);
         this.curtain.classList.remove(IS_OPEN);
         this.desktop.removeEventListener('change', onMediaChange);
       } else {
-        nav.classList.add(IS_OPEN);
+        nav.parentElement.classList.add(IS_OPEN);
         this.desktop.addEventListener('change', onMediaChange);
         this.curtain.classList.add(IS_OPEN);
         this.loadSearch();
@@ -327,6 +334,20 @@ class Gnav {
       e.preventDefault();
       window.adobeIMS.signIn();
     });
+  };
+
+  decorateBreadcrumbs = () => {
+    const parent = this.el.querySelector('.breadcrumbs');
+    if (parent) {
+      const ul = parent.querySelector('ul');
+      if (ul) {
+        ul.querySelector('li:last-of-type')?.setAttribute('aria-current', 'page');
+        const nav = createTag('nav', { class: 'breadcrumbs', 'aria-label': 'Breadcrumb' }, ul);
+        parent.remove();
+        return nav;
+      }
+    }
+    return null;
   };
   /* c8 ignore stop */
 

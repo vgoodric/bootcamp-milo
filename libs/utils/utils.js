@@ -315,7 +315,8 @@ function decorateSections(el, isDoc) {
   });
 }
 
-async function loadPostLCP(header) {
+async function loadPostLCP() {
+  const header = document.querySelector('header');
   if (header) { loadBlock(header); }
   loadTemplate();
   const { locale } = getConfig();
@@ -333,7 +334,9 @@ export async function loadDeferred(area) {
 
 export async function loadArea(area = document) {
   const isDoc = area === document;
-  const header = decorateHeader();
+
+  if (isDoc) { decorateHeader(); }
+
   const sections = decorateSections(area, isDoc);
   // For loops correctly handle awaiting inside them.
   // eslint-disable-next-line no-restricted-syntax
@@ -345,7 +348,7 @@ export async function loadArea(area = document) {
     await Promise.all(loaded);
 
     // Post LCP operations.
-    if (isDoc && section.el.dataset.idx === '0') { loadPostLCP(header); }
+    if (isDoc && section.el.dataset.idx === '0') { loadPostLCP(); }
 
     // Show the section when all blocks inside are done.
     delete section.el.dataset.status;

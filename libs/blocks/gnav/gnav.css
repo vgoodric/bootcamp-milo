@@ -1,18 +1,23 @@
 .gnav-wrapper {
-  position: relative;
+  position: absolute;
+  left: 0;
+  right: 0;
+  max-height: 100%;
+  overflow-y: scroll;
   background: #FFF;
   width: 100%;
-  height: 64px;
-  border-bottom: 1px solid #EAEAEA;
   display: flex;
+  flex-wrap: wrap;
   z-index: 99;
   box-sizing: border-box;
+  border-bottom: 1px solid #EAEAEA;
 }
 
-.breadcrumbs {
+nav.breadcrumbs {
   width: 100%;
-  border-bottom: 1px solid #EAEAEA;
+  border-top: 1px solid #EAEAEA;
   font-size: 12px;
+  line-height: 32px;
   font-weight: 400;
   color: #707070;
 }
@@ -21,21 +26,12 @@
   color: #707070;
 }
 
-.gnav-wrapper + .breadcrumbs {
-  display: block;
-}
-
-.breadcrumbs > div > div {
-  max-width: 1440px;
-  display: flex;
-  margin: 0 auto;
-}
-
 .breadcrumbs ul {
   padding: 0;
-  margin: 0 0 0 10px;
   list-style: none;
+  max-width: 1420px;
   display: flex;
+  margin: 0 auto;
 }
 
 .breadcrumbs li {
@@ -56,15 +52,14 @@
 nav.gnav {
   visibility: unset;
   display: grid;
-  grid-template-areas: 'toggle  brand   profile'
-                       'search  search  search'
-                       'navlist navlist navlist';
-  grid-template-columns: 64px 1fr auto;
-  grid-template-rows: 64px auto 1fr;
+  grid-template-areas: 'toggle     brand      profile'
+                       'search     search     search'
+                       'navlist    navlist    navlist';
+  grid-template-columns: 56px 1fr auto;
+  grid-template-rows: 56px auto 40px 1fr;
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
   flex: 0 1 100%;
-  box-sizing: border-box;
   font-weight: normal;
 }
 
@@ -587,11 +582,24 @@ nav.gnav .gnav-search-field:hover .gnav-search-input::placeholder {
 }
 
 @media (min-width: 1200px) {
+  .gnav-wrapper {
+    position: relative;
+    left: unset;
+    right: unset;
+    height: unset;
+    overflow-y: unset;
+    border-bottom: 1px solid #EAEAEA;
+  }
+
   nav.gnav {
     grid-template-areas: 'brand navlist search profile logo';
     grid-template-columns: auto 1fr auto auto auto;
-    grid-template-rows: unset;
+    grid-template-rows: 63px;
     padding: 0 12px 0 0;
+  }
+
+  nav.breadcrumbs {
+    display: block;
   }
 
   .gnav.is-Open {
