@@ -131,6 +131,23 @@ div:not([class]) > div > div img[src^="./media_"] {
   margin: 0 auto;
 }
 
+.section .section-background img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+/* Section Metadata */
+.section.center .content > h1,
+.section.center .content > h2,
+.section.center .content > h3,
+.section.center .content > h4,
+.section.center .content > h5,
+.section.center .content > h6,
+.section.center .content > p {
+  text-align: center;
+}
+
 /* Dialog */
 dialog {
   border: none;
