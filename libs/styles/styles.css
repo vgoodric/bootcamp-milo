@@ -42,7 +42,7 @@ body {
 }
 
 header {
-  min-height: 65px;
+  min-height: 64px;
   display: flex;
   align-content: stretch;
   font-weight: 700;
@@ -53,8 +53,7 @@ header.has-breadcrumbs {
   min-height: 97px;
 }
 
-header nav,
-.breadcrumbs {
+header nav, .breadcrumbs {
   display: none;
 }
 
@@ -173,9 +172,7 @@ dialog button.dialog-close {
 
 /* progressive section appearance */
 main > div,
-main .section[data-status='decorated'],
-main [data-status='decorated'],
-main [data-status='loading'] {
+main .section[data-status='decorated'] {
   display: none;
 }
 

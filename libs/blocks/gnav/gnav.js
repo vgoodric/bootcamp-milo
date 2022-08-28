@@ -56,8 +56,7 @@ class Gnav {
       nav.append(logo);
     }
 
-    const wrapper = createTag('div', { class: 'gnav-wrapper' }, nav);
-    this.el.append(this.curtain, wrapper);
+    this.el.append(this.curtain, createTag('div', { class: 'gnav-wrapper' }, nav));
   };
 
   loadSearch = async () => {

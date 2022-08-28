@@ -1,7 +1,3 @@
-header nav.gnav {
-  visibility: unset;
-}
-
 .gnav-wrapper {
   position: relative;
   background: #FFF;
@@ -10,6 +6,7 @@ header nav.gnav {
   border-bottom: 1px solid #EAEAEA;
   display: flex;
   z-index: 99;
+  box-sizing: border-box;
 }
 
 .breadcrumbs {
@@ -42,8 +39,12 @@ header nav.gnav {
 }
 
 .breadcrumbs li {
-  padding: 0 10px;
+  padding: 0 10px 0 14px;
   position: relative;
+}
+
+.breadcrumbs li:first-of-type {
+  padding: 0 10px;
 }
 
 .breadcrumbs li:not(:first-of-type):before {

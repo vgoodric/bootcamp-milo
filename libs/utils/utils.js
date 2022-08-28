@@ -164,7 +164,6 @@ export async function loadTemplate() {
 }
 
 export async function loadBlock(block) {
-  block.dataset.status = 'loading';
   const name = block.classList[0];
   const { miloLibs, codeRoot } = getConfig();
   const base = miloLibs && MILO_BLOCKS.includes(name) ? miloLibs : codeRoot;
@@ -188,7 +187,6 @@ export async function loadBlock(block) {
     })();
   });
   await Promise.all([styleLoaded, scriptLoaded]);
-  delete block.dataset.status;
   return block;
 }
 
@@ -245,10 +243,7 @@ function decorateLinks(el) {
 
 function decorateBlocks(el) {
   const blocks = el.querySelectorAll('div[class]:not(.content)');
-  return [...blocks].map((block) => {
-    block.dataset.status = 'decorated';
-    return block;
-  });
+  return [...blocks].map((block) => block);
 }
 
 function decorateContent(el) {
@@ -290,7 +285,6 @@ function decorateHeader() {
     header.remove();
     return null;
   }
-  header.dataset.status = 'decorated';
   header.className = getMetadata('header') || 'gnav';
   const breadcrumbs = document.querySelector('.breadcrumbs');
   if (breadcrumbs) {
