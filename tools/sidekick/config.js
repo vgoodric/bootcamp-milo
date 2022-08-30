@@ -23,7 +23,7 @@ const seoQaTool = async (_, sk) => {
   const dispatchEvent = () => document.dispatchEvent(
     new CustomEvent('seo-qa-tool', {
       detail: {
-        Url: sk.config.host,
+        Url: window.location.href,
       },
     }),
   );

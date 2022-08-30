@@ -1,4 +1,4 @@
-const seaQaTool = async ({url=''} = {}) => {
+const seaQaTool = ({url} = {}) => {
 console.log("hi")
 console.log(url);
 };
