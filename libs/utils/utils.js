@@ -6,6 +6,7 @@ const MILO_BLOCKS = [
   'caas',
   'card-metadata',
   'columns',
+  'interview',
   'faas',
   'faq',
   'fragment',
