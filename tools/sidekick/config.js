@@ -18,6 +18,28 @@ function hasSchema(host) {
   return false;
 }
 
+const seoQaTool = async (_, sk) => {
+  const SCRIPT_ID = 'send-seo-listener';
+  const dispatchEvent = () => document.dispatchEvent(
+    new CustomEvent('seo-qa-tool', {
+      detail: {
+        Url: window.location.href,
+      },
+    }),
+  );
+
+  if (!document.getElementById(SCRIPT_ID)) {
+    const script = document.createElement('script');
+    script.src = '/tools/seo-qa-tool/seoQaToolEventListener.js';
+    script.id = SCRIPT_ID;
+    script.onload = () => dispatchEvent();
+    document.head.appendChild(script);
+  } else {
+    dispatchEvent();
+  }
+};
+
+
 const sendToCaaS = async (_, sk) => {
   const SCRIPT_ID = 'send-caas-listener';
   const dispatchEvent = () => document.dispatchEvent(
@@ -59,9 +81,7 @@ const sendToCaaS = async (_, sk) => {
         condition: (s) => s.isEditor() || s.isHelix(),
         button: {
           text: 'TestStatusCode',
-          action: (_, s) => {
-            console.log("Hi")
-          },
+          action: seoQaTool,
         },
       },
       {
