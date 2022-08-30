@@ -60,24 +60,7 @@ const sendToCaaS = async (_, sk) => {
         button: {
           text: 'TestStatusCode',
           action: (_, s) => {
-            let test;
-            fetch(window.location.href).then(response => {
-              if (response.status === 200) {
-                alert("Status Code is correct");
-              } else {
-                alert("Invalid status code");
-              }
-            });
-            if (
-              (
-                document.documentElement.textContent || document.documentElement.innerText
-
-              ).indexOf('Wiki') > -1) {
-              alert("Lorem Ipsum");
-            } else {
-              alert("No lorem Ipsum");
-            }
-
+            console.log("Hi")
           },
         },
       },
