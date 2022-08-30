@@ -12,7 +12,7 @@ const [setConfig, getConfig] = (() => {
 
 const seaQaTool = ({url=''} = {}) => {
 console.log("hi")
+console.log(window.location.href)
 setConfig({url});
-console.log(url);
 };
 export default seaQaTool;
