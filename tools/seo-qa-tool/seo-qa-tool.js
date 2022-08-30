@@ -1,4 +1,4 @@
-const seaQaTool =  ({url=''} = {}) => {
+const seaQaTool =  ({url} = {}) => {
 console.log("hi")
 console.log(url);
 };
