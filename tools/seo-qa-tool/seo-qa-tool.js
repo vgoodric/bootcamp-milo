@@ -1,9 +1,11 @@
 function checkIfExists(name) {
+  $(document).ready(function(){
   if ($(name).length) {
     return true;
   } else {
     return false;
   }
+});
 }
 
 
