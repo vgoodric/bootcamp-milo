@@ -7,7 +7,7 @@ function retireveStatuscode(url){
 
 function seaQaTool (){
  let response = retireveStatuscode(window.location.href)
- console.log(response.status)
+ console.log(response)
 }
 
 
