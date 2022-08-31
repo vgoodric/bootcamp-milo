@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { decorateBlockAnalytics, decorateLinkAnalytics } from '../../utils/analytics.js';
+
 /*
  * Marquee - v1.0.0
  */
@@ -34,6 +36,7 @@ function decorateButtons(el, isLarge) {
 function decorateText(el, isLarge) {
   const headings = el.querySelectorAll('h1, h2, h3, h4, h5, h6');
   const heading = headings[headings.length - 1];
+  decorateLinkAnalytics(el, headings);
   heading.className = isLarge ? 'heading-XXL' : 'heading-XL';
   heading.nextElementSibling.className = isLarge ? 'body-XL' : 'body-M';
   if (heading.previousElementSibling) {
@@ -42,6 +45,8 @@ function decorateText(el, isLarge) {
 }
 
 export default function init(el) {
+  const headings = el.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  decorateBlockAnalytics(el, headings[0]);
   const children = el.querySelectorAll(':scope > div');
   const foreground = children[children.length - 1];
   if (children.length > 1) {
