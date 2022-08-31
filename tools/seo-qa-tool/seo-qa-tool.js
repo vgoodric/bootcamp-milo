@@ -1,13 +1,13 @@
 function retireveStatuscode(url){
   fetch(url).then(response => {
-    return response;
+    return response.status;
   });
 }
 
 
 function seaQaTool (){
- let response = retireveStatuscode(window.location.href)
- console.log(response)
+  let status = retireveStatuscode(window.location.href)
+  console.log(status)
 }
 
 
