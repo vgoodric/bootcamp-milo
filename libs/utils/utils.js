@@ -384,7 +384,7 @@ export async function loadArea(area = document) {
   if (isDoc) {
     loadFooter();
     const { default: loadFavIcon } = await import('./favicon.js');
-    loadFavIcon(createTag, getConfig(), getMetadata);
+    loadFavIcon(getConfig(), getMetadata);
   }
 
   // Load everything that can be deferred until after all blocks load.

@@ -1,11 +1,6 @@
-export function decorateBlockAnalytics(blockEl) {
-  const lh = [];
-  const exclude = ['--', 'block'];
-  blockEl.classList.forEach((c) => {
-    if (!c.includes(exclude[0]) && c !== exclude[1]) lh.push(c);
-  });
-  blockEl.setAttribute('daa-im', 'true');
-  blockEl.setAttribute('daa-lh', lh.join('|'));
+export function decorateBlockAnalytics(el) {
+  el.setAttribute('daa-im', 'true');
+  el.setAttribute('daa-lh', [...el.classList].join('|'));
 }
 
 export function decorateLinkAnalytics(textEl, headings) {
