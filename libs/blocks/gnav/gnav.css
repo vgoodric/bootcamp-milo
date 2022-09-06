@@ -37,7 +37,7 @@ header nav.gnav {
     'header     header'
     'breadcrumb gutter'
     'scroll     gutter';
-  grid-template-columns: 1fr 20px;
+  grid-template-columns: 1fr 12px;
   grid-template-rows: 56px 36px;
   position: absolute;
   inset: 0;
@@ -94,6 +94,11 @@ header span.gnav-brand-title {
   display: none;
 }
 
+header.gnav a {
+  color: #2e2e2e;
+  text-decoration: none;
+}
+
 header .gnav-profile {
   grid-area: header;
   justify-self: end;
@@ -104,6 +109,7 @@ header .scroll-wrapper {
   grid-area: scroll;
   overflow-y: scroll;
   display: grid;
+  grid-template-rows: auto 1fr;
   grid-template-areas:
     'search'
     'nav';
@@ -137,7 +143,7 @@ header.is-open button.gnav-toggle::after {
 
 header .breadcrumbs ul {
   padding: 0;
-  margin: 0 0 0 10px;
+  margin: 0;
   list-style: none;
   display: flex;
 }
@@ -154,13 +160,23 @@ header .breadcrumbs li {
 }
 
 header .breadcrumbs li:first-of-type {
-  padding: 0 10px;
+  padding: 0;
+}
+
+header .breadcrumbs li:first-of-type a {
+  padding: 0 12px;
+}
+
+.breadcrumbs li:not(:first-of-type)::before {
+  position: absolute;
+  left: 0;
+  content: '/';
 }
 
 /* Search */
 header.is-open .gnav-search {
   grid-area: search;
-  padding: 14px;
+  padding: 12px;
   border-bottom: 1px solid #EAEAEA;
 }
 
@@ -320,6 +336,7 @@ header.is-open .gnav-mainnav {
 
 header .gnav-navitem {
   font-size: 14px;
+  line-height: 1;
   position: relative;
 }
 
@@ -327,13 +344,13 @@ header .gnav-navitem a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 20px;
+  padding: 18px 12px;
   color: #4B4B4B;
   transition: background-color .1s ease;
 }
 
 header .gnav-navitem > a {
-  border-bottom: solid 1px #f3f3f3;
+  border-bottom: solid 1px #EAEAEA;
 }
 
 header .gnav-navitem > a:hover {
@@ -361,7 +378,7 @@ header .gnav-navitem.has-Menu > a:after {
 header .gnav-navitem.has-Menu.is-open:before {
   background: #969796;
   position: absolute;
-  width: 4px;
+  width: 2px;
   top: 0;
   bottom: 0;
   left: 0;
@@ -391,18 +408,16 @@ header .gnav-navitem-menu ul {
 }
 
 header .gnav-navitem.has-Menu.is-open > a {
-  padding: 20px 24px;
   font-weight: 700;
   position: relative;
   border-bottom: none;
-  background-color: #FAFAFA;
 }
 
 header .gnav-navitem.has-Menu.is-open > a:before {
   content: '';
   position: absolute;
-  left: 20px;
-  right: 20px;
+  left: 12px;
+  right: 12px;
   bottom: 0;
   display: block;
   border-bottom: 1px solid #D1D1D1;
@@ -453,15 +468,15 @@ nav.gnav .gnav-menu-container .gnav-promo img {
 }
 
 .gnav-navitem.large-menu .gnav-navitem-menu strong a {
-  display: unset;
-  padding: 5px 14px;
-  line-height: 16px;
+  display: inline-block;
+  padding: 0 14px;
+  line-height: 36px;
 }
 
 .gnav-navitem.large-menu h5 {
   font-size: 14px;
   color: #4B4B4B;
-  border-bottom: 1px solid #E1E1E1;
+  border-bottom: 1px solid #D1D1D1;
   margin-top: 0;
   margin-bottom: 16px;
   padding-bottom: 5px;
@@ -471,7 +486,7 @@ nav.gnav .gnav-menu-container .gnav-promo img {
 .gnav-navitem.has-Menu.is-open .gnav-navitem-menu.large-Variant:scope > div {
   display: flex;
   flex-flow: column wrap;
-  padding: 20px 20px 30px;
+  padding: 0 24px;
 }
 
 .gnav-navitem.has-Menu.is-open .gnav-navitem-menu.large-Variant {
@@ -485,22 +500,29 @@ nav.gnav .gnav-menu-container .gnav-promo img {
 }
 
 .gnav-navitem.has-Menu.is-open .gnav-navitem-menu.large-Variant > div > div > h5 {
-  margin: 6px 6px 12px 12px;
+  margin: 0;
+  padding: 18px 0;
+  line-height: 1;
+}
+
+
+.gnav-navitem.has-Menu.is-open .gnav-navitem-menu.large-Variant > div > div > p {
+  margin-top: 10px;
 }
 
 .gnav-navitem.large-menu .gnav-navitem-menu a {
-  padding: 16px 20px;
+  padding: 10px 12px;
+}
+
+.gnav-navitem.large-menu .gnav-navitem-menu li:first-child a {
+  margin-top: 10px;
 }
 
 .gnav-navitem.large-menu .link-group {
   margin-top: 10px;
 }
 
-.gnav-navitem.large-menu .link-group:first-of-type {
-  margin-top: 0;
-}
-
-.gnav-navitem.large-menu .link-group a img{
+.gnav-navitem.large-menu .link-group a img {
   width: 26px;
   margin-right: 15px;
 }
@@ -531,7 +553,120 @@ nav.gnav .gnav-menu-container .gnav-promo img {
   color: #656565;
 }
 
+.gnav-menu-container .con-button {
+  margin-left: 12px;
+}
+
 /* END MAINNAV */
+
+/* PROFILE */
+
+.gnav-profile {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  min-width: 54.25px;
+  padding: 0 12px;
+  box-sizing: border-box;
+}
+
+.gnav-profile .gnav-signin {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.gnav-profile .gnav-profile-button {
+  padding: 0 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.gnav-profile .gnav-profile-button .gnav-profile-img {
+  display: block;
+  width: 30px;
+  border-radius: 4px;
+}
+
+.gnav-profile .gnav-profile-menu {
+  display: none;
+  position: fixed;
+  right: 0;
+  top: 64px;
+  min-width: 320px;
+  background: #FFF;
+  border: 1px solid #E1E1E1;
+  border-radius: 0 0 4px 4px;
+  overflow: hidden;
+}
+
+.gnav-profile.is-Open .gnav-profile-menu {
+  display: unset;
+}
+
+.gnav-profile-header {
+  display: flex;
+  padding: 20px;
+  align-items: start;
+}
+
+.gnav-profile-header .gnav-profile-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 4px;
+}
+
+.gnav-profile-details {
+  margin-left: 16px;
+  align-self: stretch;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.gnav-profile-name {
+  font-size: 18px;
+  line-height: 1;
+  margin: 0;
+  font-weight: 700;
+  flex: 0 0 100%;
+}
+
+.gnav-profile-email {
+  color: #707070;
+  font-size: 14px;
+  line-height: 1.25;
+  margin: 0;
+  flex: 0 0 100%;
+}
+
+.gnav-profile-account {
+  margin: 0;
+  text-decoration: underline;
+  font-size: 14px;
+  align-self: flex-end;
+  flex: 0 0 100%;
+}
+
+.gnav-profile-actions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+}
+
+.gnav-profile-actions a {
+  padding: 14px 20px;
+  display: block;
+  border-top: 1px solid #E1E1E1;
+  box-sizing: border-box;
+  color: #4b4b4b;
+}
+
+.gnav-profile-menu a:hover {
+  background-color: #FAFAFA;
+}
+/* END PROFILE */
 
 @media (min-width: 1200px) {
   header .gnav-wrapper {

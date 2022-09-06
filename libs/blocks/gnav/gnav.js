@@ -212,6 +212,12 @@ class Gnav {
       menu.append(container);
     }
     this.decorateLinkGroups(menu);
+
+    const ctas = menu.querySelectorAll('strong a');
+    ctas.forEach((cta) => {
+      cta.className = 'con-button blue';
+    });
+
     navLink.addEventListener('focus', () => {
       window.addEventListener('keydown', this.toggleOnSpace);
     });
@@ -248,6 +254,7 @@ class Gnav {
         cta.target = '_blank';
       }
       cta.parentElement.classList.add('gnav-cta');
+      cta.classList.add('con-button', 'blue');
       return cta.parentElement;
     }
     return null;
