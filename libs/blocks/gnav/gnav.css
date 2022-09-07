@@ -460,11 +460,7 @@ nav.gnav .gnav-menu-container .gnav-promo img {
 .gnav-cta {
   display: flex;
   align-items: center;
-  padding: 20px;
-}
-
-.gnav-cta a {
-  width: 100%;
+  padding: 20px 12px;
 }
 
 .gnav-navitem.large-menu .gnav-navitem-menu strong a {
