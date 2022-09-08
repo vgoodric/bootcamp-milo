@@ -35,7 +35,7 @@ class Gnav {
     }
 
     // Create a scrollable region for mobile
-    const scrollWrapper = createTag('div', { class: 'scroll-wrapper' });
+    const scrollWrapper = createTag('div', { class: 'mainnav-wrapper' });
 
     const mainNav = this.decorateMainNav();
     if (mainNav) {
