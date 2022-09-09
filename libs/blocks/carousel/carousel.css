@@ -1,3 +1,4 @@
-.carousel {
-  display: none !important;
+.carousel-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
