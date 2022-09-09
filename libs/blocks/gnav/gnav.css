@@ -698,6 +698,7 @@ nav.gnav .gnav-menu-container .gnav-promo img {
   }
 
   header .mainnav-wrapper {
+    background-color: unset;
     display: grid;
     grid-area: navlist;
     grid-template-rows: unset;
@@ -709,9 +710,13 @@ nav.gnav .gnav-menu-container .gnav-promo img {
     grid-area: content;
   }
 
+  header .gnav-navitem {
+    line-height: 63px;
+  }
+
   header .gnav-navitem > a {
     border-bottom: none;
-    padding: 25px 20px;
+    padding: 0 12px;
   }
 
   .gnav-cta {
@@ -734,13 +739,20 @@ nav.gnav .gnav-menu-container .gnav-promo img {
   }
 
   .gnav-wrapper .breadcrumbs {
+    display: block;
     margin-top: 63px;
     grid-area: breadcrumbs;
     border-top: 1px solid #EAEAEA;
+    border-bottom: none;
   }
 
   .gnav-wrapper .breadcrumbs ul {
     margin: 0 auto;
+  }
+
+  header .breadcrumbs a,
+  header .breadcrumbs li {
+  line-height: 32px;
   }
 
   header button.gnav-toggle {

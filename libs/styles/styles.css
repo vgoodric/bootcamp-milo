@@ -49,6 +49,8 @@ header {
   right: 0;
   z-index: 100;
   overflow: hidden;
+  background: #FFF;
+  box-sizing: border-box;
 }
 
 header nav {
@@ -57,6 +59,10 @@ header nav {
 
 header + main {
   margin-top: 57px;
+}
+
+.breadcrumbs {
+  display: none;
 }
 
 .section .section-metadata {
@@ -226,6 +232,7 @@ div[data-failed="true"]::before {
 @media (min-width: 900px) {
   header {
     min-height: 64px;
+    border-bottom: 1px solid #EAEAEA;
   }
 
   header.has-breadcrumbs {
