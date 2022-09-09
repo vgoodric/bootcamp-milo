@@ -1,14 +1,3 @@
-function checkIfExists(name) {
-  $(document).ready(function(){
-  if ($(name).length) {
-    return true;
-  } else {
-    return false;
-  }
-});
-}
-
-
 function seaQaTool() {
   fetch(window.location.href).then(response => {
     if (response.status === 200) {
@@ -17,12 +6,6 @@ function seaQaTool() {
       alert("Invalid status code");
     }
   });
-  var hi = checkIfExists("h1")
-  if (hi) {
-    console.log("yes")
-  } else {
-    console.log("no")
-  }
 }
 
 
