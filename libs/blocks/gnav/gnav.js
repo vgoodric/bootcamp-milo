@@ -392,12 +392,12 @@ class Gnav {
 
   closeMenu = () => {
     this.state.openMenu.classList.remove(IS_OPEN);
+    this.curtain.classList.remove('is-open');
     document.removeEventListener('click', this.closeOnDocClick);
     window.removeEventListener('keydown', this.closeOnEscape);
     const menuToggle = this.state.openMenu.querySelector('[aria-expanded]');
     menuToggle.setAttribute('aria-expanded', false);
     this.state.openMenu = null;
-    // document.body.style.overflow = '';
   };
 
   openMenu = (el, isSearch) => {
@@ -409,13 +409,12 @@ class Gnav {
     document.addEventListener('click', this.closeOnDocClick);
     window.addEventListener('keydown', this.closeOnEscape);
     if (!isSearch) {
-      const desktop = window.matchMedia('(min-width: 1200px)');
+      const desktop = window.matchMedia('(min-width: 900px)');
       if (desktop.matches) {
         document.addEventListener('scroll', this.closeOnScroll, { passive: true });
       }
     } else {
-      this.el.classList.add(IS_OPEN);
-      document.body.style.overflow = 'hidden';
+      this.curtain.classList.add('is-open');
       el.querySelector('.gnav-search-input').focus();
     }
     this.state.openMenu = el;
@@ -445,6 +444,9 @@ class Gnav {
     const isCurtain = e.target === this.curtain;
     if ((this.state.openMenu && !closest) || isCurtain) {
       this.toggleMenu(this.state.openMenu);
+    }
+    if (isCurtain) {
+      this.curtain.classList.remove('is-open');
     }
   };
 
