@@ -164,7 +164,7 @@ class Gnav {
       if (navBlock) {
         navItem.classList.add('large-menu');
         if (navBlock.classList.contains('section')) {
-          navItem.classList.add('section');
+          navItem.classList.add('section-menu');
         }
         this.decorateLargeMenu(navLink, navItem, menu);
       }
@@ -183,16 +183,17 @@ class Gnav {
     const linkGroups = menu.querySelectorAll('.link-group');
     linkGroups.forEach((linkGroup) => {
       const image = linkGroup.querySelector('picture');
-      const anchor = linkGroup.querySelector('p a');
-      const title = anchor.textContent;
-      const subtitle = linkGroup.querySelector('p:last-of-type');
+      const anchor = linkGroup.querySelector('a');
+      const title = anchor?.textContent;
+      const subtitle = linkGroup.querySelector('p:last-of-type') || '';
       const titleWrapper = createTag('div');
+      titleWrapper.className = 'link-group-title';
       anchor.href = makeRelative(anchor.href, true);
       const link = createTag('a', { class: 'link-block', href: anchor.href });
 
       linkGroup.replaceChildren();
       titleWrapper.append(title, subtitle);
-      const contents = !image ? [titleWrapper] : [image, titleWrapper];
+      const contents = image ? [image, titleWrapper] : [titleWrapper];
       link.append(...contents);
       linkGroup.appendChild(link);
     });
@@ -241,6 +242,13 @@ class Gnav {
         const text = await resp.text();
         menu.insertAdjacentHTML('beforeend', text);
         const decoratedMenu = this.decorateMenu(navItem, navLink, menu);
+        const menuSections = decoratedMenu.querySelectorAll('.gnav-menu-container > div');
+        menuSections.forEach((sec) => { sec.classList.add('section'); });
+        const sectionMetas = decoratedMenu.querySelectorAll('.section-metadata');
+        sectionMetas.forEach(async (meta) => {
+          const { default: sectionMetadata } = await import('../section-metadata/section-metadata.js');
+          sectionMetadata(meta);
+        });
         navItem.appendChild(decoratedMenu);
       }
     });

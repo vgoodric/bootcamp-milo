@@ -483,30 +483,30 @@ nav.gnav .gnav-menu-container .gnav-promo img {
 }
 
 .gnav-navitem.has-Menu.is-open .gnav-menu-container,
-.gnav-navitem.has-Menu.is-open .gnav-navitem-menu.large-Variant:scope > div {
+.gnav-navitem.has-Menu.is-open .gnav-navitem-menu:scope > div {
   display: flex;
   flex-flow: column wrap;
   padding: 0 24px;
 }
 
-.gnav-navitem.has-Menu.is-open .gnav-navitem-menu.large-Variant {
+.gnav-navitem.has-Menu.is-open .gnav-navitem-menu {
   padding-top: 0;
   left: 0;
   right: 0;
 }
 
-.gnav-navitem.has-Menu.is-open .gnav-navitem-menu.large-Variant > div > div > ul {
+.gnav-navitem.has-Menu.is-open .gnav-navitem-menu > div > div > ul {
   margin: 0;
 }
 
-.gnav-navitem.has-Menu.is-open .gnav-navitem-menu.large-Variant > div > div > h5 {
+.gnav-navitem.has-Menu.is-open .gnav-navitem-menu > div > div > h5 {
   margin: 0;
   padding: 18px 0;
   line-height: 1;
 }
 
 
-.gnav-navitem.has-Menu.is-open .gnav-navitem-menu.large-Variant > div > div > p {
+.gnav-navitem.has-Menu.is-open .gnav-navitem-menu > div > div > p {
   margin-top: 10px;
 }
 
@@ -553,6 +553,10 @@ nav.gnav .gnav-menu-container .gnav-promo img {
   color: #656565;
 }
 
+.last-link-blue ul li:last-of-type a {
+  color: #1473E6;
+}
+
 .gnav-menu-container .con-button {
   margin-left: 12px;
 }
@@ -574,6 +578,7 @@ nav.gnav .gnav-menu-container .gnav-promo img {
   display: flex;
   align-items: center;
   font-size: 14px;
+  padding-bottom: 2px;
 }
 
 .gnav-profile .gnav-profile-button {
@@ -668,12 +673,13 @@ nav.gnav .gnav-menu-container .gnav-promo img {
 }
 
 /* END PROFILE */
+
 @media (min-width: 900px) {
   header .gnav-wrapper {
     height: unset;
     grid-template-areas: 'main'
                          'breadcrumbs';
-    overflow-x: scroll;
+    /* overflow-x: scroll; TODO: Fix overflow when window small */
     background: #FFF;
   }
 
@@ -718,9 +724,58 @@ nav.gnav .gnav-menu-container .gnav-promo img {
     display: flex;
   }
 
+  header .gnav-navitem.has-Menu.is-open:before {
+    display: none;
+  }
+
+  header .gnav-navitem.section-menu {
+    border-left: 1px solid #EBEBEB;
+    border-right: 1px solid #EBEBEB;
+  }
+
   header .gnav-navitem > a {
     border-bottom: none;
     padding: 0 12px;
+  }
+
+  header .gnav-navitem.section-menu > a {
+    padding: 20px;
+  }
+
+  header .gnav-navitem.has-Menu.is-open > a {
+    font-weight: unset;
+  }
+
+  .gnav-navitem.has-Menu.is-open .gnav-navitem-menu > div > div > h5 {
+    margin: 0 12px;
+  }
+
+  header .gnav-navitem.section-menu + .gnav-navitem > a {
+    padding-left: 20px;
+  }
+
+  header .gnav-navitem.has-Menu.is-open > a:before {
+    display: none;
+  }
+
+  .gnav-navitem.has-Menu.is-open .gnav-navitem-menu {
+    position: fixed;
+    margin-top: 64px;
+    padding: 0;
+  }
+
+  .gnav-navitem.has-Menu.is-open .gnav-menu-container,
+  .gnav-navitem.has-Menu.is-open .gnav-navitem-menu.large-Variant:scope > div {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      padding: 40px 20px 60px;
+      width: 1200px;
+      margin: 0 auto;
+  }
+
+  .gnav-navitem.large-menu .link-group:first-child {
+    margin-top: 6px;
   }
 
   .gnav-cta {
@@ -740,6 +795,7 @@ nav.gnav .gnav-menu-container .gnav-promo img {
 
   header .gnav-search button.gnav-search-button {
     display: flex;
+    padding: 0;
   }
 
   .gnav-wrapper .breadcrumbs {
