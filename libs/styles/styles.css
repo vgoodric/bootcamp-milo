@@ -233,6 +233,7 @@ div[data-failed="true"]::before {
   header {
     min-height: 64px;
     border-bottom: 1px solid #EAEAEA;
+    overflow: unset;
   }
 
   header.has-breadcrumbs {

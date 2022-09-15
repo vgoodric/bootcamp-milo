@@ -439,11 +439,12 @@ header .gnav-navitem-menu a:hover {
 
 .gnav .gnav-promo {
   padding: 40px 0;
+  padding: 28px;
+  background: #FFF;
 }
 
-nav.gnav .gnav-navitem.has-Menu.is-open div.gnav-promo > div {
-  padding: 28px;
-  background-color: #fff;
+.gnav .gnav-promo.image-only {
+  background: unset;
 }
 
 .gnav-navitem.large-menu .gnav-navitem-menu .gnav-promo a {
@@ -548,8 +549,9 @@ nav.gnav .gnav-menu-container .gnav-promo img {
 }
 
 .gnav-navitem.large-menu .link-group .link-block  p:last-of-type {
-  font-size: 13px;
-  font-weight: 300;
+  -webkit-font-smoothing: auto;
+  font-size: 12px;
+  font-weight: 400;
   color: #656565;
 }
 
@@ -733,6 +735,13 @@ nav.gnav .gnav-menu-container .gnav-promo img {
     border-right: 1px solid #EBEBEB;
   }
 
+  header .gnav-navitem.has-Menu.is-open .gnav-navitem-menu.small-Variant,
+  header .gnav-navitem.has-Menu.is-open .gnav-navitem-menu.medium-Variant {
+    position: absolute;
+    display: flex;
+    right: unset;
+  }
+
   header .gnav-navitem > a {
     border-bottom: none;
     padding: 0 12px;
@@ -748,6 +757,7 @@ nav.gnav .gnav-menu-container .gnav-promo img {
 
   .gnav-navitem.has-Menu.is-open .gnav-navitem-menu > div > div > h5 {
     margin: 0 12px;
+    padding: 18px 0 6px 0;
   }
 
   header .gnav-navitem.section-menu + .gnav-navitem > a {
@@ -776,6 +786,14 @@ nav.gnav .gnav-menu-container .gnav-promo img {
 
   .gnav-navitem.large-menu .link-group:first-child {
     margin-top: 6px;
+  }
+
+  .gnav-navitem.large-menu h5 + .link-group {
+    margin-top: 6px;
+  }
+
+  .gnav-navitem.large-menu .link-group {
+      margin-top: 0;
   }
 
   .gnav-cta {
