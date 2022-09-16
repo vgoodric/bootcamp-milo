@@ -637,7 +637,7 @@ nav.gnav .gnav-navitem-menu .gnav-promo.card img {
   display: none;
   position: fixed;
   right: 0;
-  top: 64px;
+  top: 56px;
   min-width: 320px;
   background: #FFF;
   border: 1px solid #E1E1E1;
@@ -645,7 +645,7 @@ nav.gnav .gnav-navitem-menu .gnav-promo.card img {
   overflow: hidden;
 }
 
-.gnav-profile.is-Open .gnav-profile-menu {
+.gnav-profile.is-open .gnav-profile-menu {
   display: unset;
 }
 
@@ -936,6 +936,15 @@ nav.gnav .gnav-navitem-menu .gnav-promo.card img {
 
   .gnav-search-results .article-card:first-of-type {
     margin-top: unset;
+  }
+
+  .gnav-profile {
+    padding: 0 8px;
+  }
+
+  .gnav-profile .gnav-profile-menu {
+    position: absolute;
+    top: 100%;
   }
 }
 
