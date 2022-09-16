@@ -42,12 +42,20 @@ header nav.gnav {
   display: grid;
   grid-template-areas:
     'header     header'
-    'breadcrumb gutter'
+    'scroll gutter'
     'scroll     gutter';
   grid-template-columns: 1fr 12px;
   grid-template-rows: 56px 36px;
   position: absolute;
   inset: 0;
+}
+
+header.has-breadcrumbs nav.gnav {
+  
+  grid-template-areas:
+    'header     header'
+    'breadcrumb gutter'
+    'scroll     gutter';
 }
 
 header nav.gnav a:hover {
