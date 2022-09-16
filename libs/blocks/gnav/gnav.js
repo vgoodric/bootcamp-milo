@@ -401,6 +401,7 @@ class Gnav {
   closeMenu = () => {
     this.state.openMenu.classList.remove(IS_OPEN);
     this.curtain.classList.remove('is-open');
+    this.curtain.classList.remove('is-quiet');
     document.removeEventListener('click', this.closeOnDocClick);
     window.removeEventListener('keydown', this.closeOnEscape);
     const menuToggle = this.state.openMenu.querySelector('[aria-expanded]');
@@ -420,6 +421,9 @@ class Gnav {
       const desktop = window.matchMedia('(min-width: 900px)');
       if (desktop.matches) {
         document.addEventListener('scroll', this.closeOnScroll, { passive: true });
+        if (el.classList.contains('large-menu')) {
+          this.curtain.classList.add('is-open', 'is-quiet');
+        }
       }
     } else {
       this.curtain.classList.add('is-open');
