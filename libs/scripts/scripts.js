@@ -21,6 +21,7 @@ const locales = {
   de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
   cn: { ietf: 'zh-CN', tk: 'tav4wnu' },
   kr: { ietf: 'ko-KR', tk: 'zfo3ouc' },
+  ae_ar: { ietf: 'ar-AE', tk: 'nwq1mna.css', dir: 'rtl' },
 };
 const config = {
   imsClientId: 'milo',
