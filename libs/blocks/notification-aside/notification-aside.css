@@ -1,0 +1,95 @@
+.notification-aside {
+  display: block;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.notification-aside .action-area {
+  margin-bottom: 0;
+}
+
+.notification-aside .foreground.container,
+.notification-aside .foreground.container {
+  padding: var(--spacing-m) 0;
+}
+
+.notification-aside.small {
+  text-align: left;
+}
+
+.notification-aside.xsmall .foreground.container {
+  padding: var(--spacing-xxs) 0;
+}
+
+.notification-aside .foreground.container .text .body a {
+  color: inherit;
+  text-decoration: underline;
+  font-weight: normal;
+}
+
+.notification-aside.xsmall .foreground.container .text p {
+  display: inline;
+  margin-bottom: 0;
+}
+
+.notification-aside .foreground.container .text p.strong,
+.notification-aside .foreground.container .text p.strong {
+  font-weight: bold;
+}
+
+.notification-aside.small .foreground.container .image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 var(--spacing-xs);
+  height: 40px;
+  width: 40px;
+}
+
+.notification-aside.small .foreground.container .image img {
+  align-self: center;
+  vertical-align: middle;
+}
+
+@media screen and (min-width: 600px) {
+  .notification-aside.small .foreground.container .text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .notification-aside.small .foreground.container .text .image,
+  .notification-aside.small .foreground.container .text .action-area {
+    margin: 0;
+  }
+
+  .notification-aside.small .foreground.container .text .image {
+    height: 60px;
+    width: 60px;
+  }
+
+  .notification-aside.small .foreground.container .text .action-area {
+    min-width: 150px;
+    text-align: right;
+  }
+
+  .notification-aside.xsmall .foreground.container .text a.cta {
+    margin-left: var(--spacing-xs);
+    font-weight: bold;
+    text-decoration: underline;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .notification-aside.large .foreground.container {
+    padding: var(--spacing-xl) 0;
+  }
+
+  .notification-aside.xsmall {
+    text-align: left;
+  }
+}
+
