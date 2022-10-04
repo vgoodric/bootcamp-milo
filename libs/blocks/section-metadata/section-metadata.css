@@ -72,9 +72,7 @@
   border-bottom: 1px solid #d8d8d8;
 }
 
-.section.two-up .grid,
-.section.three-up .grid,
-.section.four-up .grid {
+.section .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(276px, 1fr));
 }
@@ -91,6 +89,10 @@
 
   .section.four-up .grid {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  .section.five-up .grid {
+    grid-template-columns: repeat(5, 1fr);
   }
 
 }

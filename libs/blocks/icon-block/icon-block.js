@@ -14,43 +14,48 @@
 * Icon Block - v5.1
 */
 
-import { decorateBlockBg, decorateButtons } from '../../utils/decorate.js';
+import { decorateButtons } from '../../utils/decorate.js';
 
 function decorateLayout(el) {
-  const children = el.querySelectorAll(':scope > div');
-  if (children.length > 1 && children[0].childNodes.length) {
-    decorateBlockBg(el, children[0]);
-  }
   const foreground = document.createElement('div');
   foreground.classList.add('foreground', 'container', 'grid');
   el.appendChild(foreground);
   return foreground;
 }
 
-function decorateContent(row, isVertical) {
+function decorateContent(row, isVerticle, isCentered) {
   if (!row) return;
-  const text = row.querySelector('h1, h2, h3, h4, h5, h6')?.closest('div');
+  const text = row.querySelector('h1, h2, h3, h4, h5, h6, p')?.closest('div');
   if (text) {
     text?.classList.add('text');
     const headings = text?.querySelectorAll('h1, h2, h3, h4, h5, h6');
     const heading = headings?.[headings.length - 1];
-    heading?.classList.add(isVertical ? 'heading-S' : 'heading-XL');
+    let headingSize = 'heading-XL';
+    if (isVerticle) headingSize = 'heading-S';
+    else if (isCentered) headingSize = 'heading-M';
+    heading?.classList.add(headingSize);
     heading?.nextElementSibling?.classList.add('body-M');
     heading?.previousElementSibling?.classList.add('icon-area');
-    decorateButtons(row);
-  } else {
-    row.classList.add('text');
     const image = row.querySelector(':scope img');
     image?.parentElement?.parentElement?.classList?.add('icon-area');
+    decorateButtons(row);
+    extendButtonsClass(text)
   }
+}
+
+function extendButtonsClass(text) {
+  const buttons = text.querySelectorAll('.con-button');
+  if (buttons.length === 0) return;
+  buttons.forEach((button) => { button.classList.add('white') });
 }
 
 export default function init(el) {
   const foreground = decorateLayout(el);
   const rows = el.querySelectorAll(':scope > div:not([class])');
-  const isVertical = el.classList.contains('vertical');
+  const isVerticle = el.classList.contains('vertical');
+  const isCentered = el.classList.contains('centered');
   [...rows].forEach(row => {
-    decorateContent(row, isVertical);
+    decorateContent(row, isVerticle, isCentered);
     foreground.insertAdjacentElement('beforeEnd', row.children[0]);
     row.remove();
   });

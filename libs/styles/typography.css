@@ -133,6 +133,18 @@
   color: #000;
 }
 
+.con-button.white {
+  border: 2px solid #fff;
+  background-color: #fff;
+  color: var(--text-color);
+}
+
+.con-button.white:hover {
+  border: 2px solid #fff;
+  background-color: #fff;
+  color: #000;
+}
+
 /* mobile only */
 @media (max-width: 600px) {
   .con-button.button-justified-mobile {
