@@ -75,38 +75,38 @@ function extendButtonsClass(text) {
 }
 
 export default function init(el) {
-  decorateBlockAnalytics(el);
-  const isLight = el.classList.contains('light');
-  if (!isLight) el.classList.add('dark');
-  const children = el.querySelectorAll(':scope > div');
-  const foreground = children[children.length - 1];
-  if (children.length > 1) {
-    children[0].classList.add('background');
-    decorateBlockBg(el, children[0]);
-  }
-  foreground.classList.add('foreground', 'container');
-  const headline = foreground.querySelector('h1, h2, h3, h4, h5, h6');
-  const text = headline.closest('div');
-  text.classList.add('text');
-  const media = foreground.querySelector(':scope > div:not([class])');
-  media?.classList.add('media');
+  // decorateBlockAnalytics(el);
+  // const isLight = el.classList.contains('light');
+  // if (!isLight) el.classList.add('dark');
+  // const children = el.querySelectorAll(':scope > div');
+  // const foreground = children[children.length - 1];
+  // if (children.length > 1) {
+  //   children[0].classList.add('background');
+  //   decorateBlockBg(el, children[0]);
+  // }
+  // foreground.classList.add('foreground', 'container');
+  // const headline = foreground.querySelector('h1, h2, h3, h4, h5, h6');
+  // const text = headline.closest('div');
+  // text.classList.add('text');
+  // const media = foreground.querySelector(':scope > div:not([class])');
+  // media?.classList.add('media');
 
-  if (media?.querySelector('a[href$=".mp4"]')) {
-    decorateVideo(media);
-  } else {
-    media?.classList.add('image');
-  }
+  // if (media?.querySelector('a[href$=".mp4"]')) {
+  //   decorateVideo(media);
+  // } else {
+  //   media?.classList.add('image');
+  // }
 
-  const size = getBlockSize(el);
-  decorateButtons(text, size === 'large' ? 'button-XL' : 'button-L');
-  const headings = text.querySelectorAll('h1, h2, h3, h4, h5, h6');
-  decorateLinkAnalytics(text, headings);
-  decorateText(text, size);
-  extendButtonsClass(text);
-  if (el.classList.contains('split')) {
-    if (foreground && media) {
-      media.classList.add('bleed');
-      foreground.insertAdjacentElement('beforebegin', media);
-    }
+  // const size = getBlockSize(el);
+  // decorateButtons(text, size === 'large' ? 'button-XL' : 'button-L');
+  // const headings = text.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  // decorateLinkAnalytics(text, headings);
+  // decorateText(text, size);
+  // extendButtonsClass(text);
+  // if (el.classList.contains('split')) {
+  //   if (foreground && media) {
+  //     media.classList.add('bleed');
+  //     foreground.insertAdjacentElement('beforebegin', media);
+  //   }
   }
 }
