@@ -175,7 +175,7 @@
   line-height: 21px;
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 600px) and (max-width: 1200px) {
   .icon-block .foreground.container .icon-area {
     max-width: 234px;
   }
@@ -232,6 +232,10 @@
 
   .two-up .icon-block.vertical .foreground.container {
     max-width: 1000px;
+  }
+
+  .section.five-up .grid {
+    grid-template-columns: repeat(5, 1fr);
   }
 
   .five-up .icon-block .foreground.container .text {
