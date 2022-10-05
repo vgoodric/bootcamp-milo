@@ -99,7 +99,11 @@
   grid-template-columns: repeat(2, 1fr);
 }
 
-.five-up .icon-block .foreground.container {
+.icon-block .foreground.container.grid {
+  gap: var(--spacing-m);
+}
+
+.five-up .icon-block .foreground.container.grid {
   gap: var(--spacing-xs);
 }
 
