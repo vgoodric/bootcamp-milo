@@ -103,11 +103,11 @@
   gap: var(--spacing-xs);
 }
 
-.five-up .icon-block .foreground.container .icon-area {
+.five-up .icon-block .foreground.container.grid .icon-area {
   height: 44px;
 }
 
-.five-up .icon-block .foreground.container .icon-area img {
+.five-up .icon-block .foreground.container.grid .icon-area img {
   height: 44px;
 }
 
@@ -192,7 +192,7 @@
     padding-right: 53%;
   }
 
-  .five-up .icon-block .foreground.container .icon-area {
+  .five-up .icon-block .foreground.container.grid .icon-area {
     text-align: center;
   }
 }
