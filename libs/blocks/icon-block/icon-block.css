@@ -121,6 +121,7 @@
 
 .icon-block .foreground.container .text .heading-XL,
 .icon-block .foreground.container .text .heading-L,
+.icon-block .foreground.container .text .heading-M,
 .icon-block .foreground.container .text .heading-S {
   margin: var(--spacing-xs) 0;
 }

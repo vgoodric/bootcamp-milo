@@ -19,9 +19,9 @@ import { decorateButtons } from '../../utils/decorate.js';
 const iconBlockVariants = {
   fullwidth: ['XL', 'M'],
   small: ['L', 'M'],
+  bio: ['S', 'S'],
   vertical: ['S', 'M'],
-  centered: ['M', 'M'],
-  bio: ['S', 'S']
+  centered: ['M', 'M']
 }
 
 function decorateLayout(el) {
@@ -47,8 +47,14 @@ function decorateContent(row, sizes) {
   }
 }
 
+function sortedVariants(x, y) {
+  const priority = ['bio', 'small'];
+  return priority.includes(x) ? -1 : priority.includes(y) ? 1 : 0;
+}
+
 function getBlockVariant(el) {
-  return [...el.classList].filter(i => Object.keys(iconBlockVariants).indexOf(i) > -1)?.[0] ?? 'fullwidth';
+  const variantList = [...el.classList].filter(i => Object.keys(iconBlockVariants).indexOf(i) > -1).sort(sortedVariants);
+  return variantList?.[0] ?? 'fullwidth';
 }
 
 export default function init(el) {
