@@ -16,47 +16,48 @@
 
 import { decorateButtons } from '../../utils/decorate.js';
 
+const iconBlockVariants = {
+  fullwidth: ['XL', 'M'],
+  small: ['L', 'M'],
+  vertical: ['S', 'M'],
+  centered: ['M', 'M'],
+  bio: ['S', 'S']
+}
+
 function decorateLayout(el) {
   const foreground = document.createElement('div');
-  foreground.classList.add('foreground', 'container', 'grid');
+  foreground.classList.add('foreground', 'container');
   el.appendChild(foreground);
   return foreground;
 }
 
-function decorateContent(row, isVerticle, isCentered) {
+function decorateContent(row, sizes) {
   if (!row) return;
   const text = row.querySelector('h1, h2, h3, h4, h5, h6, p')?.closest('div');
   if (text) {
     text?.classList.add('text');
     const headings = text?.querySelectorAll('h1, h2, h3, h4, h5, h6');
     const heading = headings?.[headings.length - 1];
-    let headingSize = 'heading-XL';
-    if (isVerticle) headingSize = 'heading-S';
-    else if (isCentered) headingSize = 'heading-M';
-    heading?.classList.add(headingSize);
-    heading?.nextElementSibling?.classList.add('body-M');
+    heading?.classList.add(`heading-${sizes[0]}`);
+    heading?.nextElementSibling?.classList.add(`body-${sizes[1]}`);
     heading?.previousElementSibling?.classList.add('icon-area');
     const image = row.querySelector(':scope img');
     image?.parentElement?.parentElement?.classList?.add('icon-area');
     decorateButtons(row);
-    extendButtonsClass(text)
   }
 }
 
-function extendButtonsClass(text) {
-  const buttons = text.querySelectorAll('.con-button');
-  if (buttons.length === 0) return;
-  buttons.forEach((button) => { button.classList.add('white') });
+function getBlockVariant(el) {
+  return [...el.classList].filter(i => Object.keys(iconBlockVariants).indexOf(i) > -1)?.[0] ?? 'fullwidth';
 }
 
 export default function init(el) {
   const foreground = decorateLayout(el);
   const rows = el.querySelectorAll(':scope > div:not([class])');
-  const isVerticle = el.classList.contains('vertical');
-  const isCentered = el.classList.contains('centered');
   [...rows].forEach(row => {
-    decorateContent(row, isVerticle, isCentered);
+    decorateContent(row, iconBlockVariants[getBlockVariant(el)]);
     foreground.insertAdjacentElement('beforeEnd', row.children[0]);
     row.remove();
   });
+  if (foreground.childElementCount > 1) foreground.classList.add('grid');
 }

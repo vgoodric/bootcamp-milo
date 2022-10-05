@@ -34,9 +34,33 @@
 }
 
 .icon-block .foreground.container {
-  padding-top: var(--spacing-xxxl);
+  padding: var(--spacing-xxxl) 0;
   position: relative;
   text-align: center;
+}
+
+.icon-block.xl-spacing .foreground.container {
+  padding: var(--spacing-xl) 0;
+}
+
+.icon-block.l-spacing .foreground.container {
+  padding: var(--spacing-l) 0;
+}
+
+.icon-block.m-spacing .foreground.container {
+  padding: var(--spacing-m) 0;
+}
+
+.icon-block.s-spacing .foreground.container {
+  padding: var(--spacing-s) 0;
+}
+
+.icon-block.xs-spacing .foreground.container {
+  padding: var(--spacing-xs) 0;
+}
+
+.icon-block.no-spacing .foreground.container {
+  padding: 0;
 }
 
 .icon-block .foreground.container .text {
@@ -44,7 +68,6 @@
   flex-wrap: wrap;
   align-content: center;
   width: 100%;
-  margin-bottom: var(--spacing-xxxl);
 }
 
 .icon-block .foreground.container .icon-area {
@@ -57,6 +80,19 @@
 .icon-block .foreground.container .icon-area img {
   height: 80px;
   width: auto;
+}
+
+.icon-block.bio .foreground.container .icon-area {
+  margin: 0 auto;
+  width: 80px;
+  height: 80px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.icon-block.bio .foreground.container .icon-area img {
+  object-fit: cover;
 }
 
 .section.five-up .grid {
@@ -80,6 +116,7 @@
 }
 
 .icon-block .foreground.container .text .heading-XL,
+.icon-block .foreground.container .text .heading-L,
 .icon-block .foreground.container .text .heading-S {
   margin: var(--spacing-xs) 0;
 }
@@ -110,11 +147,7 @@
   margin-bottom: var(--spacing-s);
 }
 
-.icon-block.vertical .foreground.container .text {
-  margin-bottom: var(--spacing-xxl);
-}
-
-.section.five-up .foreground.container .text {
+.section.five-up .foreground.container .grid .text {
   text-align: left;
   margin-bottom: var(--spacing-xs);
   padding-bottom: var(--spacing-xs);
@@ -173,8 +206,13 @@
     margin: 0 auto;
   }
 
+  .icon-block.bio .foreground.container,
   .icon-block:not(.vertical) .foreground.container {
     max-width: 800px;
+  }
+
+  .two-up .icon-block.centered .foreground.container {
+    max-width: 1000px;
   }
 
   .icon-block .foreground.container .icon-area {

@@ -52,7 +52,7 @@ export function decorateBlockBg(block, node) {
       node.children[0].classList.add(viewports[0], viewports[1]);
       node.children[1].classList.add(viewports[2]);
     } else {
-      [...node.children].forEach( (e, i) => {
+      [...node.children].forEach((e, i) => {
         e.classList.add(viewports[i]);
       });
     }
@@ -63,7 +63,6 @@ export function decorateBlockBg(block, node) {
   }
 }
 
-export function getBlockSize(el) {
-  const sizes = ['small', 'medium', 'large'];
-  return sizes.find((size) => el.classList.contains(size)) || sizes[1]; /* medium default */
+export function getBlockSize(el, sizes = ['small', 'medium', 'large', 'xlarge'], def = 1) {
+  return sizes.find((size) => el.classList.contains(size)) || sizes[def];
 }
