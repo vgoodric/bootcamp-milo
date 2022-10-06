@@ -17,12 +17,6 @@
       "url": "/tools/tagger/index.html"
     },
     {
-      "id": "send-to-caas",
-      "title": "Send to CaaS",
-      "environments": [ "dev", "preview", "live", "prod" ],
-      "event": "sk:send-to-caas"
-    },
-    {
       "id": "tools",
       "title": "Tools",
       "isContainer": true,
@@ -30,6 +24,7 @@
     },
     {
       "id": "send-to-caas-2",
+      "containerId": "tools",
       "title": "Send to CaaS",
       "environments": [ "dev", "preview", "live", "prod" ],
       "event": "sk:send-to-caas"
