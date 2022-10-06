@@ -11,16 +11,17 @@
   ],
   "plugins": [
     {
-      "id": "tagger",
-      "title": "Tagger",
+      "id": "translate",
+      "title": "Translate",
       "environments": [ "edit" ],
-      "url": "/tools/tagger/index.html"
+      "url": "/tools/translation/index.html",
+      "include_paths": [ "**.xlsx**" ]
     },
     {
       "id": "tools",
       "title": "Tools",
       "isContainer": true,
-      "environments": [ "dev", "preview", "live", "prod" ]
+      "environments": [ "edit", "dev", "preview", "live", "prod" ]
     },
     {
       "id": "send-to-caas-2",
