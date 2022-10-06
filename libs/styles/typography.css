@@ -133,6 +133,35 @@
   color: #000;
 }
 
+.con-button.fill {
+  color: var(--color-white);
+  background: var(--text-color);
+  border: 2px solid var(--text-color);
+}
+
+.con-button.fill:hover,
+.con-button.fill:active {
+  background: var(--color-black);
+  border-color: var(--color-black);
+}
+
+.dark .con-button.fill {
+  color: var(--text-color);
+  background: var(--color-white);
+  border-color: var(--color-white);
+}
+
+.dark .con-button.fill:hover,
+.dark .con-button.fill:active {
+  color: var(--color-black);
+  background: var(--color-white);
+  border-color: var(--color-white);
+}
+
+.con-button.fill:hover {
+  text-decoration: none;
+}
+
 /* mobile only */
 @media (max-width: 600px) {
   .con-button.button-justified-mobile {

@@ -5,15 +5,22 @@ export function decorateButtons(el, size) {
   if (buttons.length === 0) return;
   buttons.forEach((button) => {
     const parent = button.parentElement;
-    const buttonType = parent.nodeName === 'STRONG' ? 'blue' : 'outline';
+    let buttonType = parent.nodeName === 'STRONG' ? 'blue' : 'outline';
+
+    // if parent == outline and first child is strong
+    if (buttonType === 'outline' && button.firstChild.nodeName === 'STRONG') {
+      buttonType = 'fill';
+      button.innerText = button.children[0].innerText;
+    }
+
     button.classList.add('con-button', buttonType);
     if (size) button.classList.add(size); /* button-L, button-XL */
     parent.insertAdjacentElement('afterend', button);
-    parent.remove();
   });
   const actionArea = buttons[0].closest('p');
   actionArea.classList.add('action-area');
   actionArea.nextElementSibling?.classList.add('supplemental-text', 'body-XL');
+  actionArea.querySelectorAll('em, strong')?.forEach(elem => elem.remove());
 }
 
 export function decorateIcons(el) {
