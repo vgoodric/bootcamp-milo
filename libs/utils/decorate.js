@@ -6,15 +6,12 @@ export function decorateButtons(el, size) {
   buttons.forEach((button) => {
     const parent = button.parentElement;
     let buttonType = parent.nodeName === 'STRONG' ? 'blue' : 'outline';
-
-    // if parent == outline and first child is strong
     if (buttonType === 'outline' && button.firstChild.nodeName === 'STRONG') {
       buttonType = 'fill';
-      button.innerText = button.children[0].innerText;
+      button.innerHTML = button.children[0].innerHTML;
     }
-
     button.classList.add('con-button', buttonType);
-    if (size) button.classList.add(size); /* button-L, button-XL */
+    if (size) button.classList.add(size);
     parent.insertAdjacentElement('afterend', button);
   });
   const actionArea = buttons[0].closest('p');
