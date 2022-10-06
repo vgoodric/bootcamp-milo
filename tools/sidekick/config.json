@@ -19,20 +19,19 @@
     {
       "id": "send-to-caas",
       "title": "Send to CaaS",
-      "environments": [ "dev", "preview", "publish" ],
+      "environments": [ "dev", "preview", "live", "prod" ],
       "event": "sk:send-to-caas"
     },
     {
       "id": "tools",
       "title": "Tools",
       "isContainer": true,
-      "environments": [ "dev", "preview", "publish" ]
+      "environments": [ "dev", "preview", "live", "prod" ]
     },
     {
-      "id": "send-to-caas",
+      "id": "send-to-caas-2",
       "title": "Send to CaaS",
-      "environments": [ "dev", "preview" ],
-      "containerId": "tools",
+      "environments": [ "dev", "preview", "live", "prod" ],
       "event": "sk:send-to-caas"
     },
     {
