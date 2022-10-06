@@ -1,6 +1,8 @@
 {
   "project": "Milo",
+  "outerHost": "main--milo--adobecom.hlx.live",
   "host": "milo.adobe.com",
+  "byocdn": true,
   "libraries": [
     {
       "text": "Blocks",
@@ -15,15 +17,21 @@
       "url": "/tools/tagger/index.html"
     },
     {
+      "id": "send-to-caas",
+      "title": "Send to CaaS",
+      "environments": [ "dev", "preview", "publish" ],
+      "event": "sk:send-to-caas"
+    },
+    {
       "id": "tools",
       "title": "Tools",
       "isContainer": true,
-      "environments": [ "dev", "preview" ]
+      "environments": [ "dev", "preview", "publish" ]
     },
     {
       "id": "send-to-caas",
       "title": "Send to CaaS",
-      "environments": [ "preview" ],
+      "environments": [ "dev", "preview" ],
       "containerId": "tools",
       "event": "sk:send-to-caas"
     },
@@ -53,10 +61,6 @@
       "event": "update-feed",
       "excludePaths": [ "/**" ],
       "includePaths": [ "/", "/jp/", "/jp/topics/**" ]
-    },
-    {
-      "id": "publish",
-      "excludePaths": [ "**/drafts/**" ]
     }
   ]
 }
