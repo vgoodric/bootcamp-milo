@@ -1,6 +1,12 @@
 {
   "project": "Milo",
   "host": "milo.adobe.com",
+  "libraries": [
+    {
+      "text": "Blocks",
+      "paths": ["https://main--milo--adobecom.hlx.page/docs/library/blocks.json"]
+    }
+  ],
   "plugins": [
     {
       "id": "tagger",
@@ -15,13 +21,11 @@
       "environments": [ "dev", "preview" ]
     },
     {
-      "id": "card-preview",
-      "title": "Card Preview",
-      "environments": [ "dev", "preview" ],
+      "id": "send-to-caas",
+      "title": "Send to CaaS",
+      "environments": [ "preview" ],
       "containerId": "tools",
-      "event": "card-preview",
-      "excludePaths": [ "/**" ],
-      "includePaths": [ "**/publish/**", "**/drafts/**" ]
+      "event": "sk:send-to-caas"
     },
     {
       "id": "predicted-url",
