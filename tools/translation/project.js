@@ -21,7 +21,7 @@ function getUrlInfo() {
   function getParam(name) {
     return location.searchParams.get(name);
   }
-  const sp = getParam('ref');
+  const sp = getParam('referer');
   const owner = getParam('owner');
   const repo = getParam('repo');
   const ref = getParam('ref');
