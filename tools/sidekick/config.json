@@ -15,6 +15,7 @@
       "title": "Translate",
       "environments": [ "edit" ],
       "url": "/tools/translation/index.html",
+      "passReferer": true,
       "include_paths": [ "**.xlsx**" ]
     },
     {
@@ -24,7 +25,7 @@
       "environments": [ "edit", "dev", "preview", "live", "prod" ]
     },
     {
-      "id": "send-to-caas-2",
+      "id": "send-to-caas",
       "containerId": "tools",
       "title": "Send to CaaS",
       "environments": [ "dev", "preview", "live", "prod" ],
