@@ -146,6 +146,10 @@ function getHelixAdminConfig() {
 async function getConfig() {
   const location = new URL(document.location.href);
   function getParam(name) { return location.searchParams.get(name); }
+
+  const subDomain = location.hostname.split('.').shift();
+  console.log(subDomain);
+
   const owner = getParam('owner');
   const repo = getParam('repo');
   const ref = getParam('ref');

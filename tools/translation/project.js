@@ -21,6 +21,10 @@ function getUrlInfo() {
   function getParam(name) {
     return location.searchParams.get(name);
   }
+
+  // const subDomain = location.hostname.split('.').shift();
+  console.log(location);
+
   const sp = getParam('referer');
   const owner = getParam('owner');
   const repo = getParam('repo');
