@@ -22,13 +22,12 @@ function getUrlInfo() {
     return location.searchParams.get(name);
   }
 
-  // const subDomain = location.hostname.split('.').shift();
-  console.log(location);
+  const sub = location.hostname.split('.').shift().split('--');
 
   const sp = getParam('referer');
-  const owner = getParam('owner');
-  const repo = getParam('repo');
-  const ref = getParam('ref');
+  const owner = getParam('owner') || sub[2];
+  const repo = getParam('repo') || sub[1];
+  const ref = getParam('ref') || sub[0];
   return {
     sp,
     owner,

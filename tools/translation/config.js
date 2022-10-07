@@ -147,12 +147,11 @@ async function getConfig() {
   const location = new URL(document.location.href);
   function getParam(name) { return location.searchParams.get(name); }
 
-  const subDomain = location.hostname.split('.').shift();
-  console.log(subDomain);
+  const sub = location.hostname.split('.').shift().split('--');
 
-  const owner = getParam('owner');
-  const repo = getParam('repo');
-  const ref = getParam('ref');
+  const owner = getParam('owner') || sub[2];
+  const repo = getParam('repo') || sub[1];
+  const ref = getParam('ref') || sub[0];
   const configPath = `https://${ref}--${repo}--${owner}.hlx.page${LOC_CONFIG}`;
 
   if (!decoratedConfig) {
