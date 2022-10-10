@@ -7,6 +7,7 @@ const MILO_TEMPLATES = [
 const MILO_BLOCKS = [
   'accordion',
   'adobetv',
+  'all-hands',
   'aside',
   'caas',
   'caas-config',
