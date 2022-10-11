@@ -400,6 +400,7 @@ async function loadPostLCP(config) {
   loadTemplate();
   const { default: loadFonts } = await import('./fonts.js');
   loadFonts(config.locale, loadStyle);
+  loadMartech(config);
 }
 
 export async function loadDeferred(area) {
@@ -432,7 +433,6 @@ export async function loadArea(area = document) {
 
   if (isDoc) {
     decorateHeader();
-    loadMartech(config);
   }
 
   const sections = decorateSections(area, isDoc);
