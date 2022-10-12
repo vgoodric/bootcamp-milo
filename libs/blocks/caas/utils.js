@@ -1,6 +1,19 @@
 /* eslint-disable no-underscore-dangle */
 import { loadScript, loadStyle } from '../../utils/utils.js';
 
+const fetchWithTimeout = async (resource, options = {}) => {
+  const { timeout = 5000 } = options;
+
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  const response = await fetch(resource, {
+    ...options,
+    signal: controller.signal,
+  });
+  clearTimeout(id);
+  return response;
+};
+
 export const loadStrings = async (url) => {
   // TODO: Loc based loading
   if (!url) return {};
@@ -29,7 +42,7 @@ export const loadCaasTags = async (tagsUrl) => {
   if (tagsUrl) {
     const url = tagsUrl.startsWith('https://') || tagsUrl.startsWith('http://') ? tagsUrl : `https://${tagsUrl}`;
     try {
-      const resp = await fetch(url);
+      const resp = await fetchWithTimeout(url);
       if (resp.ok) {
         const json = await resp.json();
         return {
@@ -76,6 +89,8 @@ const fixAlloyAnalytics = async () => {
 };
 
 export const initCaas = async (state, caasStrs, el) => {
+  window.dexter = window.dexter || {}; // required for caas modals
+
   const caasEl = el || document.getElementById('caas');
   if (!caasEl) return;
 
@@ -239,7 +254,7 @@ export const getConfig = async (state, strs = {}) => {
         ','
       )}&collectionTags=${collectionTags}&excludeContentWithTags=${excludeContentWithTags}&language=${language}&country=${country}&complexQuery=${complexQuery}&excludeIds=${excludedCards}&currentEntityId=&featuredCards=${featuredCards}&environment=&draft=${
         state.draftDb
-      }&size=2000${flatFile}`,
+      }&size=${state.collectionSize || state.totalCardsToShow}${flatFile}`,
       fallbackEndpoint: '',
       totalCardsToShow: state.totalCardsToShow,
       cardStyle: state.cardStyle,
@@ -391,6 +406,7 @@ export const defaultState = {
   bookmarkIconUnselect: '',
   cardStyle: 'half-height',
   collectionBtnStyle: 'primary',
+  collectionSize: '',
   container: '1200MaxWidth',
   country: 'caas:country/us',
   contentTypeTags: [],
