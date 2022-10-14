@@ -2,18 +2,19 @@
 /* eslint-disable no-underscore-dangle */
 
 function getDetails(env) {
+  console.log(env);
   /* c8 ignore start */
   if (env.name === 'prod') {
     return {
       url: 'https://assets.adobedtm.com/d4d114c60e50/a0e989131fd5/launch-5dd5dd2177e6.min.js',
-      edgeConfigId: '2cba807b-7430-41ae-9aac-db2b0da742d5',
+      edgeConfigId: env.consumer?.edgeConfigId || env.edgeConfigId,
     };
   }
-  /* c8 ignore stop */
   return {
     url: 'https://assets.adobedtm.com/d4d114c60e50/a0e989131fd5/launch-2c94beadc94f-development.min.js',
-    edgeConfigId: '8d2805dd-85bf-4748-82eb-f99fdad117a6',
+    edgeConfigId: env.consumer?.edgeConfigId || env.edgeConfigId,
   };
+  /* c8 ignore stop */
 }
 
 export default async function init(config, loadScript) {
