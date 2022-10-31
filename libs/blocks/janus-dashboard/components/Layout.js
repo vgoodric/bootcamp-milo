@@ -7,8 +7,13 @@ function Layout() {
   const {
     state: { showDetail },
   } = useContext(FilterContext);
-  const detailSection = showDetail ? html`<${DetailSection} />` : null;
-  return html` <div><${SummarySection} />${detailSection}</div> `;
+  const detailSection = html`<${DetailSection} />`;
+  return html`
+    <div class='whole-block'>
+      <${SummarySection} />
+      ${detailSection}
+    </div>
+  `;
 }
 
 export default Layout;

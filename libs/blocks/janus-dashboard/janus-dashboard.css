@@ -1,6 +1,21 @@
+:root {
+  --main-background-color: #676767;
+  --main-text-color: white;
+  --main-blue: #25a1fc;
+  --main-red: #ff6850;
+  --main-green: #69c973;
+  --main-yellow: #ffb400;
+  --secondary-background-color: grey;
+  --selected-background-color: #343434;
+  --selected-text-color: #ececec;
+  --selected-text-alternative-color: #292929;
+}
+
 .janus-dashboard {
-  background-color: #676767;
-  color: white;
+  background-color: var(--main-background-color);
+  color: var(--main-text-color);
+  padding-top: 3em;
+  padding-bottom: 3em;
 }
 
 .paper {
@@ -19,21 +34,17 @@
 
 
 .card {
-  background-color: grey;
+  background-color: var(--secondary-background-color);
   padding: 3em;
-}
-
-.section-divider {
-  margin-bottom: 5em;
 }
 
 .grid-container {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
-  /* padding: 0;
-   margin: 0; */
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .flex-end {
@@ -44,9 +55,19 @@
   justify-content: space-around;
 }
 
+.space-between {
+  justify-content: space-between;
+}
+
+.whole-block {
+  margin-left: 5rem;
+  margin-right: 5rem;
+}
+
 .grid-item {
   /* margin: auto;
   text-align: 'center'; */
+  
   /* background: tomato;
   padding: 5px;
   width: 200px;
@@ -56,34 +77,49 @@
   color: white;
   font-weight: bold;
   font-size: 3em; */
-  /* margin: auto; */
-  text-align: center;
   flex-basis: 10%;
-}
-
-.feature-row-head {
-  font-weight: bold;
 }
 
 .clickable {
   cursor: pointer;
   text-decoration: underline;
+  text-decoration-color: inherit;
 }
 
 .blue {
-  color: #25a1fc;
+  color: var(--main-blue);
 }
 
 .red {
-  color: #ff6850;
+  color: var(--main-red);
 }
 
 .green {
-  color: #69c973;
+  color: var(--main-green);
 }
 
 .yellow {
-  color : #ffb400;
+  color : var(--main-yellow);
+}
+
+.mb1 {
+  margin-bottom: 1em;
+}
+
+.mb2 {
+  margin-bottom: 2em;
+}
+
+.mb5 {
+  margin-bottom: 5em;
+}
+
+.mt2 {
+  margin-top: 2em;
+}
+
+.pl1 {
+  padding-left: 1em;
 }
 
 .button {
@@ -97,25 +133,35 @@
   border-radius: 15px;
 }
 
-.detail-rows-table {
-  border: 1px solid white;
-  border-collapse: collapse;
-  border-spacing: 10px;
-  width: 1600px;
-}
-
-.detail-rows-cell {
-  border: 1px solid white;
-  padding: 10px;
-  font-size: 80%;
-}
-
-.centered {
+.text-centered {
   text-align: center;
 }
 
+.text-left {
+  text-align: left;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.detail-rows-table {
+  /* border: 0px solid var(--main-text-color); */
+  border-collapse: collapse;
+  border-spacing: 10px;
+  width: 100%;
+}
+
+.table-data-cell {
+  padding: 5px 30px 5px 10px;
+}
+
+.table-header-cell {
+  padding: 5px 30px 5px 10px;
+}
+
 .detail-rows-row:nth-child(odd) {
-  background-color: #cc7979;
+  background-color: var(--selected-text-alternative-color);
 }
 
 .loader-text {
@@ -131,4 +177,94 @@
   align-items: center;
   position: relative;
   height: 400px;
+}
+
+.summary-card {
+  border: 2px;
+  border-color: var(--secondary-background-color);
+  border-style: solid;
+  border-radius: 1%;
+  padding: 2em;
+  width: 300px;
+  height:200px;
+}
+
+.summary-card .date {
+  font-weight: 100;
+  font-size:medium;
+}
+
+.summary-card .branch {
+  font-weight: 400;
+  font-size:medium;
+  width:200px;
+}
+
+.summary-card .status {
+  font-weight: 800;
+  font-size:large;
+  width: 200px;
+}
+
+.summary-card .cnt-percent {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.summary-card .cnt-percent .percent {
+  font-weight: 500;
+  font-size:2em;
+}
+
+.summary-card .cnt-percent .cnt {
+  font-weight: 800;
+  font-size:5em;
+}
+
+.dropdown {
+  text-align: left;
+}
+
+.dropdown .label {
+  font-weight: 400;
+  font-size: medium;
+}
+
+.dropdown .select {
+  color: var(--main-text-color);
+  background-color: var(--main-background-color);
+  width: 150px;
+  border: 2px;
+  border-color: grey;
+  border-style: solid;
+  padding-left: 5px;
+}
+
+.detail-section-title-row {
+  margin-bottom: 1em;
+  font-weight: 800;
+}
+
+.long-text-block {
+  overflow: auto;
+  width: 700px;
+}
+
+.unselected-table-row {
+  background-color: var(--secondary-background-color);
+  color: var(--main-text-color);
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.selected-table-row {
+  background-color: var(--selected-background-color);
+  color: var(--selected-text-color);
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.selected-background {
+  background-color: var(--selected-background-color);
+  color: var(--selected-text-color);
 }

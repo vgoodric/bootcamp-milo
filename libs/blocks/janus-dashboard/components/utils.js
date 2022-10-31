@@ -107,3 +107,10 @@ export function preprocessTestResults(results) {
     flattened,
   };
 }
+
+export const colorMap = {
+  failed: 'red',
+  passed: 'green',
+  flaky: 'yellow',
+  total: 'blue',
+};
