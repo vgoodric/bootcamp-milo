@@ -93,12 +93,13 @@
 }
 
 .marketo .mktoForm .mktoHtmlText {
+  width: 100%!important;
   font-size: 14px;
   font-weight: normal;
   color: var(--marketo-form-text);
 }
 
-.marketo .mktoForm .mktoHtmlText:has(span) {
+.marketo .mktoForm .marketo-privacy {
   padding: 20px 0;
 }
 
@@ -218,24 +219,30 @@
 }
 
 .dialog-modal .marketo .mktoFormRow {
-  width: 48%;
-}
-
-.dialog-modal .marketo .mktoFormRow:has(.mktoHtmlText) {
   width: 100%;
 }
 
-.dialog-modal .marketo .mktoForm .mktoField {
-  width: 100%!important;
+.dialog-modal .marketo .mktoFormRow.marketo-privacy {
+  width: 100%;
 }
 
 .dialog-modal .marketo .mktoForm label {
   padding-bottom: 6px;
 }
 
-.dialog-modal .marketo .mktoForm .mktoError {
+.dialog-modal .marketo .mktoForm.show-warnings .mktoError {
   width: 100%;
   margin-left: 0;
+}
+
+.dialog-modal .marketo .mktoForm .mktoField {
+  width: 100%!important;
+}
+
+@media screen and (min-width: 600px) {
+  .dialog-modal .marketo .mktoFormRow {
+    width: 46%;
+  }
 }
 
 .columns .marketo .mktoForm .mktoField {
