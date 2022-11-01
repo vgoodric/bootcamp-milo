@@ -20,6 +20,7 @@ const HIDDEN_FIELDS = 'hidden fields';
 const BASE_URL = 'base url';
 const FORM_ID = 'form id';
 const MUNCHKIN_ID = 'munchkin id';
+const ERROR_MESSAGE = 'error message';
 
 /* Marketo adds default styles that we want to remove */
 const cleanStyleSheets = (baseURL) => {
@@ -32,12 +33,17 @@ const cleanStyleSheets = (baseURL) => {
   });
 };
 
-const loadForm = (form, formData) => {
-  if (!form) return;
+const cleanFormStyles = (form) => {
   const formEl = form.getFormElem().get(0);
 
-  formEl.querySelectorAll('style').forEach((e) => { e.disabled = true; });
-  formEl.parentElement.querySelectorAll('*[style]').forEach((e) => e.removeAttribute('style'));
+  formEl?.querySelectorAll('style').forEach((e) => { e.remove(); });
+  formEl?.parentElement?.querySelectorAll('*[style]').forEach((e) => e.removeAttribute('style'));
+};
+
+const loadForm = (form, formData) => {
+  if (!form) return;
+
+  cleanFormStyles(form);
   cleanStyleSheets(formData[BASE_URL]);
 
   if (formData[HIDDEN_FIELDS]) {
@@ -55,6 +61,7 @@ export const formValidate = (form, success, error, errorMessage) => {
   formEl.classList.remove('hide-errors');
   formEl.classList.add('show-warnings');
 
+  cleanFormStyles(form);
   if (!success && errorMessage) {
     error.textContent = errorMessage;
     error.classList.add('alert');
@@ -88,8 +95,13 @@ export const formSuccess = (form, redirectUrl) => {
 };
 
 const readyForm = (error, form, formData) => {
+  const formEl = form.getFormElem().get(0);
   const redirectUrl = formData[DESTINATION_URL];
-  const errorMessage = formData['Error Message'];
+  const errorMessage = formData[ERROR_MESSAGE];
+
+  // Set row width of legal language, without knowing position
+  const formTexts = formEl.querySelectorAll('.mktoHtmlText');
+  formTexts[formTexts.length - 1].closest('.mktoFormRow').classList.add('marketo-privacy');
 
   form.onValidate((success) => formValidate(form, success, error, errorMessage));
   form.onSuccess(() => formSuccess(form, redirectUrl));
@@ -103,6 +115,10 @@ const init = (el) => {
     [BASE_URL]: marketoBaseURL,
     [MUNCHKIN_ID]: marketoMunchkinID,
   };
+  if (el.classList.contains('right') || el.classList.contains('left')) {
+    const section = el.closest('.section');
+    section.classList.add('marketo-two-up');
+  }
 
   children.forEach((element) => {
     const key = element.children[0]?.textContent.toLowerCase();
