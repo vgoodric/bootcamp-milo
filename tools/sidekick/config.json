@@ -15,7 +15,7 @@
       "title": "Translate",
       "environments": [ "edit" ],
       "url": "/tools/translation/index.html",
-      "passReferer": true,
+      "passReferrer": true,
       "include_paths": [ "**.xlsx**" ]
     },
     {
