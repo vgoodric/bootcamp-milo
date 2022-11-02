@@ -16,6 +16,7 @@
       "environments": [ "edit" ],
       "url": "/tools/translation/index.html",
       "passReferrer": true,
+
       "include_paths": [ "**.xlsx**" ]
     },
     {
