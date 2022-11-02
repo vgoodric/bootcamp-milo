@@ -21,15 +21,18 @@ const MILO_BLOCKS = [
   'gnav',
   'how-to',
   'icon-block',
-  'manual-card',
+  'card',
   'marquee',
   'media',
   'merch',
   'modal',
   'pdf-viewer',
   'quote',
+  'review',
   'section-metadata',
   'tabs',
+  'table-of-contents',
+  'text',
   'youtube',
   'z-pattern',
   'share',
@@ -45,13 +48,17 @@ const AUTO_BLOCKS = [
   { 'pdf-viewer': '.pdf' },
 ];
 const ENVS = {
-  local: { name: 'local' },
+  local: {
+    name: 'local',
+    edgeConfigId: '8d2805dd-85bf-4748-82eb-f99fdad117a6',
+  },
   stage: {
     name: 'stage',
     ims: 'stg1',
     adobeIO: 'cc-collab-stage.adobe.io',
     adminconsole: 'stage.adminconsole.adobe.com',
     account: 'stage.account.adobe.com',
+    edgeConfigId: '8d2805dd-85bf-4748-82eb-f99fdad117a6',
   },
   prod: {
     name: 'prod',
@@ -59,19 +66,25 @@ const ENVS = {
     adobeIO: 'cc-collab.adobe.io',
     adminconsole: 'adminconsole.adobe.com',
     account: 'account.adobe.com',
+    edgeConfigId: '2cba807b-7430-41ae-9aac-db2b0da742d5',
   },
 };
 
-function getEnv() {
+function getEnv(conf) {
   const { host, href } = window.location;
   const location = new URL(href);
   const query = location.searchParams.get('env');
 
-  if (query) { return ENVS.query; }
-  if (host.includes('localhost:')) return ENVS.local;
+  if (query) return { ...ENVS[query], consumer: conf[query] };
+  if (host.includes('localhost:')) return { ...ENVS.local, consumer: conf.local };
   /* c8 ignore start */
-  if (host.includes('hlx.page') || host.includes('hlx.live') || host.includes('corp.adobe')) return ENVS.stage;
-  return ENVS.prod;
+  if (host.includes('hlx.page')
+   || host.includes('hlx.live')
+   || host.includes('stage.adobe')
+   || host.includes('corp.adobe')) {
+    return { ...ENVS.stage, consumer: conf.stage };
+  }
+  return { ...ENVS.prod, consumer: conf.prod };
   /* c8 ignore stop */
 }
 
@@ -92,10 +105,15 @@ export const [setConfig, getConfig] = (() => {
   return [
     (conf) => {
       const { origin } = window.location;
-      config = { ...conf, env: getEnv() };
+      config = { env: getEnv(conf), ...conf };
       config.codeRoot = conf.codeRoot ? `${origin}${conf.codeRoot}` : origin;
       config.locale = getLocale(conf.locales);
       document.documentElement.setAttribute('lang', config.locale.ietf);
+      try {
+        document.documentElement.setAttribute('dir',(new Intl.Locale(config.locale.ietf)).textInfo.direction);  
+      } catch (e) {
+        console.log("Invalid or missing locale:",e)
+      }
       if (config.contentRoot) {
         config.locale.contentRoot = `${origin}${config.locale.prefix}${config.contentRoot}`;
       } else {
@@ -389,12 +407,13 @@ function decorateSections(el, isDoc) {
 async function loadMartech(config) {
   const query = new URL(window.location.href).searchParams.get('martech');
   if (query !== 'off') {
-    const { default: martech } = await import('./martech.js');
+    const { default: martech } = await import('../martech/martech.js');
     martech(config, loadScript, getMetadata);
   }
 }
 
 async function loadPostLCP(config) {
+  loadMartech(config);
   const header = document.querySelector('header');
   if (header) { loadBlock(header); }
   loadTemplate();
@@ -422,7 +441,7 @@ function loadPrivacy() {
     },
   };
 
-  const env = getEnv().name === 'prod' ? '' : 'stage.';
+  const env = getConfig().env.name === 'prod' ? '' : 'stage.';
   loadScript(`https://www.${env}adobe.com/etc.clientlibs/globalnav/clientlibs/base/privacy-standalone.js`);
 }
 
@@ -432,7 +451,6 @@ export async function loadArea(area = document) {
 
   if (isDoc) {
     decorateHeader();
-    loadMartech(config);
   }
 
   const sections = decorateSections(area, isDoc);
