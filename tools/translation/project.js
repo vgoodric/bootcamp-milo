@@ -24,7 +24,7 @@ function getUrlInfo() {
 
   const sub = location.hostname.split('.').shift().split('--');
 
-  const sp = getParam('referer');
+  const sp = getParam('referrer');
   const owner = getParam('owner') || sub[2];
   const repo = getParam('repo') || sub[1];
   const ref = getParam('ref') || sub[0];
