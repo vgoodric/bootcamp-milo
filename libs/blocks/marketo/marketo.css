@@ -7,24 +7,6 @@
   --marketo-form-text: #535353;
 }
 
-@media screen and (min-width: 1200px) {
-  .section.marketo-two-up {
-    display: grid;
-    gap: var(--spacing-m);
-    max-width: var(--grid-container-width);
-    margin: 0 auto var(--spacing-xs);
-    grid-template-areas: "left right";
-  }
-}
-
-.marketo.right {
-  grid-area: right;
-}
-
-.marketo.left {
-  grid-area: left;
-}
-
 /* stylelint-disable selector-class-pattern */
 .marketo .marketo-form-wrapper {
   box-sizing: border-box;
