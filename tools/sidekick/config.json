@@ -1,6 +1,5 @@
 {
   "project": "Milo",
-  "outerHost": "main--milo--adobecom.hlx.live",
   "host": "milo.adobe.com",
   "byocdn": true,
   "libraries": [
@@ -16,7 +15,6 @@
       "environments": [ "edit" ],
       "url": "/tools/translation/index.html",
       "passReferrer": true,
-
       "include_paths": [ "**.xlsx**" ]
     },
     {
@@ -31,33 +29,6 @@
       "title": "Send to CaaS",
       "environments": [ "dev", "preview", "live", "prod" ],
       "event": "sk:send-to-caas"
-    },
-    {
-      "id": "predicted-url",
-      "title": "Predicted URL",
-      "environments": [ "dev", "preview" ],
-      "containerId": "tools",
-      "event": "predicted-url",
-      "excludePaths": [ "/**" ],
-      "includePaths": [ "**/drafts/**" ]
-    },
-    {
-      "id": "copy-article-data",
-      "title": "Copy Article Data",
-      "environments": [ "dev", "preview" ],
-      "containerId": "tools",
-      "event": "copy-article-data",
-      "excludePaths": [ "/**" ],
-      "includePaths": [ "**/publish/**", "**/drafts/**" ]
-    },
-    {
-      "id": "update-feed",
-      "title": "Update Feed",
-      "environments": [ "dev", "preview" ],
-      "containerId": "tools",
-      "event": "update-feed",
-      "excludePaths": [ "/**" ],
-      "includePaths": [ "/", "/jp/", "/jp/topics/**" ]
     }
   ]
 }
