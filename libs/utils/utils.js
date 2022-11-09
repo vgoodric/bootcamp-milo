@@ -379,6 +379,19 @@ function decorateHeader() {
   }
 }
 
+async function decoratePlaceholders(area, config, isDoc) {
+  const toReplace = isDoc ? area.documentElement : area;
+  const regex = /{{(.*?)}}/g;
+  const found = regex.test(toReplace.innerHTML);
+  if (!found) return;
+  const { default: getPlaceholders } = await import('../features/placeholders.js');
+  const placeholderList = await getPlaceholders(config);
+  const html = toReplace.innerHTML.replaceAll(regex, (_, key) => {
+    return placeholderList[key] || key.replaceAll('-', ' ');
+  });
+  toReplace.innerHTML = html;
+}
+
 async function loadFooter() {
   const footer = document.querySelector('footer');
   if (!footer) return;
@@ -391,7 +404,7 @@ async function loadFooter() {
   await loadBlock(footer);
 }
 
-function decorateSections(el, isDoc) {
+function decorateSections(el, isDoc, config) {
   const selector = isDoc ? 'body > main > div' : ':scope > div';
   return [...el.querySelectorAll(selector)].map((section, idx) => {
     const links = decorateLinks(section);
@@ -464,11 +477,13 @@ export async function loadArea(area = document) {
   const config = getConfig();
   const isDoc = area === document;
 
+  await decoratePlaceholders(area, config, isDoc);
+
   if (isDoc) {
     decorateHeader();
   }
 
-  const sections = decorateSections(area, isDoc);
+  const sections = await decorateSections(area, isDoc, config);
   // eslint-disable-next-line no-restricted-syntax
   for (const section of sections) {
     const loaded = section.blocks.map((block) => loadBlock(block));
