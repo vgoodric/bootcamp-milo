@@ -27,6 +27,8 @@ export default function init({ loadScript, loadStyle }) {
 
   const sk = document.querySelector('helix-sidekick');
 
+  console.log(sk);
+
   // Add plugin listeners here
   sk.addEventListener('custom:send-to-caas', sendToCaasListener);
   sk.addEventListener('custom:check-schema', checkSchemaListener);
