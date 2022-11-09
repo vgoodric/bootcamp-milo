@@ -14,6 +14,10 @@ export default function init({ loadScript, loadStyle }) {
     window.open(`${resultsUrl}${encodeURIComponent(window.location.href)}`, 'check-schema');
   };
 
+  const preflightListener = (e) => {
+    console.log('Preflight Mofo!');
+  };
+
   // Support for legacy manifest v2 - Delete once everyone is migrated to v3
   document.addEventListener('send-to-caas', async (e) => {
     const { host, project, branch, repo, owner } = e.detail;
@@ -26,4 +30,5 @@ export default function init({ loadScript, loadStyle }) {
   // Add plugin listeners here
   sk.addEventListener('custom:send-to-caas', sendToCaasListener);
   sk.addEventListener('custom:check-schema', checkSchemaListener);
+  sk.addEventListener('custom:preflight', preflightListener);
 }

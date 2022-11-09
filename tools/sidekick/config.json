@@ -43,8 +43,7 @@
       "title": "Preflight",
       "id": "preflight",
       "environments": ["dev", "preview", "live", "prod"],
-      "event": "preflight",
-      "excludePaths": ["/tools**", "*.json"]
+      "event": "preflight"
     }
   ]
 }
