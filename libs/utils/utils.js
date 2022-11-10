@@ -400,7 +400,7 @@ async function loadFooter() {
   await loadBlock(footer);
 }
 
-function decorateSections(el, isDoc, config) {
+function decorateSections(el, isDoc) {
   const selector = isDoc ? 'body > main > div' : ':scope > div';
   return [...el.querySelectorAll(selector)].map((section, idx) => {
     const links = decorateLinks(section);
@@ -479,7 +479,7 @@ export async function loadArea(area = document) {
     decorateHeader();
   }
 
-  const sections = await decorateSections(area, isDoc, config);
+  const sections = decorateSections(area, isDoc);
   // eslint-disable-next-line no-restricted-syntax
   for (const section of sections) {
     const loaded = section.blocks.map((block) => loadBlock(block));
