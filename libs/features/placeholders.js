@@ -1,21 +1,25 @@
-function findPlaceholder(placeholders, key) {
-  return placeholders[key] || key.replaceAll('-', ' ');
-}
+const placeholders = {};
+let fetched = false;
 
-async function fetchPlaceholders(config) {
+const fetchPlaceholders = (config) => new Promise(async (resolve) => {
+  if (fetched) { resolve(placeholders); return; }
   const path = `${config.locale.contentRoot}/placeholders.json`;
   const resp = await fetch(path);
-  const placeholders = {};
   const json = resp.ok ? await resp.json() : { data: [] };
   json.data.forEach(item => {
     placeholders[item.key] = item.value;
   });
-  return placeholders;
+  fetched = true;
+  resolve(placeholders);
+});
+
+function findPlaceholder(placeholders, key) {
+  return placeholders[key] || key.replaceAll('-', ' ');
 }
 
-export async function regExReplace(config, regex, html) {
+export async function replaceText(config, regex, text) {
   const placeholders = await fetchPlaceholders(config);
-  return html.replaceAll(regex, (_, key) => {
+  return text.replaceAll(regex, (_, key) => {
     return findPlaceholder(placeholders, key);
   });
 }

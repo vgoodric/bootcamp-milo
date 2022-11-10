@@ -384,8 +384,8 @@ async function decoratePlaceholders(area, config) {
   const regex = /{{(.*?)}}/g;
   const found = regex.test(el.innerHTML);
   if (!found) return;
-  const { regExReplace } = await import('../features/placeholders.js');
-  el.innerHTML = await regExReplace(config, regex, el.innerHTML);
+  const { replaceText } = await import('../features/placeholders.js');
+  el.innerHTML = await replaceText(config, regex, el.innerHTML);
 }
 
 async function loadFooter() {
@@ -473,7 +473,7 @@ export async function loadArea(area = document) {
   const config = getConfig();
   const isDoc = area === document;
 
-  await decoratePlaceholders(area, config, isDoc);
+  await decoratePlaceholders(area, config);
 
   if (isDoc) {
     decorateHeader();
