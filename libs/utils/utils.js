@@ -379,17 +379,13 @@ function decorateHeader() {
   }
 }
 
-async function decoratePlaceholders(area, config, isDoc) {
-  const toReplace = isDoc ? area.documentElement : area;
+async function decoratePlaceholders(area, config) {
+  const el = area.documentElement || area;
   const regex = /{{(.*?)}}/g;
-  const found = regex.test(toReplace.innerHTML);
+  const found = regex.test(el.innerHTML);
   if (!found) return;
-  const { default: getPlaceholders } = await import('../features/placeholders.js');
-  const placeholderList = await getPlaceholders(config);
-  const html = toReplace.innerHTML.replaceAll(regex, (_, key) => {
-    return placeholderList[key] || key.replaceAll('-', ' ');
-  });
-  toReplace.innerHTML = html;
+  const { regExReplace } = await import('../features/placeholders.js');
+  el.innerHTML = await regExReplace(config, regex, el.innerHTML);
 }
 
 async function loadFooter() {
