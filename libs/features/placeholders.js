@@ -24,7 +24,7 @@ export async function replaceText(config, regex, text) {
   });
 }
 
-export async function keyReplace(key, config) {
+export async function replaceKey(key, config) {
   const placeholders = await fetchPlaceholders(config);
   return findPlaceholder(placeholders, key);
 }
