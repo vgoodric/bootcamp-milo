@@ -161,8 +161,12 @@
   font-size: 18px;
   font-weight: bold;
   text-align: center;
-  margin: 40px auto;
+  margin: 0 auto;
   color: #C9252D;
+}
+
+.marketo .marketo-error.alert {
+  margin: 40px auto;
 }
 
 .marketo .marketo-error.alert::after {
@@ -197,6 +201,12 @@
 
 .dialog-modal .marketo {
   margin: 0;
+  background-color: #FAFAFA;
+}
+
+.dialog-modal .marketo .marketo-error.alert {
+  margin: 0 auto;
+  padding: 40px 0 0;
 }
 
 .dialog-modal .marketo .marketo-form-wrapper {
@@ -247,6 +257,10 @@
 @media screen and (min-width: 1200px) {
   .dialog-modal .marketo .mktoFormRow {
     width: 48%;
+  }
+
+  .dialog-modal .marketo .mktoFormRow:first-child .mktoFieldWrap {
+    padding-top: 12px;
   }
 }
 
