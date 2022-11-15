@@ -58,6 +58,28 @@
   letter-spacing: 1px;
 }
 
+.columns.dividers {
+  background: #F8F8F8;
+  padding: 20px;
+}
+
+.columns.dividers .row:first-child:hover {
+  background-color: #F8F8F8;
+}
+
+.columns.dividers .row:not(:first-child) {
+  background: white;
+  border: 1px solid #d5d5d5;
+}
+
+.columns.dividers .row:not(:first-child) .col {
+  border-right: 1px solid #d5d5d5;
+}
+
+.columns.dividers .row:not(:first-child):hover {
+  background-color: #0000000f;
+}
+
 /* For desktop only */
 @media (min-width:600px) {
   .columns.table > .row {
