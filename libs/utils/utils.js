@@ -7,8 +7,10 @@ const MILO_TEMPLATES = [
 const MILO_BLOCKS = [
   'accordion',
   'adobetv',
+  'article-feed',
   'aside',
   'caas',
+  'caas-config',
   'card-metadata',
   'carousel',
   'chart',
@@ -20,14 +22,19 @@ const MILO_BLOCKS = [
   'gnav',
   'how-to',
   'icon-block',
-  'manual-card',
+  'marketo',
+  'card',
   'marquee',
   'media',
   'merch',
   'modal',
+  'pdf-viewer',
   'quote',
+  'review',
   'section-metadata',
   'tabs',
+  'table-of-contents',
+  'text',
   'youtube',
   'z-pattern',
   'share',
@@ -40,15 +47,22 @@ const AUTO_BLOCKS = [
   { fragment: '/fragments/' },
   { youtube: 'https://www.youtube.com' },
   { youtube: 'https://youtu.be' },
+  { 'pdf-viewer': '.pdf' },
 ];
 const ENVS = {
-  local: { name: 'local' },
+  local: {
+    name: 'local',
+    edgeConfigId: '8d2805dd-85bf-4748-82eb-f99fdad117a6',
+    pdfViewerClientId: '600a4521c23d4c7eb9c7b039bee534a0',
+  },
   stage: {
     name: 'stage',
     ims: 'stg1',
     adobeIO: 'cc-collab-stage.adobe.io',
     adminconsole: 'stage.adminconsole.adobe.com',
     account: 'stage.account.adobe.com',
+    edgeConfigId: '8d2805dd-85bf-4748-82eb-f99fdad117a6',
+    pdfViewerClientId: '600a4521c23d4c7eb9c7b039bee534a0',
   },
   prod: {
     name: 'prod',
@@ -56,20 +70,40 @@ const ENVS = {
     adobeIO: 'cc-collab.adobe.io',
     adminconsole: 'adminconsole.adobe.com',
     account: 'account.adobe.com',
+    edgeConfigId: '2cba807b-7430-41ae-9aac-db2b0da742d5',
+    pdfViewerClientId: '3c0a5ddf2cc04d3198d9e48efc390fa9',
   },
 };
+const SUPPORTED_RICH_RESULTS_TYPES = ['NewsArticle'];
 
-function getEnv() {
+function getEnv(conf) {
   const { host, href } = window.location;
   const location = new URL(href);
   const query = location.searchParams.get('env');
 
-  if (query) { return ENVS.query; }
-  if (host.includes('localhost:')) return ENVS.local;
+  if (query) return { ...ENVS[query], consumer: conf[query] };
+  if (host.includes('localhost:')) return { ...ENVS.local, consumer: conf.local };
   /* c8 ignore start */
-  if (host.includes('hlx.page') || host.includes('hlx.live') || host.includes('corp.adobe')) return ENVS.stage;
-  return ENVS.prod;
+  if (host.includes('hlx.page')
+    || host.includes('hlx.live')
+    || host.includes('stage.adobe')
+    || host.includes('corp.adobe')) {
+    return { ...ENVS.stage, consumer: conf.stage };
+  }
+  return { ...ENVS.prod, consumer: conf.prod };
   /* c8 ignore stop */
+}
+
+export function getLocaleFromPath(locales, path) {
+  const split = path.split('/');
+  const localeString = split[1];
+  const locale = locales[localeString] || locales[''];
+  if (localeString === 'langstore') {
+    locale.prefix = `/${localeString}/${split[2]}`;
+    return locale;
+  }
+  locale.prefix = locale.ietf === 'en-US' ? '' : `/${localeString}`;
+  return locale;
 }
 
 // find out current locale based on pathname and existing locales object from config.
@@ -78,10 +112,7 @@ export function getLocale(locales) {
     return { ietf: 'en-US', tk: 'hah7vzn.css', prefix: '' };
   }
   const { pathname } = window.location;
-  const split = pathname.split('/');
-  const locale = locales[split[1]] || locales[''];
-  locale.prefix = locale.ietf === 'en-US' ? '' : `/${split[1]}`;
-  return locale;
+  return getLocaleFromPath(locales, pathname);
 }
 
 export const [setConfig, getConfig] = (() => {
@@ -89,10 +120,15 @@ export const [setConfig, getConfig] = (() => {
   return [
     (conf) => {
       const { origin } = window.location;
-      config = { ...conf, env: getEnv() };
+      config = { env: getEnv(conf), ...conf };
       config.codeRoot = conf.codeRoot ? `${origin}${conf.codeRoot}` : origin;
       config.locale = getLocale(conf.locales);
       document.documentElement.setAttribute('lang', config.locale.ietf);
+      try {
+        document.documentElement.setAttribute('dir',(new Intl.Locale(config.locale.ietf)).textInfo.direction);
+      } catch (e) {
+        console.log("Invalid or missing locale:",e)
+      }
       if (config.contentRoot) {
         config.locale.contentRoot = `${origin}${config.locale.prefix}${config.contentRoot}`;
       } else {
@@ -177,7 +213,7 @@ export const loadScript = (url, type) => new Promise((resolve, reject) => {
     script.removeEventListener('error', onScript);
 
     if (event.type === 'error') {
-      reject(new Error('error loading script'));
+      reject(new Error(`error loading script: ${script.src}`));
     } else if (event.type === 'load') {
       script.dataset.loaded = true;
       resolve(script);
@@ -219,6 +255,7 @@ export async function loadBlock(block) {
   const styleLoaded = new Promise((resolve) => {
     loadStyle(`${base}/blocks/${name}/${name}.css`, resolve);
   });
+
   const scriptLoaded = new Promise((resolve) => {
     (async () => {
       try {
@@ -229,8 +266,8 @@ export async function loadBlock(block) {
         console.log(`Failed loading ${name}`, err);
         const config = getConfig();
         if (config.env.name !== 'prod') {
-          block.dataset.failed = 'true';
-          block.dataset.reason = `Failed loading ${name || ''} block.`;
+          const { showError } = await import('../blocks/fallback/fallback.js');
+          showError(block, name);
         }
       }
       resolve();
@@ -264,7 +301,10 @@ export function decorateAutoBlock(a) {
     const key = Object.keys(candidate)[0];
     const match = href.includes(candidate[key]);
     if (match) {
-      // Fragments
+      if (key === 'pdf-viewer' && a.textContent !== decodeURI(a.href)) {
+        a.target = '_blank';
+        return false;
+      }
       if (key === 'fragment' && url.hash === '') {
         const { parentElement } = a;
         const { nodeName, innerHTML } = parentElement;
@@ -356,6 +396,22 @@ function decorateHeader() {
   }
 }
 
+async function decorateIcons(area, config) {
+  const domIcons = area.querySelectorAll('span.icon');
+  if (domIcons.length === 0) return;
+  const { default: loadIcons } = await import('../features/icons.js');
+  loadIcons(domIcons, config);
+}
+
+async function decoratePlaceholders(area, config) {
+  const el = area.documentElement || area;
+  const regex = /{{(.*?)}}/g;
+  const found = regex.test(el.innerHTML);
+  if (!found) return;
+  const { replaceText } = await import('../features/placeholders.js');
+  el.innerHTML = await replaceText(config, regex, el.innerHTML);
+}
+
 async function loadFooter() {
   const footer = document.querySelector('footer');
   if (!footer) return;
@@ -383,13 +439,14 @@ function decorateSections(el, isDoc) {
 
 async function loadMartech(config) {
   const query = new URL(window.location.href).searchParams.get('martech');
-  if (query !== 'off') {
-    const { default: martech } = await import('./martech.js');
+  if (query !== 'off' && getMetadata('martech') !== 'off') {
+    const { default: martech } = await import('../martech/martech.js');
     martech(config, loadScript, getMetadata);
   }
 }
 
 async function loadPostLCP(config) {
+  loadMartech(config);
   const header = document.querySelector('header');
   if (header) { loadBlock(header); }
   loadTemplate();
@@ -405,29 +462,39 @@ export async function loadDeferred(area) {
   }
 }
 
-/**
-* Load the Privacy library
-*/
 function loadPrivacy() {
-  // Configure Privacy
   window.fedsConfig = {
     privacy: {
       otDomainId: '7a5eb705-95ed-4cc4-a11d-0cc5760e93db',
       footerLinkSelector: '[href="https://www.adobe.com/#openPrivacy"]',
     },
   };
+  loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/privacy-standalone.js');
+}
 
-  const env = getEnv().name === 'prod' ? '' : 'stage.';
-  loadScript(`https://www.${env}adobe.com/etc.clientlibs/globalnav/clientlibs/base/privacy-standalone.js`);
+function initSidekick() {
+  const initPlugins = async () => {
+    const { default: init } = await import('./sidekick.js');
+    init({ loadScript, loadStyle });
+  };
+
+  if (document.querySelector('helix-sidekick')) {
+    initPlugins();
+  } else {
+    document.addEventListener('sidekick-ready', () => {
+      initPlugins();
+    });
+  }
 }
 
 export async function loadArea(area = document) {
   const config = getConfig();
   const isDoc = area === document;
 
+  await decoratePlaceholders(area, config);
+
   if (isDoc) {
     decorateHeader();
-    loadMartech(config);
   }
 
   const sections = decorateSections(area, isDoc);
@@ -439,6 +506,9 @@ export async function loadArea(area = document) {
     // eslint-disable-next-line no-await-in-loop
     await Promise.all(loaded);
 
+    // eslint-disable-next-line no-await-in-loop
+    await decorateIcons(section.el, config);
+
     // Post LCP operations.
     if (isDoc && section.el.dataset.idx === '0') { loadPostLCP(config); }
 
@@ -449,18 +519,22 @@ export async function loadArea(area = document) {
 
   // Post section loading on document
   if (isDoc) {
+    const type = getMetadata('richresults');
+    if (SUPPORTED_RICH_RESULTS_TYPES.includes(type)) {
+      const { addRichResults } = await import('../features/richresults.js');
+      addRichResults(type, { createTag, getMetadata });
+    }
     loadFooter();
     const { default: loadFavIcon } = await import('./favicon.js');
     loadFavIcon(createTag, getConfig(), getMetadata);
+    initSidekick();
   }
 
   // Load everything that can be deferred until after all blocks load.
   await loadDeferred(area);
 }
 
-/**
- * Load everything that impacts performance later.
- */
+// Load everything that impacts performance later.
 export function loadDelayed(delay = 3000) {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -476,27 +550,8 @@ export function loadDelayed(delay = 3000) {
   });
 }
 
-export function utf8ToB64(str) {
-  return window.btoa(unescape(encodeURIComponent(str)));
-}
-
-export function b64ToUtf8(str) {
-  return decodeURIComponent(escape(window.atob(str)));
-}
-
-const RE_ALPHANUM = /[^0-9a-z]/gi;
-const RE_TRIM_UNDERSCORE = /^_+|_+$/g;
-export const analyticsGetLabel = (txt) => txt.replaceAll('&', 'and').replace(RE_ALPHANUM, '_').replace(RE_TRIM_UNDERSCORE, '');
-
-export const analyticsDecorateList = (li, idx) => {
-  const link = li.firstChild?.nodeName === 'A' && li.firstChild;
-  if (!link) return;
-
-  const label = link.textContent || link.getAttribute('aria-label');
-  if (!label) return;
-
-  link.setAttribute('daa-ll', `${analyticsGetLabel(label)}-${idx + 1}`);
-};
+export const utf8ToB64 = (str) => window.btoa(unescape(encodeURIComponent(str)));
+export const b64ToUtf8 = (str) => decodeURIComponent(escape(window.atob(str)));
 
 export function parseEncodedConfig(encodedConfig) {
   try {
@@ -505,37 +560,6 @@ export function parseEncodedConfig(encodedConfig) {
     console.log(e);
   }
   return null;
-}
-
-export const removeHash = (url) => url?.split('#')[0];
-
-export function getHashConfig() {
-  const { hash } = window.location;
-  if (!hash) return null;
-  window.location.hash = '';
-
-  const encodedConfig = hash.startsWith('#') ? hash.substring(1) : hash;
-  return parseEncodedConfig(encodedConfig);
-}
-
-export const isValidUuid = (id) => /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(id);
-
-export const cloneObj = (obj) => JSON.parse(JSON.stringify(obj));
-
-export function updateObj(obj, defaultObj) {
-  const ds = cloneObj(defaultObj);
-  Object.keys(ds).forEach((key) => {
-    if (obj[key] === undefined) obj[key] = ds[key];
-  });
-  return obj;
-}
-
-export function getBlockClasses(className) {
-  const trimDashes = (str) => str.replace(/(^\s*-)|(-\s*$)/g, '');
-  const blockWithVariants = className.split('--');
-  const name = trimDashes(blockWithVariants.shift());
-  const variants = blockWithVariants.map((v) => trimDashes(v));
-  return { name, variants };
 }
 
 export function createIntersectionObserver({ el, callback, once = true, options = {} }) {

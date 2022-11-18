@@ -9,10 +9,8 @@ import {
   useState,
 } from '../../deps/htm-preact.js';
 import {
-  updateObj,
-  cloneObj,
-  getHashConfig,
-  isValidUuid,
+  getConfig,
+  parseEncodedConfig,
   loadStyle,
   utf8ToB64,
 } from '../../utils/utils.js';
@@ -24,6 +22,27 @@ import MultiField from '../../ui/controls/MultiField.js';
 import '../../utils/lana.js';
 
 const LS_KEY = 'caasConfiguratorState';
+
+const cloneObj = (obj) => JSON.parse(JSON.stringify(obj));
+
+const updateObj = (obj, defaultObj) => {
+  const ds = cloneObj(defaultObj);
+  Object.keys(ds).forEach((key) => {
+    if (obj[key] === undefined) obj[key] = ds[key];
+  });
+  return obj;
+};
+
+const isValidUuid = (id) => /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(id);
+
+const getHashConfig = () => {
+  const { hash } = window.location;
+  if (!hash) return null;
+  window.location.hash = '';
+
+  const encodedConfig = hash.startsWith('#') ? hash.substring(1) : hash;
+  return parseEncodedConfig(encodedConfig);
+}
 
 const caasFilesLoaded = loadCaasFiles();
 
@@ -248,6 +267,7 @@ const BasicsPanel = ({ tagsData }) => {
   const countryTags = getTagList(tagsData.country.tags);
   const languageTags = getTagList(tagsData.language.tags);
   return html`
+    <${Input} label="Collection Name (only displayed in author link)" prop="collectionName" type="text" />
     <${DropdownSelect} options=${defaultOptions.source} prop="source" label="Source" />
     <${Select} options=${countryTags} prop="country" label="Country" />
     <${Select} options=${languageTags} prop="language" label="Language" />
@@ -314,7 +334,7 @@ const TagsPanel = ({ tagsData }) => {
         name="intraTagLogic"
         options=${defaultOptions.intraTagLogicOptions}
       />
-      <${TagSelect} id="andTags" options=${allTags} label="Tags with overall AND logic" />
+      <${TagSelect} id="andTags" options=${allTags} label="Tags" />
     <//>
     <${MultiField}
       onChange=${onLogicTagChange('orLogicTags')}
@@ -323,7 +343,7 @@ const TagsPanel = ({ tagsData }) => {
       title="OR logic Tags"
       subTitle=""
     >
-      <${TagSelect} id="orTags" options=${allTags} label="Tags with overall OR logic"
+      <${TagSelect} id="orTags" options=${allTags} label="Tags"
     /><//>
   `;
 };
@@ -498,6 +518,8 @@ const AdvancedPanel = () => {
   return html`
     <button class="resetToDefaultState" onClick=${onClick}>Reset to default state</button>
     <${Input} label="Show IDs (only in the configurator)" prop="showIds" type="checkbox" />
+    <${Input} label="Do not lazyload" prop="doNotLazyLoad" type="checkbox" />
+    <${Input} label="Collection Size (defaults to Total Cards To Show)" prop="collectionSize" type="text" />
     <${Select} label="CaaS Endpoint" prop="endpoint" options=${defaultOptions.endpoints} />
     <${Select}
       label="Fallback Endpoint"
@@ -574,7 +596,17 @@ const CopyBtn = () => {
 
     const link = document.createElement('a');
     link.href = getUrl();
-    link.textContent = 'Content as a Service';
+    const dateStr = new Date().toLocaleString('us-EN', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false,
+    });
+    const collectionName = state.collectionName ? `- ${state.collectionName} ` : '';
+    link.textContent = `Content as a Service ${collectionName}- ${dateStr}${state.doNotLazyLoad ? ' (no-lazy)' : ''}`;
 
     const blob = new Blob([link.outerHTML], { type: 'text/html' });
     const data = [new ClipboardItem({ [blob.type]: blob })];
@@ -664,18 +696,24 @@ const getPanels = (tagsData) => [
   },
 ];
 
+/* c8 ignore next 15 */
 const addIdOverlays = () => {
   document.querySelectorAll('.consonant-Card').forEach((card) => {
     if (!card.querySelector('.cardid')) {
-      const idDiv = document.createElement('div');
-      idDiv.classList.add('cardid');
-      idDiv.innerText = card.id;
-      card.appendChild(idDiv);
+      const idBtn = document.createElement('button');
+      idBtn.classList.add('cardid');
+      idBtn.innerText = card.id;
+
+      idBtn.addEventListener('click', (e) => {
+        const id = e.target.textContent;
+        navigator.clipboard?.writeText(id);
+      });
+      card.appendChild(idBtn);
     }
   });
 };
 
-/* c8 ignore next 24 */
+/* c8 ignore next 7 */
 const idOverlayMO = () => {
   const mo = new MutationObserver(() => {
     setTimeout(() => addIdOverlays(), 500);
@@ -728,6 +766,7 @@ const Configurator = ({ rootEl }) => {
   useEffect(async () => {
     if (isCaasLoaded && strings !== undefined) {
       await initCaas(state, strings);
+      /* c8 ignore next 3 */
       if (state.showIds) {
         setTimeout(() => addIdOverlays(), 500);
       }
@@ -750,6 +789,7 @@ const Configurator = ({ rootEl }) => {
           <${Accordion} lskey=caasconfig items=${panels} alwaysOpen=${false} />
         </div>
         <div class="content-panel">
+          <div class="modalContainer"></div>
           <div id="caas" class="caas-preview"></div>
         </div>
       </div>
@@ -757,11 +797,20 @@ const Configurator = ({ rootEl }) => {
 };
 
 const init = async (el) => {
-  loadStyle('/libs/ui/page/page.css');
+  const { miloLibs, codeRoot } = getConfig();
+  loadStyle(`${miloLibs || codeRoot}/ui/page/page.css`);
+  loadStyle(`${miloLibs || codeRoot}/blocks/caas/caas.css`);
 
   const app = html` <${Configurator} rootEl=${el} /> `;
 
   render(app, el);
 };
 
-export { init as default, loadCaasTags };
+export {
+  init as default,
+  cloneObj,
+  getHashConfig,
+  isValidUuid,
+  loadCaasTags,
+  updateObj,
+};

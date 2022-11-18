@@ -4,8 +4,9 @@
   "version": "1.0.0",
   "description": "Website foundation technology.",
   "scripts": {
-    "test": "wtr --config ./web-test-runner.config.mjs \"./test/**/*.test.(js|html)\" --node-resolve --port=2000 --coverage",
+    "test": "wtr --config ./web-test-runner.config.mjs \"./test/**/*.test.(js|html)\" --node-resolve --port=2000 --coverage --concurrent-browsers 4",
     "test:watch": "npm test -- --watch",
+    "test:file": "wtr --config ./web-test-runner.config.mjs --node-resolve --port=2000 --coverage",
     "libs": "hlx up --port=6456",
     "lint": "npm run lint:js && npm run lint:css",
     "lint:js": "eslint .",
@@ -39,10 +40,11 @@
     "eslint": "8.11.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.25.4",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "microbundle": "0.15.1",
     "sinon": "13.0.1",
     "stylelint": "14.6.0",
     "stylelint-config-prettier": "9.0.3",
-    "stylelint-config-standard": "25.0.0",
-    "microbundle": "0.15.1"
+    "stylelint-config-standard": "25.0.0"
   }
 }

@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: 'airbnb-base',
+  extends: ['airbnb-base', 'plugin:react-hooks/recommended'],
   env: { browser: true },
   parser: '@babel/eslint-parser',
   parserOptions: {
@@ -17,11 +17,11 @@ module.exports = {
       ObjectExpression: { multiline: true, minProperties: 6 },
       ObjectPattern: { multiline: true, minProperties: 6 },
       ImportDeclaration: { multiline: true, minProperties: 6 },
-      ExportDeclaration: 'never',
+      ExportDeclaration: { multiline: true, minProperties: 6 },
     }],
   },
   ignorePatterns: [
     '/libs/deps/*',
-    '/tools/*',
+    '/tools/loc/*',
   ],
 };
