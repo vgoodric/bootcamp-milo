@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /*
  * Copyright 2022 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -114,8 +115,21 @@ const config = {
   lcpImg?.setAttribute('loading', 'eager');
 }());
 
+async function loadPlaceholders(conf) {
+  const regex = /{{(.*?)}}/g;
+  const xpath = "//*[contains(text(),'{{') or contains(@content,'{{')]";
+  const matches = document.evaluate(xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
+
+  for (let i = 0; i < matches.snapshotLength; i += 1) {
+    const match = matches.snapshotItem(i);
+    const { replaceText } = await import('../features/placeholders.js');
+    match.outerHTML = await replaceText(conf, regex, match.outerHTML);
+  }
+}
+
 (async function loadPage() {
-  setConfig(config);
+  const conf = setConfig(config);
+  await loadPlaceholders(conf);
   await loadArea();
   loadDelayed();
 }());

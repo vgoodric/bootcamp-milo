@@ -402,12 +402,12 @@ async function decorateIcons(area, config) {
 }
 
 async function decoratePlaceholders(area, config) {
-  const el = area.documentElement ? area.body : area;
-  const regex = /{{(.*?)}}/g;
-  const found = regex.test(el.innerHTML);
-  if (!found) return;
-  const { replaceText } = await import('../features/placeholders.js');
-  el.innerHTML = await replaceText(config, regex, el.innerHTML);
+  // const el = area.documentElement ? area.body : area;
+  // const regex = /{{(.*?)}}/g;
+  // const found = regex.test(el.innerHTML);
+  // if (!found) return;
+  // const { replaceText } = await import('../features/placeholders.js');
+  // el.innerHTML = await replaceText(config, regex, el.innerHTML);
 }
 
 async function loadFooter() {
