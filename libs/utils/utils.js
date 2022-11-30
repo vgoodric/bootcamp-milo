@@ -455,6 +455,8 @@ async function loadPostLCP(config) {
 }
 
 export async function loadDeferred(area) {
+  const event = new Event('milo:deferred');
+  area.dispatchEvent(event);
   if (getMetadata('nofollow-links') === 'on') {
     const path = getMetadata('nofollow-path') || '/seo/nofollow.json';
     const { default: nofollow } = await import('../features/nofollow.js');
