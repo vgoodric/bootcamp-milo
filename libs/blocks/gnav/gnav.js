@@ -138,9 +138,9 @@ class Gnav {
     const brandTitle = brand.textContent;
     brand.className = brandBlock.className;
     const title = createTag('span', { class: 'gnav-brand-title' }, brandTitle);
-    brand.setAttribute('aria-label', brand.textContent);
+    brand.setAttribute('aria-label', brandTitle);
     brand.setAttribute('daa-ll', 'Brand');
-    if (brand.textContent !== '') brand.textContent = '';
+    if (brandTitle !== '') brand.textContent = '';
     if (brand.classList.contains('logo')) {
       if (brandLinks.length > 0) {
         decorateSVG(brandLinks[0]);
@@ -155,6 +155,7 @@ class Gnav {
 
   decorateLogo = () => {
     const logo = this.body.querySelector('.adobe-logo a');
+    if(!logo) return null
     logo.href = makeRelative(logo.href, true);
     logo.classList.add('gnav-logo');
     logo.setAttribute('aria-label', logo.textContent);
@@ -330,17 +331,29 @@ class Gnav {
 
   decorateCta = () => {
     const cta = this.body.querySelector('strong a');
-    if (cta) {
-      const { origin } = new URL(cta.href);
-      if (origin !== window.location.origin) {
-        cta.target = '_blank';
-      }
-      cta.classList.add('con-button', 'blue', 'button-M');
-      cta.setAttribute('daa-ll', analyticsGetLabel(cta.textContent));
-      cta.parentElement.classList.add('gnav-cta');
-      return cta.parentElement;
+    if (!cta) return null
+    const { origin } = new URL(cta.href);
+    if (origin !== window.location.origin) {
+      cta.target = '_blank';
     }
-    return null;
+    cta.classList.add('con-button', 'blue', 'button-M');
+    cta.setAttribute('daa-ll', analyticsGetLabel(cta.textContent));
+    cta.parentElement.classList.add('gnav-cta');
+
+    cta.addEventListener('click', (e) => {
+      e.preventDefault()
+      loadScript("http://localhost:6456/libs/deps/bifrost-standalone.js").then(() => {
+      console.log(window.bifrost)
+      window.bifrost.connect({
+          timeout: 10000, // reject the call if connection can't be established in the given timeout
+          isLongWaitingEnabled: false
+      }).then((isConnectedWithCCD) => {
+          console.log({isConnectedWithCCD})
+      })
+    })
+
+    });
+    return cta.parentElement;
   };
 
   decorateSearch = () => {
@@ -494,16 +507,14 @@ class Gnav {
 
   decorateBreadcrumbs = () => {
     const parent = this.el.querySelector('.breadcrumbs');
-    if (parent) {
-      const ul = parent.querySelector('ul');
-      if (ul) {
-        ul.querySelector('li:last-of-type')?.setAttribute('aria-current', 'page');
-        const nav = createTag('nav', { class: 'breadcrumbs', 'aria-label': 'Breadcrumb' }, ul);
-        parent.remove();
-        return nav;
-      }
+    if(!parent) return null
+    const ul = parent.querySelector('ul');
+    if (ul) {
+      ul.querySelector('li:last-of-type')?.setAttribute('aria-current', 'page');
+      const nav = createTag('nav', { class: 'breadcrumbs', 'aria-label': 'Breadcrumb' }, ul);
+      parent.remove();
+      return nav;
     }
-    return null;
   };
   /* c8 ignore stop */
 
