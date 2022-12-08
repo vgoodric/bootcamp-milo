@@ -342,7 +342,7 @@ class Gnav {
 
     cta.addEventListener('click', (e) => {
       e.preventDefault()
-      loadScript("http://localhost:6456/libs/deps/bifrost-standalone.js").then(() => {
+      loadScript("https://wam-experiments--milo--adobecom.hlx.page/libs/deps/bifrost-standalone.js").then(() => {
       console.log(window.bifrost)
       window.bifrost.connect({
           timeout: 10000, // reject the call if connection can't be established in the given timeout
