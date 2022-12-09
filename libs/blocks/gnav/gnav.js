@@ -12,18 +12,23 @@ import {
   analyticsGetLabel,
 } from '../../martech/attributes.js';
 
-const COMPANY_IMG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 133.46 118.11"><defs><style>.cls-1{fill:#fa0f00;}</style></defs><polygon class="cls-1" points="84.13 0 133.46 0 133.46 118.11 84.13 0"/><polygon class="cls-1" points="49.37 0 0 0 0 118.11 49.37 0"/><polygon class="cls-1" points="66.75 43.53 98.18 118.11 77.58 118.11 68.18 94.36 45.18 94.36 66.75 43.53"/></svg>';
-const BRAND_IMG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 234"><defs><style>.cls-1{fill:#fa0f00;}.cls-2{fill:#fff;}</style></defs><rect class="cls-1" width="240" height="234" rx="42.5"/><path id="_256" data-name="256" class="cls-2" d="M186.617,175.95037H158.11058a6.24325,6.24325,0,0,1-5.84652-3.76911L121.31715,99.82211a1.36371,1.36371,0,0,0-2.61145-.034l-19.286,45.94252A1.63479,1.63479,0,0,0,100.92626,148h21.1992a3.26957,3.26957,0,0,1,3.01052,1.99409l9.2814,20.65452a3.81249,3.81249,0,0,1-3.5078,5.30176H53.734a3.51828,3.51828,0,0,1-3.2129-4.90437L99.61068,54.14376A6.639,6.639,0,0,1,105.843,50h28.31354a6.6281,6.6281,0,0,1,6.23289,4.14376L189.81885,171.046A3.51717,3.51717,0,0,1,186.617,175.95037Z"/></svg>';
-const SEARCH_ICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false"><path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path></svg>';
+const COMPANY_IMG =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 133.46 118.11"><defs><style>.cls-1{fill:#fa0f00;}</style></defs><polygon class="cls-1" points="84.13 0 133.46 0 133.46 118.11 84.13 0"/><polygon class="cls-1" points="49.37 0 0 0 0 118.11 49.37 0"/><polygon class="cls-1" points="66.75 43.53 98.18 118.11 77.58 118.11 68.18 94.36 45.18 94.36 66.75 43.53"/></svg>';
+const BRAND_IMG =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 234"><defs><style>.cls-1{fill:#fa0f00;}.cls-2{fill:#fff;}</style></defs><rect class="cls-1" width="240" height="234" rx="42.5"/><path id="_256" data-name="256" class="cls-2" d="M186.617,175.95037H158.11058a6.24325,6.24325,0,0,1-5.84652-3.76911L121.31715,99.82211a1.36371,1.36371,0,0,0-2.61145-.034l-19.286,45.94252A1.63479,1.63479,0,0,0,100.92626,148h21.1992a3.26957,3.26957,0,0,1,3.01052,1.99409l9.2814,20.65452a3.81249,3.81249,0,0,1-3.5078,5.30176H53.734a3.51828,3.51828,0,0,1-3.2129-4.90437L99.61068,54.14376A6.639,6.639,0,0,1,105.843,50h28.31354a6.6281,6.6281,0,0,1,6.23289,4.14376L189.81885,171.046A3.51717,3.51717,0,0,1,186.617,175.95037Z"/></svg>';
+const SEARCH_ICON =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false"><path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path></svg>';
 const SEARCH_DEBOUNCE_MS = 300;
 export const IS_OPEN = 'is-open';
 
-const getLocale = () => document.documentElement.getAttribute('lang') || 'en-US';
+const getLocale = () =>
+  document.documentElement.getAttribute('lang') || 'en-US';
 const getCountry = () => getLocale()?.split('-').pop() || 'US';
 const isHeading = (el) => el?.nodeName.startsWith('H');
-const childIndexOf = (el) => [...el.parentElement.children]
-  .filter((e) => (e.nodeName === 'DIV' || e.nodeName === 'P'))
-  .indexOf(el);
+const childIndexOf = (el) =>
+  [...el.parentElement.children]
+    .filter((e) => e.nodeName === 'DIV' || e.nodeName === 'P')
+    .indexOf(el);
 
 const debounce = (func, timeout = 300) => {
   let timer;
@@ -111,7 +116,11 @@ class Gnav {
   };
 
   decorateToggle = () => {
-    const toggle = createTag('button', { class: 'gnav-toggle', 'aria-label': 'Navigation menu', 'aria-expanded': false });
+    const toggle = createTag('button', {
+      class: 'gnav-toggle',
+      'aria-label': 'Navigation menu',
+      'aria-expanded': false,
+    });
     const onMediaChange = (e) => {
       if (e.matches) {
         this.el.classList.remove(IS_OPEN);
@@ -144,7 +153,10 @@ class Gnav {
     if (brand.classList.contains('logo')) {
       if (brandLinks.length > 0) {
         decorateSVG(brandLinks[0]);
-        brand.insertAdjacentElement('afterbegin', brandLinks[0].querySelector('img'));
+        brand.insertAdjacentElement(
+          'afterbegin',
+          brandLinks[0].querySelector('img')
+        );
       } else {
         brand.insertAdjacentHTML('afterbegin', BRAND_IMG);
       }
@@ -155,7 +167,7 @@ class Gnav {
 
   decorateLogo = () => {
     const logo = this.body.querySelector('.adobe-logo a');
-    if(!logo) return null
+    if (!logo) return null;
     logo.href = makeRelative(logo.href, true);
     logo.classList.add('gnav-logo');
     logo.setAttribute('aria-label', logo.textContent);
@@ -241,9 +253,13 @@ class Gnav {
     switch (el.nodeName) {
       case 'DIV':
         if (el.classList.contains('link-group')) {
-          const title = el.querySelector('.link-group-title')?.childNodes?.[0]?.textContent;
+          const title =
+            el.querySelector('.link-group-title')?.childNodes?.[0]?.textContent;
           if (title) {
-            el.firstChild.setAttribute('daa-lh', `${analyticsGetLabel(title)}-${childIndexOf(el) + 1}`);
+            el.firstChild.setAttribute(
+              'daa-lh',
+              `${analyticsGetLabel(title)}-${childIndexOf(el) + 1}`
+            );
           }
         } else {
           [...el.children].forEach((childEl) => this.setMenuAnalytics(childEl));
@@ -258,13 +274,17 @@ class Gnav {
       default: {
         const a = el.querySelector('a');
         if (a) {
-          a.setAttribute('daa-ll', `${analyticsGetLabel(a.textContent)}-${childIndexOf(el) + 1}`);
+          a.setAttribute(
+            'daa-ll',
+            `${analyticsGetLabel(a.textContent)}-${childIndexOf(el) + 1}`
+          );
         }
       }
     }
   };
 
-  decorateAnalytics = (menu) => [...menu.children].forEach((child) => this.setMenuAnalytics(child));
+  decorateAnalytics = (menu) =>
+    [...menu.children].forEach((child) => this.setMenuAnalytics(child));
 
   decorateButtons = (menu) => {
     const buttons = menu.querySelectorAll('strong a');
@@ -317,11 +337,18 @@ class Gnav {
           decorateSVG(link);
         });
         const decoratedMenu = this.decorateMenu(navItem, navLink, menu);
-        const menuSections = decoratedMenu.querySelectorAll('.gnav-menu-container > div');
-        menuSections.forEach((sec) => { sec.classList.add('section'); });
-        const sectionMetas = decoratedMenu.querySelectorAll('.section-metadata');
+        const menuSections = decoratedMenu.querySelectorAll(
+          '.gnav-menu-container > div'
+        );
+        menuSections.forEach((sec) => {
+          sec.classList.add('section');
+        });
+        const sectionMetas =
+          decoratedMenu.querySelectorAll('.section-metadata');
         sectionMetas.forEach(async (meta) => {
-          const { default: sectionMetadata } = await import('../section-metadata/section-metadata.js');
+          const { default: sectionMetadata } = await import(
+            '../section-metadata/section-metadata.js'
+          );
           sectionMetadata(meta);
         });
         navItem.appendChild(decoratedMenu);
@@ -331,7 +358,7 @@ class Gnav {
 
   decorateCta = () => {
     const cta = this.body.querySelector('strong a');
-    if (!cta) return null
+    if (!cta) return null;
     const { origin } = new URL(cta.href);
     if (origin !== window.location.origin) {
       cta.target = '_blank';
@@ -341,17 +368,88 @@ class Gnav {
     cta.parentElement.classList.add('gnav-cta');
 
     cta.addEventListener('click', (e) => {
-      e.preventDefault()
-      loadScript("https://wam-experiments--milo--adobecom.hlx.page/libs/deps/bifrost-standalone.js").then(() => {
-      console.log(window.bifrost)
-      window.bifrost.connect({
-          timeout: 10000, // reject the call if connection can't be established in the given timeout
-          isLongWaitingEnabled: false
-      }).then((isConnectedWithCCD) => {
-          console.log({isConnectedWithCCD})
-      })
-    })
+      e.preventDefault();
+      loadScript("https://wam-experiments--milo--adobecom.hlx.page/libs/deps/bifrost-standalone.js").then(
+        () => {
+          const startTime = new Date().getTime();
+          const initConfigJson = {
+            env: 'prod',
+            clientId: 'CCHomeWeb1',
+            userContext: window.userContext || {
+              accessToken: '',
+              email: 'osahin@adobe.com',
+              displayName: 'Okan Sahin',
+            },
+            isLoggingEnabled: true,
+            callbacks: {
+              onSuccessCallback: ({ timeTakenInWAMWF }) => {
+                console.log(
+                  'Connection with Thor via WAM is established in: ',
+                  timeTakenInWAMWF
+                );
+              },
+              onFailureCallback: (err) => {
+                console.log(
+                  `Connection with Thor via WAM could not be established, error is: ${JSON.stringify(
+                    err.error
+                  )}`
+                );
+              },
+              clientTokenExpiryCheck: () => {
+                console.log('clientTokenExpiry check is called');
+                return true;
+              },
+              onClientStateCallback: (clientState) => {
+                console.log(clientState);
+              },
+              onMessageCallback: (statusMessage) => {
+                const thorProductsList = window.bifrost.processMessage(statusMessage);
+                console.log(window.bifrost.isCCDAppsPanelEnabled());
+                console.log({thorProductsList})
+                if (!window.bifrost.isCCDAppsPanelEnabled()) {
+                  // return back if apps panel of CCD is disabled, as install will not work in this case
+                  //console.log('returning');
+                  //return;
+                }
+                if (thorProductsList) {
+                  !this.isPrinted &&
+                    console.log('end time', new Date().toISOString());
+                  !this.isPrinted &&
+                    console.log(
+                      'Total time taken:',
+                      new Date().getTime() - startTime
+                    );
+                  this.isPrinted = true;
+                  // this.setState({
+                  //   products: { ...thorProductsList },
+                  // });
+                }
+                /**
+             * or 
+            
+            if you don't want to use processMessage as it CCH specific function
+            following code snippet can be used
+            if (statusMessage.msgBody.status 
+            && statusMessage.msgBody.status.listingDetails) {
+              const appsFromCCD = JSON.parse(statusMessage.msgBody.status.listingDetails);
+              console.log(appsFromCCD); // Apps list from CCD
+            }
+             */
+              },
+            },
+          };
 
+          window.bifrost.initialize(initConfigJson);
+          window.bifrost
+            .connect({
+              timeout: 10000, // reject the call if connection can't be established in the given timeout
+              isLongWaitingEnabled: false,
+            })
+            .then((isConnectedWithCCD) => {
+              console.log({ isConnectedWithCCD });
+            });
+        }
+      );
     });
     return cta.parentElement;
   };
@@ -371,7 +469,7 @@ class Gnav {
           'aria-controls': 'gnav-search-bar',
           'daa-ll': 'Search',
         },
-        SEARCH_ICON,
+        SEARCH_ICON
       );
       searchButton.addEventListener('click', () => {
         this.loadSearch();
@@ -384,8 +482,15 @@ class Gnav {
   };
 
   decorateSearchBar = (label) => {
-    const searchBar = createTag('aside', { id: 'gnav-search-bar', class: 'gnav-search-bar' });
-    const searchField = createTag('div', { class: 'gnav-search-field' }, SEARCH_ICON);
+    const searchBar = createTag('aside', {
+      id: 'gnav-search-bar',
+      class: 'gnav-search-bar',
+    });
+    const searchField = createTag(
+      'div',
+      { class: 'gnav-search-field' },
+      SEARCH_ICON
+    );
     const searchInput = createTag('input', {
       class: 'gnav-search-input',
       placeholder: label,
@@ -419,7 +524,7 @@ class Gnav {
     const { default: appLauncher } = await import('./gnav-appLauncher.js');
     appLauncher(profileEl, appLauncherBlock, this.toggleMenu);
   };
-  
+
   decorateProfile = () => {
     const blockEl = this.body.querySelector('.profile');
     if (!blockEl) return null;
@@ -435,7 +540,9 @@ class Gnav {
       autoValidateToken: true,
       environment: env.ims,
       useLocalStorage: false,
-      onReady: () => { this.imsReady(blockEl, profileEl); },
+      onReady: () => {
+        this.imsReady(blockEl, profileEl);
+      },
     };
     loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
     return profileEl;
@@ -445,7 +552,9 @@ class Gnav {
     const accessToken = window.adobeIMS.getAccessToken();
     if (accessToken) {
       const { env } = getConfig();
-      const ioResp = await fetch(`https://${env.adobeIO}/profile`, { headers: new Headers({ Authorization: `Bearer ${accessToken.token}` }) });
+      const ioResp = await fetch(`https://${env.adobeIO}/profile`, {
+        headers: new Headers({ Authorization: `Bearer ${accessToken.token}` }),
+      });
 
       if (ioResp.status === 200) {
         const profile = await import('./gnav-profile.js');
@@ -490,7 +599,11 @@ class Gnav {
     if (!seoEnabled) return;
     const breadcrumb = this.el.querySelector('.breadcrumbs');
     if (!breadcrumb) return;
-    const breadcrumbSEO = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [] };
+    const breadcrumbSEO = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [],
+    };
     const items = breadcrumb.querySelectorAll('ul > li');
     items.forEach((item, idx) => {
       const link = item.querySelector('a');
@@ -501,17 +614,25 @@ class Gnav {
         item: link?.href,
       });
     });
-    const script = createTag('script', { type: 'application/ld+json' }, JSON.stringify(breadcrumbSEO));
+    const script = createTag(
+      'script',
+      { type: 'application/ld+json' },
+      JSON.stringify(breadcrumbSEO)
+    );
     document.head.append(script);
   };
 
   decorateBreadcrumbs = () => {
     const parent = this.el.querySelector('.breadcrumbs');
-    if(!parent) return null
+    if (!parent) return null;
     const ul = parent.querySelector('ul');
     if (ul) {
       ul.querySelector('li:last-of-type')?.setAttribute('aria-current', 'page');
-      const nav = createTag('nav', { class: 'breadcrumbs', 'aria-label': 'Breadcrumb' }, ul);
+      const nav = createTag(
+        'nav',
+        { class: 'breadcrumbs', 'aria-label': 'Breadcrumb' },
+        ul
+      );
       parent.remove();
       return nav;
     }
@@ -557,7 +678,9 @@ class Gnav {
     if (!isSearch) {
       const desktop = window.matchMedia('(min-width: 900px)');
       if (desktop.matches) {
-        document.addEventListener('scroll', this.closeOnScroll, { passive: true });
+        document.addEventListener('scroll', this.closeOnScroll, {
+          passive: true,
+        });
         if (el.classList.contains('large-menu')) {
           this.curtain.classList.add('is-open', 'is-quiet');
         }
