@@ -33,19 +33,10 @@ const debounce = (func, timeout = 300) => {
   };
 };
 
-function getBlockClasses(className) {
-  const trimDashes = (str) => str.replace(/(^\s*-)|(-\s*$)/g, '');
-  const blockWithVariants = className.split('--');
-  const name = trimDashes(blockWithVariants.shift());
-  const variants = blockWithVariants.map((v) => trimDashes(v));
-  return { name, variants };
-}
-
 class Gnav {
   constructor(body, el) {
     this.el = el;
     this.body = body;
-    this.decorateBlocks();
     this.desktop = window.matchMedia('(min-width: 1200px)');
   }
 
@@ -94,7 +85,6 @@ class Gnav {
 
     const wrapper = createTag('div', { class: 'gnav-wrapper' }, nav);
 
-    this.setBreadcrumbSEO();
     const breadcrumbs = this.decorateBreadcrumbs();
     if (breadcrumbs) {
       wrapper.append(breadcrumbs);
@@ -287,7 +277,7 @@ class Gnav {
       menu.append(container);
     }
     this.decorateLinkGroups(menu);
-    this.decorateAnalytics(menu);
+    // this.decorateAnalytics(menu);
     navLink.addEventListener('focus', () => {
       window.addEventListener('keydown', this.toggleOnSpace);
     });
@@ -406,7 +396,7 @@ class Gnav {
     const { default: appLauncher } = await import('./gnav-appLauncher.js');
     appLauncher(profileEl, appLauncherBlock, this.toggleMenu);
   };
-  
+
   decorateProfile = () => {
     const blockEl = this.body.querySelector('.profile');
     if (!blockEl) return null;
@@ -472,22 +462,21 @@ class Gnav {
     profileEl.append(signIn);
   };
 
-  setBreadcrumbSEO = () => {
+  setBreadcrumbSEO = (ul) => {
     const seoEnabled = getMetadata('breadcrumb-seo') !== 'off';
     if (!seoEnabled) return;
-    const breadcrumb = this.el.querySelector('.breadcrumbs');
-    if (!breadcrumb) return;
-    const breadcrumbSEO = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [] };
-    const items = breadcrumb.querySelectorAll('ul > li');
-    items.forEach((item, idx) => {
+    const items = ul.querySelectorAll(':scope > li');
+    if (items.length === 0) return;
+    const itemListElement = [...items].map((item, idx) => {
       const link = item.querySelector('a');
-      breadcrumbSEO.itemListElement.push({
+      return {
         '@type': 'ListItem',
         position: idx + 1,
         name: link ? link.innerHTML : item.innerHTML,
         item: link?.href,
-      });
+      };
     });
+    const breadcrumbSEO = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement };
     const script = createTag('script', { type: 'application/ld+json' }, JSON.stringify(breadcrumbSEO));
     document.head.append(script);
   };
@@ -497,6 +486,7 @@ class Gnav {
     if (parent) {
       const ul = parent.querySelector('ul');
       if (ul) {
+        this.setBreadcrumbSEO(ul);
         ul.querySelector('li:last-of-type')?.setAttribute('aria-current', 'page');
         const nav = createTag('nav', { class: 'breadcrumbs', 'aria-label': 'Breadcrumb' }, ul);
         parent.remove();
@@ -592,14 +582,6 @@ class Gnav {
     if (e.code === 'Escape') {
       this.toggleMenu(this.state.openMenu);
     }
-  };
-
-  decorateBlocks = () => {
-    const variantBlocks = this.body.querySelectorAll('[class$="-"]');
-    variantBlocks.forEach((block) => {
-      const { name, variants } = getBlockClasses(block.className);
-      block.classList.add(name, ...variants);
-    });
   };
 }
 
