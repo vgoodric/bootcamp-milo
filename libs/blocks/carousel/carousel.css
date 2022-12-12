@@ -3,10 +3,17 @@
   --carousel-slide-button-width: var(--carousel-slide-button-height);
   --carousel-slide-button-height-desktop: 32px;
   --carousel-slide-button-width-desktop: var(--carousel-slide-button-height-desktop);
+  --carousel-focus-color: #109cde;
+  --carousel-ligthbox-active-text-color: #fff;
 }
 
 .carousel {
   overflow: hidden;
+  margin-bottom: 1.8rem;
+}
+
+.carousel .carousel-wrapper {
+  position: relative;
 }
 
 .carousel .carousel-previous,
@@ -73,23 +80,28 @@
   transform: rotate(180deg);
 }
 
+
+
 .carousel .carousel-previous:hover img,
 .carousel .carousel-next:hover img,
 .carousel .carousel-previous:active img,
 .carousel .carousel-next:active img,
 .carousel .carousel-previous:focus img,
-.carousel .carousel-next:focus img {
+.carousel .carousel-next:focus img,
+.carousel.lightbox .lightbox-button:hover img {
   filter: brightness(0.5);
 }
 
 .carousel-slides {
   display: flex;
+  align-items: center;
   left: -100%;
   position: relative;
   transform: translateX(100%);
   transform-style: preserve-3d;
   margin-bottom: 1rem;
   scroll-snap-type: x mandatory;
+  will-change: transform;
 }
 
 .carousel-slides.is-reversing {
@@ -130,12 +142,13 @@
 
 .carousel .carousel-controls {
   display: flex;
-  /* align-items: center;
-  justify-content: center; */
   padding-bottom: 3px;
   position: absolute;
   left: 50%;
   right: auto;
+  top: auto;
+  /* justify-content: center;
+  align-items: center; */
   transform: translateX(-50%);
 }
 
@@ -173,7 +186,135 @@
   background-color: #4b4b4b;
 }
 
+/* .carousel.show-2 .carousel-indicators,
+.carousel.show-3 .carousel-indicators,
+.carousel.show-4 .carousel-indicators,
+.carousel.show-5 .carousel-indicators,
+.carousel.show-6 .carousel-indicators {
+  display: none;
+} */
+
+/* Lightbox */
+/* .carousel.lightbox-active .carousel-wrapper {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  right: auto;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  z-index: 104;
+  width: 100%;
+} */
+
+.carousel.lightbox .carousel-close,
+.carousel.lightbox-active .carousel-expand {
+  display: none;
+}
+
+.carousel.lightbox-active .carousel-close {
+  display: block;
+}
+
+.carousel.lightbox-active {
+  /* background:rgb(0 0 0 / 90%); */
+  /* color: var(--carousel-ligthbox-active-text-color); */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 105;
+  align-items: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden auto;
+}
+
+.carousel.lightbox-active .carousel-wrapper {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 104;
+}
+
+/* .carousel.lightbox-active::after */
+  .carousel-curtain {
+  content: '';
+  background:rgb(0 0 0 / 90%);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  /* z-index: 103; */
+}
+
+.carousel.lightbox-active .carousel-previous,
+.carousel.lightbox-active .carousel-next {
+  top: calc(48% - var(--carousel-slide-button-height-desktop) / 2);
+  z-index: 105;
+  position: fixed;
+}
+
+.carousel.lightbox-active .carousel-slides {
+  max-width: 100%;
+}
+
+/* .carousel.container.lightbox-active {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+} */
+
+.carousel.lightbox .lightbox-button {
+  background-color: rgb(255 255 255 / 80%);
+  border: 1px solid rgb(116 116 116 / 30%);
+  border-radius: 4px;
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 3px 2px 0 4px;
+}
+
+.carousel.lightbox .carousel-close {
+  background-color: transparent;
+  border: none;
+}
+
+.carousel.lightbox .carousel-close:focus-visible {
+  outline: 2px solid var(--carousel-focus-color);
+}
+
+.carousel.lightbox.lightbox-active .lightbox-button {
+  position: fixed;
+}
+
+.carousel.lightbox .lightbox-button:hover {
+  background-color: rgb(255 255 255 / 90%);
+}
+
+.carousel.lightbox .carousel-close:hover {
+  background-color: transparent;
+}
+
 @media (min-width: 900px) {
+  .carousel.lightbox-active.container .carousel-wrapper {
+    width: 80.3333%;
+  }
+
+  .carousel.lightbox-active .carousel.slides {
+    max-width: initial;
+  }
+  
+
   .carousel .carousel-previous,
   .carousel .carousel-next {
     height: var(--carousel-slide-button-height-desktop);
