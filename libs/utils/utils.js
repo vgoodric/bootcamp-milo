@@ -31,6 +31,7 @@ const MILO_BLOCKS = [
   'media',
   'merch',
   'modal',
+  'newsletter-modal',
   'pdf-viewer',
   'quote',
   'review',
