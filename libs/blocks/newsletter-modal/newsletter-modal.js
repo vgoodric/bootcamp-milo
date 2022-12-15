@@ -1,5 +1,18 @@
 import { createTag } from '../../utils/utils.js';
 
+function closeModal() {
+  const qModals = document.querySelectorAll('.dialog-modal');
+  if (qModals?.length) {
+    qModals.forEach((modal) => {
+      if (modal.nextElementSibling?.classList.contains('modal-curtain')) {
+        modal.nextElementSibling.remove();
+      }
+      modal.remove();
+    });
+    window.history.pushState('', document.title, `${window.location.pathname}${window.location.search}`);
+  }
+}
+
 function displayConfirmation(content, message) {
   const confirmationText = createTag('p', { class: 'newsletter-modal-confirmation' });
   const confirmationClose = createTag('button', { class: 'newsletter-modal-confirmation-close' });
@@ -11,10 +24,10 @@ function displayConfirmation(content, message) {
   content.append(confirmationText);
   content.append(confirmationClose);
 
-  // confirmationClose.addEventListener('click', (e) => {
-  //   e.preventDefault();
-  //   container.classList.remove('active');
-  // });
+  confirmationClose.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeModal();
+  });
 }
 
 export default function init(block) {
@@ -30,22 +43,22 @@ export default function init(block) {
   const emailPlaceholder = children[2].querySelector('div p:nth-child(2)').textContent;
   const cta = children[2].querySelector('div p:nth-child(3)').textContent;
 
+  const successMsg = children[3].querySelector(':scope > div:nth-child(1) ').textContent;
+  const errorMsg = children[3].querySelector(':scope > div:nth-child(2) ').textContent;
+
   const bannerContainer = createTag('div', { class: 'newsletter-modal-banner-container' }, picture);
-  const closeIcon = createTag('img', { class: 'newsletter-modal-close-icon', src: '/newsletter-modal/close.svg' });
-  const close = createTag('a', { class: 'newsletter-modal-close' }, closeIcon);
-  bannerContainer.append(close);
 
   const content = createTag('div', { class: 'newsletter-modal-content' });
   const textEl = createTag('p', { class: 'newsletter-modal-text' }, text);
   const form = createTag('form', { class: 'newsletter-modal-form' });
-  
+
   const emailTextEl = createTag('span', { class: 'newsletter-modal-email-text', id: 'newsletter_email' }, emailText);
   const emailEl = createTag('input', { type: 'email', class: 'newsletter-modal-email', required: 'required' });
 
   const emailLabelEl = createTag('label', { class: 'newsletter-modal-email-label', for: 'newsletter_email' }, emailTextEl);
   emailLabelEl.append(emailEl);
   emailEl.placeholder = emailPlaceholder;
-  
+
   const ctaEl = createTag('button', { type: 'submit', class: 'newsletter-modal-cta' }, cta);
   const disclaimerEl = createTag('p', { class: 'newsletter-modal-disclaimer' }, disclaimer);
 
@@ -72,10 +85,10 @@ export default function init(block) {
 
       fetch('https://www.adobe.com/api2/subscribe_v1', requestOptions)
         .then(() => {
-          displayConfirmation(content, 'Thank you for subscribing to the Adobe Blog Newsletter.');
+          displayConfirmation(content, successMsg);
         })
         .catch(() => {
-          displayConfirmation(content, 'An error occurred during subscription. Please refresh the page and try again.');
+          displayConfirmation(content, errorMsg);
         });
     } else {
       emailEl.classList.add('error');
