@@ -2,7 +2,7 @@ body.newsletter-no-scroll {
   overflow: hidden;
 }
 
-main .newsletter-modal {
+.newsletter-modal {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,16 +10,16 @@ main .newsletter-modal {
   overflow: hidden;
 }
 
-main .newsletter-modal-banner-container {
+.newsletter-modal-banner-container {
   width: 100%;
 }
 
-main .newsletter-modal-banner {
+.newsletter-modal-banner {
   width: 100%;
   max-width: none;
 }
 
-main .newsletter-modal-content {
+.newsletter-modal-content {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -28,7 +28,7 @@ main .newsletter-modal-content {
   min-height: 365px;
 }
 
-main .newsletter-modal-close {
+.newsletter-modal-close {
   display: flex;
   position: absolute;
   top: 10px;
@@ -40,26 +40,26 @@ main .newsletter-modal-close {
   justify-content: center;
 }
 
-main .newsletter-modal-close-icon {
+.newsletter-modal-close-icon {
   width: 12px;
   height: 12px;
 }
 
-main .newsletter-modal-text {
+.newsletter-modal-text {
   width: 80%;
   max-width: 420px;
   font-size: 20px;
   margin: 0 0 16px 0!important;
 }
 
-main .newsletter-modal-form {
+.newsletter-modal-form {
   display: flex;
   max-width: 420px;
   width: 80%;
   align-items: center;
 }
 
-main .newsletter-modal-email-label {
+.newsletter-modal-email-label {
   width: 80%;
   max-width: 250px;
   display: flex;
@@ -67,12 +67,12 @@ main .newsletter-modal-email-label {
   margin-bottom: 25px;
 }
 
-main .newsletter-modal-email-label span {
+.newsletter-modal-email-label span {
   font-size: 12px;
   color: #747474;
 }
 
-main .newsletter-modal-email-label input {
+.newsletter-modal-email-label input {
   border: none;
   border-bottom: 1px #D3D3D3 solid;
   font-style: italic;
@@ -82,11 +82,11 @@ main .newsletter-modal-email-label input {
   font-family: var(--body-font-family);
 }
 
-main .newsletter-modal-email-label input.error {
+.newsletter-modal-email-label input.error {
   border-bottom: 1px #ff0000 solid;
 }
 
-main .newsletter-modal-email-label input:focus {
+.newsletter-modal-email-label input:focus {
   outline: none;
 }
 
@@ -97,7 +97,7 @@ main .newsletter-modal-email-label input:focus {
   color: #D3D3D3;
 }
 
-main .newsletter-modal .newsletter-modal-cta {
+.newsletter-modal .newsletter-modal-cta {
   background-color: #1473E6;
   color: white;
   border-radius: 100px;
