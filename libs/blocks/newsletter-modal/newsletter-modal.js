@@ -14,15 +14,11 @@ function closeModal() {
 }
 
 function displayConfirmation(content, message) {
-  const confirmationText = createTag('p', { class: 'newsletter-modal-confirmation' });
-  const confirmationClose = createTag('button', { class: 'newsletter-modal-confirmation-close' });
+  const confirmationText = createTag('p', { class: 'newsletter-modal-confirmation' }, message);
+  const confirmationClose = createTag('button', { class: 'newsletter-modal-confirmation-close' }, 'Close');
 
-  confirmationText.textContent = message;
-  confirmationClose.textContent = 'Close';
   content.innerHTML = '';
-
-  content.append(confirmationText);
-  content.append(confirmationClose);
+  content.append(confirmationText, confirmationClose);
 
   confirmationClose.addEventListener('click', (e) => {
     e.preventDefault();
@@ -47,14 +43,13 @@ export default function init(block) {
   const errorMsg = children[3].querySelector(':scope > div:nth-child(2) ').textContent;
 
   const bannerContainer = createTag('div', { class: 'newsletter-modal-banner-container' }, picture);
-
   const content = createTag('div', { class: 'newsletter-modal-content' });
+
   const textEl = createTag('p', { class: 'newsletter-modal-text' }, text);
   const form = createTag('form', { class: 'newsletter-modal-form' });
 
   const emailTextEl = createTag('span', { class: 'newsletter-modal-email-text', id: 'newsletter_email' }, emailText);
   const emailEl = createTag('input', { type: 'email', class: 'newsletter-modal-email', required: 'required' });
-
   const emailLabelEl = createTag('label', { class: 'newsletter-modal-email-label', for: 'newsletter_email' }, emailTextEl);
   emailLabelEl.append(emailEl);
   emailEl.placeholder = emailPlaceholder;

@@ -101,6 +101,7 @@ body.newsletter-no-scroll {
   font-size: 10px;
   color: #2C2C2C;
   margin-bottom: 40px;
+  line-height: var(--type-body-xxs-lh);
 }
 
 .newsletter-modal-disclaimer a, .newsletter-modal-disclaimer a:visited, .newsletter-modal-disclaimer a:active {
@@ -140,7 +141,6 @@ body.newsletter-no-scroll {
 
   .newsletter-modal-content {
       flex: auto;
-      min-height: 320px;
   }
 
   .newsletter-modal-banner-container img {
