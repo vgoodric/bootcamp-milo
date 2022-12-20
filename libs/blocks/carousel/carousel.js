@@ -99,7 +99,7 @@ function decorateSlideIndicators(slides) {
       'aria-labelledby': `Viewing Slide ${i + 1}`,
     });
 
-    // Inital active state
+    // Set inital active state
     if (i === 0) {
       li.classList.add('active');
       li.setAttribute('tabindex', 0);
@@ -113,32 +113,27 @@ function handleNext(nextElement, elements) {
   if (nextElement.nextElementSibling) {
     return nextElement.nextElementSibling;
   }
-  // The last nextElementSibiling returns false
-  // nextElement = elements[0];
-  const updateElement = elements[0];
-  return updateElement;
+  return elements[0];
 }
 
 function handlePrevious(previousElment, elements) {
   if (previousElment.previousElementSibling) {
     return previousElment.previousElementSibling;
   }
-  // previousElment = elements[elements.length - 1];
-  const updateElement = elements[elements.length - 1];
-  return updateElement;
+  return elements[elements.length - 1];
 }
 
 function handleLightboxButtons(lightboxBtns, el, slideWrapper) {
-  const curtain = createTag('div', { class: 'carousel-curtain is-open' });
-  // Handle Next/Previous Buttons
-  Array.from(lightboxBtns).forEach((button) => {
+  const curtain = createTag('div', { class: 'carousel-curtain' });
+
+  [...lightboxBtns].forEach((button) => {
     button.addEventListener('click', (event) => {
       event.preventDefault();
       if (button.classList.contains('carousel-expand')) {
         el.classList.add('lightbox-active');
         slideWrapper.append(curtain);
       }
-      // close arousel lightbox
+
       if (button.classList.contains('carousel-close')) {
         el.classList.remove('lightbox-active');
         curtain.remove();
@@ -146,7 +141,7 @@ function handleLightboxButtons(lightboxBtns, el, slideWrapper) {
     }, true);
   });
 
-  // Handle click outside of Carousel/Close btn to close lightbox
+  // Handle click outside of Carousel
   curtain.addEventListener('click', (event) => {
     event.preventDefault();
     el.classList.remove('lightbox-active');
@@ -154,8 +149,15 @@ function handleLightboxButtons(lightboxBtns, el, slideWrapper) {
   }, true);
 }
 
-function moveSlides(event, carouselElements) {
-  // console.log('jump', jumpTo);
+function jumpToDirection(activeSlideIndex, jumpToIndex, slideContainer) {
+  if (activeSlideIndex < jumpToIndex) {
+    slideContainer.classList.remove('is-reversing');
+  } else {
+    slideContainer.classList.add('is-reversing');
+  }
+}
+
+function moveSlides(event, carouselElements, jumpToIndex) {
   const {
     slideContainer,
     slides,
@@ -164,60 +166,90 @@ function moveSlides(event, carouselElements) {
     controlsContainer,
     direction,
   } = carouselElements;
-  console.log('move slides direction', direction);
-  // console.log('currentTarget, eventCode', event.currentTarget, event.code);
-  let referenceSlide = slideContainer.querySelector('.reference-slide');
-  let slideIndex = controlsContainer.querySelector('.active');
 
-  // Check if reference slide has been set
+  let referenceSlide = slideContainer.querySelector('.reference-slide');
+  let activeSlide = slideContainer.querySelector('.active');
+  let activeSlideIndicator = controlsContainer.querySelector('.active');
+  const activeSlideIndex = activeSlideIndicator.dataset.index;
+
   if (!referenceSlide) {
     slides[slides.length - 1].classList.add('reference-slide');
-    slides[slides.length - 1].style.order = '-1';
+    slides[slides.length - 1].style.order = '1';
     // track reference slide - last slide initially
     referenceSlide = slides[slides.length - 1];
   }
 
-  // Remove class after being tracked
+  // Remove class/attributes after being tracked
   referenceSlide.classList.remove('reference-slide');
   referenceSlide.style.order = null;
-  slideIndex.classList.remove('active');
-  slideIndex.setAttribute('tabindex', -1);
+  activeSlide.classList.remove('active');
+  activeSlideIndicator.classList.remove('active');
+  activeSlideIndicator.setAttribute('tabindex', -1);
 
-  // Update reference slide
+  /*
+   * If jumpto buttons are clicked
+   * update reference slide, indicator dot, and active slide
+  */
+  if (jumpToIndex >= 0) {
+    if (jumpToIndex === 0) {
+      slides[slides.length - 1].classList.add('reference-slide');
+      slides[slides.length - 1].style.order = '1';
+      referenceSlide = slides[slides.length - 1];
+      activeSlideIndicator = slideIndicators[jumpToIndex];
+      activeSlide = slides[jumpToIndex];
+      jumpToDirection(activeSlideIndex, jumpToIndex, slideContainer);
+    } else if (jumpToIndex === slides.length - 1) {
+      slides[slides.length - 2].classList.add('reference-slide');
+      slides[slides.length - 2].style.order = '1';
+      referenceSlide = slides[slides.length - 2];
+      activeSlideIndicator = slideIndicators[jumpToIndex];
+      activeSlide = slides[jumpToIndex];
+      jumpToDirection(activeSlideIndex, jumpToIndex, slideContainer);
+    } else {
+      slides[jumpToIndex - 1].classList.add('reference-slide');
+      slides[jumpToIndex - 1].style.order = '1';
+      referenceSlide = slides[jumpToIndex - 1];
+      activeSlideIndicator = slideIndicators[jumpToIndex];
+      activeSlide = slides[jumpToIndex];
+      jumpToDirection(activeSlideIndex, jumpToIndex, slideContainer);
+    }
+  }
+
+  // Next arrow button, swipe, keyboard navigation
   if ((event.currentTarget).dataset.toggle === 'next'
     || event.key === KEY_CODES.ARROW_RIGHT
     || event.key === KEY_CODES.ARROW_DOWN
     || (direction === 'left' && event.type === 'touchend')) {
     nextPreviousBtns[1].focus();
     referenceSlide = handleNext(referenceSlide, slides);
-    slideIndex = handleNext(slideIndex, slideIndicators);
+    activeSlideIndicator = handleNext(activeSlideIndicator, slideIndicators);
+    activeSlide = handleNext(activeSlide, slides);
     slideContainer?.classList.remove('is-reversing');
   }
+
+  // Previous arrow button, swipe, keyboard navigation
   if ((event.currentTarget).dataset.toggle === 'previous'
     || event.key === KEY_CODES.ARROW_LEFT
     || event.key === KEY_CODES.ARROW_UP
     || (direction === 'right' && event.type === 'touchend')) {
     nextPreviousBtns[0].focus();
     referenceSlide = handlePrevious(referenceSlide, slides);
-    slideIndex = handlePrevious(slideIndex, slideIndicators);
+    activeSlideIndicator = handlePrevious(activeSlideIndicator, slideIndicators);
+    activeSlide = handlePrevious(activeSlide, slides);
     slideContainer.classList.add('is-reversing');
   }
+
+  // Update reference slide attributes
   referenceSlide.classList.add('reference-slide');
-  referenceSlide.style.order = '-1';
+  referenceSlide.style.order = '1';
 
-  // Hanlde slide indicator
-  slideIndex.classList.add('active');
-  slideIndex.setAttribute('tabindex', 0);
+  // Update active slide and indicator dot attributes
+  activeSlide.classList.add('active');
+  activeSlideIndicator.classList.add('active');
+  activeSlideIndicator.setAttribute('tabindex', 0);
 
-  // Loop over all siblings and update their order
-  let i;
-  let j;
-  let ref;
-  for (
-    i = j = 2, ref = slides.length;
-    ref >= 2 ? j <= ref : j >= ref;
-    i = ref >= 2 ? ++j : --j
-  ) {
+  // Loop over all slide siblings to update their order
+  for (let i = 2; i <= slides.length; i += 1) {
     referenceSlide = handleNext(referenceSlide, slides);
     referenceSlide.style.order = i;
   }
@@ -244,7 +276,6 @@ const getSwipeDirection = (swipe, swipeDistance) => {
   if (xDistance !== swipe.xStart && xDistance > swipe.xMin) {
     return (swipe.xEnd > swipe.xStart) ? 'right' : 'left';
   }
-
   return undefined;
 };
 
@@ -280,31 +311,29 @@ function mobileSwipeDetect(carouselElements) {
   });
 }
 
-function handleNextPreviousEvents(carouselElements) {
+function handleChangingSlides(carouselElements) {
   const { el, nextPreviousBtns, slideIndicators } = carouselElements;
 
   // Handle Next/Previous Buttons
-  Array.from(nextPreviousBtns).forEach((btn) => {
+  [...nextPreviousBtns].forEach((btn) => {
     btn.addEventListener('click', (event) => {
       moveSlides(event, carouselElements);
     });
   });
 
-  // // Handle keyboard navigation
+  // Handle keyboard navigation
   el.addEventListener('keydown', (event) => {
-    // console.log(event.key);
     if (event.key === KEY_CODES.ARROW_RIGHT
       || event.key === KEY_CODES.ARROW_LEFT
       || event.key === KEY_CODES.ARROW_UP
       || event.key === KEY_CODES.ARROW_DOWN) { moveSlides(event, carouselElements); }
   });
 
-  // // Handle slide indictors
-  Array.from(slideIndicators).forEach((li) => {
-    li.addEventListener('click', () => {
-      console.log('slide indicator', li.dataset.index);
-      // const jumpTo = li.dataset.index;
-      // moveSlides(event, carouselElements, jumpTo);
+  // Handle slide indictors
+  [...slideIndicators].forEach((li) => {
+    li.addEventListener('click', (event) => {
+      const jumpToIndex = Number(li.dataset.index);
+      moveSlides(event, carouselElements, jumpToIndex);
     });
   });
 
@@ -324,9 +353,7 @@ export default function init(el) {
     if (key.textContent === 'carousel' && key.nextElementSibling.textContent === carouselName) {
       const slide = key.closest('.section');
       slide.classList.add('carousel-slide');
-
       rdx.push(slide);
-
       slide.setAttribute('data-index', rdx.indexOf(slide));
     }
     return rdx;
@@ -340,20 +367,24 @@ export default function init(el) {
   fragment.append(...slides);
   const slideWrapper = createTag('div', { class: 'carousel-wrapper' });
   const slideContainer = createTag('div', { class: 'carousel-slides' }, fragment);
+  const carouselElements = {
+    el,
+    nextPreviousBtns,
+    slideContainer,
+    slides,
+    slideIndicators,
+    controlsContainer,
+    direction: undefined,
+  };
 
-  // el.replaceChildren(slideContainer);
   if (el.classList.contains('lightbox')) {
     const lightboxBtns = decorateLightboxButtons();
     slideWrapper.append(slideContainer, ...lightboxBtns);
-
     handleLightboxButtons(lightboxBtns, el, slideWrapper);
   } else {
     slideWrapper.append(slideContainer);
   }
-  /*
-  * Remove block property DOM elements before adding updated slide DOM
-  * replaceChildren() api not supported by Safari 13.1
-  */
+
   el.textContent = '';
   el.append(slideWrapper);
 
@@ -374,15 +405,6 @@ export default function init(el) {
     });
   });
 
-  const carouselElements = {
-    el,
-    nextPreviousBtns,
-    slideContainer,
-    slides,
-    slideIndicators,
-    controlsContainer,
-    direction: undefined,
-  };
-
-  handleNextPreviousEvents(carouselElements);
+  slides[0].classList.add('active');
+  handleChangingSlides(carouselElements);
 }
