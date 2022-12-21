@@ -1,4 +1,4 @@
-import { makeRelative, loadScript, getConfig } from '../../utils/utils.js';
+import { makeRelative, loadScript, getConfig, createTag } from '../../utils/utils.js';
 import {
   throttle,
   parseValue,
@@ -9,6 +9,8 @@ import {
 } from './utils.js';
 import getTheme from './chartLightTheme.js';
 import { replaceKey } from '../../features/placeholders.js';
+import accordionInit from '../accordion/accordion.js';
+import { getModal } from '../modal/modal.js';
 
 export const SMALL = 'small';
 export const MEDIUM = 'medium';
@@ -432,6 +434,42 @@ const setDonutListeners = (chart, source, seriesData, units = []) => {
   chart.on('legendselectchanged', ({ selected }) => { mouseOutValue = handleDonutSelect(sourceData, selected, chart, units?.[0], title); });
 };
 
+// Accessible Chart Data
+const chartTable = (data, units) => {
+  console.log(data);
+  // copy to not mess up charts
+  const rows = Array.from(data.source);
+  console.log(rows)
+  if (!rows) return;
+  const headers = rows.shift();
+  const headersRow = createTag('tr');
+
+  headers.forEach((cell) => {
+    headersRow.appendChild(createTag('th', { scope: 'col' }, cell));
+  });
+
+  const thead = createTag('thead', null, headersRow);
+  const tbody = createTag('tbody');
+
+  const unit = units[0] ?? '';
+  rows.forEach((row, idx) => {
+    // copy to not mess up charts
+    row = Array.from(row)
+    const bodyRow = createTag('tr');
+    const headerCell = row.shift();
+    
+    // TODO: Pie and Donut charts have a different format
+    bodyRow.append(createTag('th', { class: '', scope: 'row' }, headerCell), ...row.map((cell) => createTag('td', null, cell + unit)));
+    tbody.appendChild(bodyRow);
+  });
+
+  const table = createTag('table');
+
+  table.append(thead, tbody);
+
+  return table;
+}
+
 const initChart = (chartWrapper, chartType, { data, series }, colors, size) => {
   const themeName = getTheme(size);
   const { dataset, headers, units } = processDataset(data);
@@ -603,6 +641,21 @@ const init = (el) => {
       const data = chartData(json);
 
       if (!data) return;
+
+      const { dataset, headers, units } = processDataset(data.data);
+      const accordionTable = chartTable(dataset, units);
+      const modalTable = chartTable(dataset, units);
+      const accordion = createTag('div', {class: 'accordion'}, '<div>Data Accordion</div>');
+      const accordionData = createTag('div', null, accordionTable);
+      accordion.append(accordionData);
+      children[2].after(accordion);
+      accordionInit(accordion);
+      
+      const modalButton = createTag('button', {class: 'modal-button'}, '<div>Data Modal</div>')
+      modalButton.addEventListener('click', () => {
+        getModal(null, { class: 'chart-modal', id: 'chart-modal', content: modalTable, closeEvent: 'closeModal' });
+      })
+      children[2].after(modalButton);
 
       const hasOverride = hasPropertyCI(data?.data[0], 'color');
       const colors = hasOverride
