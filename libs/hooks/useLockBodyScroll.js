@@ -4,6 +4,6 @@ export default function useLockBodyScroll() {
   useLayoutEffect(() => {
     const originalStyle = window.getComputedStyle(document.body).overflow;
     document.body.style.overflow = 'hidden';
-    return () => (document.body.style.overflow = originalStyle);
+    return () => (document.body.style.overflow = originalStyle); // eslint-disable-line
   }, []);
 }

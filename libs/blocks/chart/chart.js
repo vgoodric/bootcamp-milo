@@ -354,7 +354,7 @@ export const getChartOptions = (chartType, dataset, series, headers, colors, siz
   let yUnits = units;
 
   if (units[0] === 'date') {
-    xUnit = units[0];
+    xUnit = units[0]; // eslint-disable-line prefer-destructuring
     yUnits = units.length > 1 ? units.slice(1) : [''];
   }
 

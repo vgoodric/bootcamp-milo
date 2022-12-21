@@ -52,7 +52,7 @@ export default async function getApps(profileEl, appLauncherBlock, toggle) {
 
   const appsLink = appLauncherBlock.querySelector('a');
   appsLink.href = makeRelative(appsLink.href, true);
-  
+
   const path = appsLink.href;
   const resp = await fetch(`${path}.plain.html`);
   if (!resp.ok) return null;

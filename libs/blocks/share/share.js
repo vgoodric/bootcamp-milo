@@ -14,7 +14,7 @@ export async function getSVGsfromFile(path, selectors) {
     const svg = doc.querySelector('svg');
     if (svg) return [{ svg }];
     return null;
-  } else if (!(selectors instanceof Array)) {
+  } if (!(selectors instanceof Array)) {
     selectors = [selectors];
   }
 
@@ -66,7 +66,7 @@ export default async function decorate(el) {
   if (!svgs) return;
 
   const heading = await replaceKey('share-this-page', config);
-  const toSentenceCase = (str) => (str && typeof str === 'string') ? str.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase()) : '';
+  const toSentenceCase = (str) => ((str && typeof str === 'string') ? str.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase()) : ''); // eslint-disable-line
   el.append(createTag('p', null, toSentenceCase(heading)));
   const container = createTag('p', { class: 'icon-container' });
   svgs.forEach((svg) => {

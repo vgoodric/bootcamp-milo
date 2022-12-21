@@ -96,11 +96,11 @@ function Review({
       window.setTimeout(() => {
         window.removeEventListener(
           BEFORE_UNLOAD_EVENT,
-          beforeUnloadCallback.current
+          beforeUnloadCallback.current,
         );
         beforeUnloadCallback.current = null;
         sendSetRating();
-      }, parseInt(clickTimeout, 10))
+      }, parseInt(clickTimeout, 10)),
     );
   };
 
@@ -113,7 +113,7 @@ function Review({
     if (beforeUnloadCallback.current !== null) {
       window.removeEventListener(
         BEFORE_UNLOAD_EVENT,
-        beforeUnloadCallback.current
+        beforeUnloadCallback.current,
       );
       beforeUnloadCallback.current = null;
     }
@@ -122,7 +122,7 @@ function Review({
   const handleRatingClick = (
     newRating,
     ev,
-    { isKeyboardSelection = false } = {}
+    { isKeyboardSelection = false } = {},
   ) => {
     if (!isInteractive) return;
 
@@ -137,13 +137,13 @@ function Review({
     }
 
     setAverageRating(
-      addToAverage(newRating, Number(averageRating), updatedTotalReviews)
+      addToAverage(newRating, Number(averageRating), updatedTotalReviews),
     );
 
     if (
-      !isKeyboardSelection &&
-      newRating > commentThreshold &&
-      !displayComments
+      !isKeyboardSelection
+      && newRating > commentThreshold
+      && !displayComments
     ) {
       handleClickAboveCommentThreshold(newRating, updatedTotalReviews);
       return;
@@ -156,9 +156,9 @@ function Review({
     setRating(newRating);
 
     if (
-      isKeyboardSelection &&
-      newRating > commentThreshold &&
-      !displayComments
+      isKeyboardSelection
+      && newRating > commentThreshold
+      && !displayComments
     ) {
       onRatingSet({
         rating: newRating,

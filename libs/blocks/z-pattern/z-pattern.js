@@ -38,7 +38,7 @@ function getReversedRowCount(rows) {
 
 function getChildSingleRowCount(children) {
   return [...children].reduce((length, child) => {
-    if (child.children.length === 1) length += 1;
+    if (child.children.length === 1) length += 1; // eslint-disable-line no-param-reassign
     return length;
   }, 0);
 }

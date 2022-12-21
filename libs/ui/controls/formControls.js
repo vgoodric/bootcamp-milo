@@ -12,19 +12,17 @@ const Select = ({ label, name, onChange, options, value }) => {
       <label for=${name}>${label}</label>
       <select id=${name} value=${value} onChange=${onSelectChange}>
         ${Object.entries(options).map(
-          ([val, optionLabel]) => html`<option value="${val}">${optionLabel}</option>`
-        )}
+    ([val, optionLabel]) => html`<option value="${val}">${optionLabel}</option>`,
+  )}
       </select>
     </div>
   `;
 };
 
-const Input = ({ label, name, onChange, onValidate, type = 'text', value }) => {
+const Input = ({
+  label, name, onChange, onValidate, type = 'text', value,
+}) => {
   const [isValid, setIsValid] = useState(true);
-
-  useEffect(() => {
-    if (value) validateInput(value);
-  }, []);
 
   const validateInput = (val) => {
     if (typeof onValidate === 'function' && val !== '' && !onValidate(val)) {
@@ -40,12 +38,16 @@ const Input = ({ label, name, onChange, onValidate, type = 'text', value }) => {
     onChange(inputVal, e);
   };
 
+  useEffect(() => {
+    if (value) validateInput(value);
+  }, []);
+
   const isCheckbox = type === 'checkbox';
 
   const computedValue = { [isCheckbox ? 'checked' : 'value']: value };
 
   const id = isCheckbox
-    ? `${name}${checkboxIdx++}`
+    ? `${name}${checkboxIdx++}` // eslint-disable-line no-plusplus
     : name;
 
   return html`

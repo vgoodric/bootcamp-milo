@@ -1,9 +1,7 @@
-import { getConfig, getMetadata, createTag } from '../../utils/utils.js';
+import { createTag } from '../../utils/utils.js';
 
 const SCOPE = 'adobecom';
 const API_KEY = 'adobedotcom2';
-
-
 
 const getHelpxLink = (searchStr, country = 'US') => `https://helpx.adobe.com/globalsearch.html?q=${encodeURIComponent(searchStr)}&start_index=0&country=${country}`;
 const getSearchLink = (searchStr, locale = 'en_US') => `https://adobesearch.adobe.io/autocomplete/completions?q[locale]=${locale}&scope=${SCOPE}&q[text]=${encodeURIComponent(searchStr)}`;

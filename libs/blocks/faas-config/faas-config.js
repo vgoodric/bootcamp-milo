@@ -31,7 +31,7 @@ const getHashConfig = () => {
 
   const encodedConfig = hash.startsWith('#') ? hash.substring(1) : hash;
   return parseEncodedConfig(encodedConfig);
-}
+};
 
 const getInitialState = () => {
   const hashConfig = getHashConfig();
@@ -92,7 +92,7 @@ const CopyBtn = () => {
     const inputs = document.querySelectorAll('#ai_Required select, #ai_Required input');
     const requiredPanelExpandButton = document.querySelector('#ai_Required button[aria-label=Expand]');
     inputs.forEach((input) => {
-      if(input.id === '149') {
+      if (input.id === '149') {
         return;
       }
       if (!input.value) {
@@ -110,11 +110,10 @@ const CopyBtn = () => {
         input.focus();
         return;
       }
-      if(input.name == "v" && !/^[A-Za-z0-9]*$/.test(input.value)) {
+      if (input.name === 'v' && !/^[A-Za-z0-9]*$/.test(input.value)) {
         inputValidation = false;
         setErrorMessage('Campagin ID allows only letters and numbers');
         input.focus();
-        return;
       }
     });
     return inputValidation;
@@ -246,7 +245,7 @@ const RequiredPanel = () => {
   };
 
   if (!Object.keys(langOptions).length) {
-    useEffect(() => {
+    useEffect(() => { // eslint-disable-line react-hooks/rules-of-hooks
       getObjFromAPI('/faas/api/locale').then((data) => {
         data.forEach((l) => {
           langOptions[l.code] = l.name;
@@ -383,7 +382,9 @@ const StylePanel = () => html`
   <${Select}
     label="Title Size"
     prop="title_size"
-    options="${{ h1: 'H1', h2: 'H2', h3: 'H3', h4: 'H4', h5: 'H5', h6: 'H6', p: 'P' }}" />
+    options="${{
+    h1: 'H1', h2: 'H2', h3: 'H3', h4: 'H4', h5: 'H5', h6: 'H6', p: 'P',
+  }}" />
   <${Select} label="Title Alignment" prop="title_align" options="${{ left: 'Left', center: 'Center', right: 'Right' }}" />
   <${Select} label="Custom Theme" prop="style_customTheme" options="${{ none: 'None' }}" />
 `;

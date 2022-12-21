@@ -16,8 +16,8 @@ export function addRichResults(type, { createTag, getMetadata }) {
     };
     const script = createTag('script', { type: 'application/ld+json' }, JSON.stringify(newsArticle));
     document.head.append(script);
-  }
-  
+  };
+
   switch (type) {
     // add support for new types here, e.g. Product
     case 'NewsArticle':

@@ -61,17 +61,17 @@ function decorateText(el, size) {
     headingEl.nextElementSibling?.classList.add(`body-${bodySize}`);
     const sib = headingEl.previousElementSibling;
     if (sib) {
-      sib.querySelector('img, .icon') ? sib.classList.add('icon-area') : sib.classList.add(`detail-${detailSize}`);
+      sib.querySelector('img, .icon') ? sib.classList.add('icon-area') : sib.classList.add(`detail-${detailSize}`); // eslint-disable-line chai-friendly/no-unused-expressions
       sib.previousElementSibling?.classList.add('icon-area');
     }
   };
-  size === 'large' ? decorate(heading, 'XXL', 'XL', 'L') : decorate(heading, 'XL', 'M', 'M');
+  size === 'large' ? decorate(heading, 'XXL', 'XL', 'L') : decorate(heading, 'XL', 'M', 'M'); // eslint-disable-line chai-friendly/no-unused-expressions
 }
 
 function extendButtonsClass(text) {
   const buttons = text.querySelectorAll('.con-button');
   if (buttons.length === 0) return;
-  buttons.forEach((button) => { button.classList.add('button-justified-mobile') });
+  buttons.forEach((button) => { button.classList.add('button-justified-mobile'); });
 }
 
 export default function init(el) {

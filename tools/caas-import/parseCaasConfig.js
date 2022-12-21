@@ -96,7 +96,7 @@ const parseAndQuery = (str) => {
         : 'OR';
       return {
         intraTagLogic,
-        andTags: q.split(` ${intraTagLogic} `)
+        andTags: q.split(` ${intraTagLogic} `),
       };
     });
 };

@@ -15,7 +15,7 @@
   const w = window;
 
   function isCorpAdobeCom() {
-    const host = window.location.host;
+    const { host } = window.location;
     if (host.length > 15 && host.substring(host.length - 15) === '.corp.adobe.com') {
       return true;
     }
@@ -33,7 +33,7 @@
 
     function getOpt(key) {
       if (op1[key] !== undefined) {
-        return op1[key]
+        return op1[key];
       }
       if (op2[key] !== undefined) {
         return op2[key];
@@ -41,22 +41,20 @@
       return defaultOptions[key];
     }
 
-    return Object.keys(defaultOptions).reduce(function (options, key) {
+    return Object.keys(defaultOptions).reduce((options, key) => {
       options[key] = getOpt(key);
       return options;
     }, {});
   }
 
   function sendUnhandledError(e) {
-    log(e.reason || e.error || e.message, {
-      errorType: 'i',
-    });
+    log(e.reason || e.error || e.message, { errorType: 'i' });
   }
 
   function log(msg, options) {
     msg = msg && msg.stack ? msg.stack : (msg || '');
     if (msg.length > MSG_LIMIT) {
-      msg = msg.slice(0, MSG_LIMIT) + '<trunc>';
+      msg = `${msg.slice(0, MSG_LIMIT)}<trunc>`;
     }
 
     const o = mergeOptions(options, w.lana.options);
@@ -73,14 +71,14 @@
 
     const endpoint = (isCorp || !o.useProd) ? o.endpointStage : o.endpoint;
     const queryParams = [
-      'm=' + encodeURIComponent(msg),
-      'c=' + encodeURI(o.clientId),
-      's=' + sampleRate,
-      't=' + encodeURI(o.errorType),
+      `m=${encodeURIComponent(msg)}`,
+      `c=${encodeURI(o.clientId)}`,
+      `s=${sampleRate}`,
+      `t=${encodeURI(o.errorType)}`,
     ];
 
     if (o.tags) {
-      queryParams.push('tags=' + encodeURI(o.tags));
+      queryParams.push(`tags=${encodeURI(o.tags)}`);
     }
 
     if (w.lana.debug || w.lana.localhost) console.log('LANA Msg: ', msg, '\nOpts:', o);
@@ -89,13 +87,13 @@
       const xhr = new XMLHttpRequest();
       if (w.lana.debug) {
         queryParams.push('d');
-        xhr.addEventListener('load', function () {
+        xhr.addEventListener('load', () => {
           console.log('LANA response:', xhr.responseText);
         });
       }
-      xhr.open('GET', endpoint + '?' + queryParams.join('&'));
+      xhr.open('GET', `${endpoint}?${queryParams.join('&')}`);
       xhr.send();
-      return xhr;
+      return xhr; // eslint-disable-line consistent-return
     }
   }
 
@@ -109,7 +107,7 @@
 
   w.lana = {
     debug: false,
-    log: log,
+    log,
     options: mergeOptions(w.lana && w.lana.options),
   };
 

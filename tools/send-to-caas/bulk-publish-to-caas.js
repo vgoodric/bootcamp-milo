@@ -93,7 +93,9 @@ const processData = async (data, accessToken) => {
   let keepGoing = true;
 
   const statusModal = showAlert('', { btnText: 'Cancel', onClose: () => { keepGoing = false; } });
-  const { caasEnv, draftOnly, host, owner, repo, usepreview } = getConfig();
+  const {
+    caasEnv, draftOnly, host, owner, repo, usepreview,
+  } = getConfig();
 
   const domain = usepreview
     ? `https://main--${repo}--${owner}.hlx.page`

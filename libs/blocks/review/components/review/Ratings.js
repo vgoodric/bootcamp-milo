@@ -46,7 +46,7 @@ const Ratings = ({
           setTimeoutId(
             setTimeout(() => {
               setHoverIndex(hoveredRating);
-            }, tooltipDelay)
+            }, tooltipDelay),
           );
         }
       }
@@ -114,7 +114,7 @@ const Ratings = ({
         starString=${starString}
         starStringPlural=${starStringPlural}
         tooltip=${tooltip}
-      />`
+      />`,
     );
   }
 

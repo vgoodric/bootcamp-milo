@@ -240,19 +240,19 @@ const beforeSubmitCallback = () => {
     const email = document.querySelector('.FaaS-1 input');
     const country = document.querySelector('.FaaS-14 select');
 
-    fetch('https://us-central1-adobe---aa-university.cloudfunctions.net/register', { 
+    fetch('https://us-central1-adobe---aa-university.cloudfunctions.net/register', {
       method: 'POST',
       body: JSON.stringify({
         first_name: firstName.value,
         last_name: lastName.value,
         email: email.value,
         university: 'none',
-        country: country.value
-      })
+        country: country.value,
+      }),
     })
-    .catch((error) => {
-      console.error('AA Sandbox Error:', error);
-    });
+      .catch((error) => {
+        console.error('AA Sandbox Error:', error);
+      });
   }
 };
 /* c8 ignore stop */
@@ -293,10 +293,10 @@ export const makeFaasConfig = (targetState) => {
         149: '',
       },
     },
-    e: { 
-      afterYiiLoadedCallback, 
+    e: {
+      afterYiiLoadedCallback,
       beforeSubmitCallback,
-    }
+    },
   };
 
   // b2bpartners

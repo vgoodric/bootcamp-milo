@@ -40,7 +40,7 @@ const init = async (a) => {
 
   /* c8 ignore next 16 */
   const handleViewSdkReady = () => {
-    const adobeDCView = new AdobeDC.View(
+    const adobeDCView = new AdobeDC.View( // eslint-disable-line no-undef
       {
         clientId,
         divId: `${PDF_RENDER_DIV_ID}_${idSuffix}`,

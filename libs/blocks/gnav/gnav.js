@@ -208,7 +208,7 @@ class Gnav {
     return mainNav;
   };
 
-  setNavLinkAttributes = (id, navLink) => {
+  setNavLinkAttributes = (id, navLink) => { // eslint-disable-line class-methods-use-this
     navLink.setAttribute('role', 'button');
     navLink.setAttribute('aria-expanded', false);
     navLink.setAttribute('aria-controls', id);
@@ -216,7 +216,7 @@ class Gnav {
     navLink.setAttribute('daa-lh', 'header|Open');
   };
 
-  decorateLinkGroups = (menu) => {
+  decorateLinkGroups = (menu) => { // eslint-disable-line class-methods-use-this
     const linkGroups = menu.querySelectorAll('.link-group');
     linkGroups.forEach((linkGroup) => {
       const image = linkGroup.querySelector('picture');
@@ -265,7 +265,7 @@ class Gnav {
 
   decorateAnalytics = (menu) => [...menu.children].forEach((child) => this.setMenuAnalytics(child));
 
-  decorateButtons = (menu) => {
+  decorateButtons = (menu) => { // eslint-disable-line class-methods-use-this
     const buttons = menu.querySelectorAll('strong a');
     buttons.forEach((btn) => {
       btn.classList.add('con-button', 'filled', 'blue', 'button-M');
@@ -406,7 +406,7 @@ class Gnav {
     const { default: appLauncher } = await import('./gnav-appLauncher.js');
     appLauncher(profileEl, appLauncherBlock, this.toggleMenu);
   };
-  
+
   decorateProfile = () => {
     const blockEl = this.body.querySelector('.profile');
     if (!blockEl) return null;

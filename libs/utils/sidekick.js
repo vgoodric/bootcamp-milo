@@ -7,7 +7,7 @@ export default function init({ loadScript, loadStyle }) {
     sendToCaaS({ host, project, branch, repo, owner }, loadScript, loadStyle);
   };
 
-  const checkSchemaListener = async (e) => {
+  const checkSchemaListener = async () => {
     const schema = document.querySelector('script[type="application/ld+json"]');
     if (schema === null) return;
     const resultsUrl = 'https://search.google.com/test/rich-results?url=';

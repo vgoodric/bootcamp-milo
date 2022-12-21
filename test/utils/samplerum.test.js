@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-expressions */
+/* eslint-disable no-redeclare */
 /* global describe it */
 
 import { expect } from '@esm-bundle/chai';

@@ -7,7 +7,7 @@ export const throttle = (delay = 250, throttled = () => {}, opts = {}, ...args) 
     if (!previousTime || time - previousTime >= delay) {
       previousTime = time;
       throttled.apply(null, [opts, args]);
-      timeout = setTimeout(() => {
+      timeout = setTimeout(() => { // eslint-disable-line no-unused-vars
         throttled.apply(null, [opts, args]);
         timeout = null;
       }, (delay));

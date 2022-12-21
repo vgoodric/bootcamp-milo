@@ -96,7 +96,7 @@ export async function getModal(el, custom) {
   dialog.insertAdjacentElement('afterend', curtain);
   close.focus({ focusVisible: true });
 
-  return dialog;
+  return dialog; // eslint-disable-line consistent-return
 }
 
 export default function init(el) {

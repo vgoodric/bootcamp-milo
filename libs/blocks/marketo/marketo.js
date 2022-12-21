@@ -107,7 +107,7 @@ const readyForm = (error, form, formData) => {
     if (e.target.type === 'submit') return;
     const pageTop = document.querySelector('header')?.offsetHeight ?? 0;
     const targetPosition = e.target?.getBoundingClientRect().top ?? 0;
-    const offsetPosition = targetPosition + window.pageYOffset - pageTop - window.innerHeight /2 ;
+    const offsetPosition = targetPosition + window.pageYOffset - pageTop - window.innerHeight / 2;
     window.scrollTo(0, offsetPosition);
   }, true);
   form.onValidate((success) => formValidate(form, success, error, errorMessage));

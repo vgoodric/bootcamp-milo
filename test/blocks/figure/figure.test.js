@@ -53,5 +53,5 @@ describe('init', () => {
 
     expect(blockEl.classList.length).to.equal(0);
   });
-  console.log(document.body.innerHTML)
+  console.log(document.body.innerHTML);
 });

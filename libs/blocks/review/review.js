@@ -28,6 +28,8 @@ const getVisitorId = () => {
   return null;
 };
 
+/* eslint-disable */
+// The pattern here should be checked, many unused vars
 const App = ({ rootEl, strings }) => html`
   <${HelixReview}
     clickTimeout="5000"
@@ -45,6 +47,7 @@ const App = ({ rootEl, strings }) => html`
     onReviewLoad=${({ hasRated, rating }) => {}}
   />
 `;
+/* eslint-enable */
 
 const sanitizedKeyDiv = (text) => text.toLowerCase().replace(/ /g, '');
 
