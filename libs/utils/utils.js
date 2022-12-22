@@ -9,6 +9,7 @@ const MILO_BLOCKS = [
   'adobetv',
   'article-feed',
   'aside',
+  'author-header',
   'caas',
   'caas-config',
   'card-metadata',
@@ -17,7 +18,10 @@ const MILO_BLOCKS = [
   'columns',
   'faas',
   'faq',
+  'featured-article',
+  'figure',
   'fragment',
+  'featured-article',
   'footer',
   'gnav',
   'how-to',
@@ -30,6 +34,7 @@ const MILO_BLOCKS = [
   'modal',
   'pdf-viewer',
   'quote',
+  'recommended-articles',
   'review',
   'section-metadata',
   'tabs',
@@ -125,24 +130,21 @@ export const [setConfig, getConfig] = (() => {
       config.locale = getLocale(conf.locales);
       document.documentElement.setAttribute('lang', config.locale.ietf);
       try {
-        document.documentElement.setAttribute('dir',(new Intl.Locale(config.locale.ietf)).textInfo.direction);
+        document.documentElement.setAttribute('dir', (new Intl.Locale(config.locale.ietf)).textInfo.direction);
       } catch (e) {
-        console.log("Invalid or missing locale:",e)
+        console.log('Invalid or missing locale:', e);
       }
-      if (config.contentRoot) {
-        config.locale.contentRoot = `${origin}${config.locale.prefix}${config.contentRoot}`;
-      } else {
-        config.locale.contentRoot = `${origin}${config.locale.prefix}`;
-      }
+      config.locale.contentRoot = `${origin}${config.locale.prefix}${config.contentRoot ?? ''}`;
+
       return config;
     },
     () => config,
   ];
 })();
 
-export function getMetadata(name) {
+export function getMetadata(name, doc = document) {
   const attr = name && name.includes(':') ? 'property' : 'name';
-  const meta = document.head.querySelector(`meta[${attr}="${name}"]`);
+  const meta = doc.head.querySelector(`meta[${attr}="${name}"]`);
   return meta && meta.content;
 }
 
@@ -301,7 +303,7 @@ export function decorateAutoBlock(a) {
     const key = Object.keys(candidate)[0];
     const match = href.includes(candidate[key]);
     if (match) {
-      if (key === 'pdf-viewer' && a.textContent !== decodeURI(a.href)) {
+      if (key === 'pdf-viewer' && !a.textContent.includes('.pdf')) {
         a.target = '_blank';
         return false;
       }
@@ -404,7 +406,7 @@ async function decorateIcons(area, config) {
 }
 
 async function decoratePlaceholders(area, config) {
-  const el = area.documentElement || area;
+  const el = area.documentElement ? area.body : area;
   const regex = /{{(.*?)}}/g;
   const found = regex.test(el.innerHTML);
   if (!found) return;
@@ -454,7 +456,7 @@ async function loadPostLCP(config) {
   loadFonts(config.locale, loadStyle);
 }
 
-export async function loadDeferred(area) {
+export async function loadDeferred(area, blocks) {
   const event = new Event('milo:deferred');
   area.dispatchEvent(event);
   if (getMetadata('nofollow-links') === 'on') {
@@ -462,6 +464,12 @@ export async function loadDeferred(area) {
     const { default: nofollow } = await import('../features/nofollow.js');
     nofollow(path, area);
   }
+
+  import('./samplerum.js').then(({ sampleRUM }) => {
+    sampleRUM('lazy');
+    sampleRUM.observe(blocks);
+    sampleRUM.observe(area.querySelectorAll('picture > img'));
+  });
 }
 
 function loadPrivacy() {
@@ -497,12 +505,19 @@ export async function loadArea(area = document) {
 
   if (isDoc) {
     decorateHeader();
+
+    import('./samplerum.js').then(({ addRumListeners }) => {
+      addRumListeners();
+    });
   }
 
   const sections = decorateSections(area, isDoc);
+
+  const areaBlocks = [];
   // eslint-disable-next-line no-restricted-syntax
   for (const section of sections) {
     const loaded = section.blocks.map((block) => loadBlock(block));
+    areaBlocks.push(...section.blocks);
 
     // Only move on to the next section when all blocks are loaded.
     // eslint-disable-next-line no-await-in-loop
@@ -521,6 +536,11 @@ export async function loadArea(area = document) {
 
   // Post section loading on document
   if (isDoc) {
+    const georouting = getMetadata('georouting') || config.geoRouting;
+    if (georouting === 'on') {
+      const { default: loadGeoRouting } = await import('../features/georouting/georouting.js');
+      loadGeoRouting(config, createTag, getMetadata);
+    }
     const type = getMetadata('richresults');
     if (SUPPORTED_RICH_RESULTS_TYPES.includes(type)) {
       const { addRichResults } = await import('../features/richresults.js');
@@ -533,7 +553,7 @@ export async function loadArea(area = document) {
   }
 
   // Load everything that can be deferred until after all blocks load.
-  await loadDeferred(area);
+  await loadDeferred(area, areaBlocks);
 }
 
 // Load everything that impacts performance later.
@@ -548,6 +568,7 @@ export function loadDelayed(delay = 3000) {
       } else {
         resolve(null);
       }
+      import('./samplerum.js').then(({ sampleRUM }) => sampleRUM('cwv'));
     }, delay);
   });
 }
@@ -575,4 +596,28 @@ export function createIntersectionObserver({ el, callback, once = true, options 
   }, options);
   io.observe(el);
   return io;
+}
+
+export function loadLana(options = {}) {
+  if (window.lana) return;
+
+  const lanaError = (e) => {
+    window.lana.log(e.reason || e.error || e.message, {
+      errorType: 'i',
+    });
+  }
+
+  window.lana = {
+    log: async (...args) => {
+      await import('../utils/lana.js');
+      window.removeEventListener('error', lanaError);
+      window.removeEventListener('unhandledrejection', lanaError);
+      return window.lana.log(...args);
+    },
+    debug: false,
+    options,
+  };
+
+  window.addEventListener('error', lanaError);
+  window.addEventListener('unhandledrejection', lanaError);
 }
