@@ -183,4 +183,12 @@ main>.section[class*='-up']>.content {
     grid-template-columns: repeat(5, 1fr);
   }
 
+  .section.grid-template-columns-1-2 {
+    grid-template-columns: 1fr 2fr;
+  }
+  
+  .section.grid-template-columns-2-1 {
+    grid-template-columns: 2fr 1fr;
+  }
+
 }
