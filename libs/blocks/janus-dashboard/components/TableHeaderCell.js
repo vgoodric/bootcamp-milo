@@ -1,7 +1,7 @@
 import { html } from '../../../deps/htm-preact.js';
 
 function TableHeaderCell({ children, textLeft }) {
-  return html`<th class=${`table-header-cell${textLeft ? ' text-left' : ''}`}>
+  return html`<th class=${`table-data-cell${textLeft ? ' text-left' : ''}`}>
     ${children}
   </th>`;
 }

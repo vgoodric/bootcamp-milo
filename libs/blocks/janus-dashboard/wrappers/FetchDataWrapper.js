@@ -1,5 +1,7 @@
 import { html, createContext, useContext } from '../../../deps/htm-preact.js';
 import { MetaDataContext } from './MetaDataWrapper.js';
+import { RepoContext } from './RepoWrapper.js';
+import { BranchContext } from './BranchWrapper.js';
 import Loader from '../components/Loader.js';
 import useGetData from '../hooks/useGetData.js';
 
@@ -15,8 +17,16 @@ function extractInfo(data) {
 
 export const DataContext = createContext();
 
-export default function FetchDataWrapper({ children, dataLink }) {
-  // const { dataapi } = useContext(MetaDataContext);
+// FIXME: after data APIs done, switch to use them from franklin-form APIs
+export default function FetchDataWrapper({ children }) {
+  const { dataLink } = useContext(MetaDataContext);
+  const {
+    state: { repo },
+  } = useContext(RepoContext);
+  const {
+    state: { branch },
+  } = useContext(BranchContext);
+
   const { isLoading, data, isError } = useGetData(dataLink);
 
   if (isError) {

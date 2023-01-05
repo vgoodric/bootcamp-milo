@@ -4,6 +4,7 @@ import GridItem from '../GridItem.js';
 import { FilterContext, ActionTypes } from '../../wrappers/FilterWrapper.js';
 import { DataContext } from '../../wrappers/FetchDataWrapper.js';
 import StatusCard from './StatusCard.js';
+import TotalCard from './TotalCard.js';
 import {
   extractTimeFromTestId,
   convertTimeToShortDate,
@@ -50,11 +51,9 @@ function SummaryRow() {
   return html`<div class="section-divider">
     <${GridContainer} spaceBetween>
       <${GridItem}>
-        <${StatusCard} 
-        status='total' 
+        <${TotalCard} 
         date=${date} 
-        cnt=${totalCnt}
-        percent=${totalPercent.toFixed(1)}/>
+        cnt=${totalCnt} />
       </${GridItem}>
       <${GridItem}>
         <${StatusCard}
@@ -83,6 +82,7 @@ function SummaryRow() {
       <${GridItem}>
         <div class='mt2'></div>
         <${Dropdown} options=${envOptions} onSelect=${setEnv} value=${env} labelText="Env" />
+
       </${GridItem}>
     </${GridContainer}>
   </div>`;

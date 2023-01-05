@@ -18,7 +18,7 @@ export default function CountRow({
   return html`
     <div class=${showingDetail ? 'selected-table-row' : 'unselected-table-row'}>
       <${GridContainer}>
-        <${GridItem}>
+        <${GridItem} spacing=3>
           <span class="pl1 bold">${feature}</span>
         </${GridItem}>
         <${GridItem} centered>

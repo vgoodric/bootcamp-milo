@@ -1,7 +1,7 @@
 import { html, useContext } from '../../../../deps/htm-preact.js';
 // import { PreprocessContext } from '../../wrappers/PreprocessWrapper.js';
 import { FilterContext } from '../../wrappers/FilterWrapper.js';
-import Feature from './Feature/index.js';
+import Features from './Features/index.js';
 import TitleRow from './TitleRow/index.js';
 import { DataContext } from '../../wrappers/FetchDataWrapper.js';
 
@@ -29,7 +29,7 @@ export default function DetailSection() {
 
   const featureRows = Array.from(featureMap.keys()).map(
     (feature) =>
-      html`<${Feature}
+      html`<${Features}
         data=${featureMap.get(feature)}
         feature=${feature}
         key=${feature}
