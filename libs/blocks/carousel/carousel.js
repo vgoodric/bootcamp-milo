@@ -33,9 +33,7 @@ const KEY_CODES = {
   END: 'End',
   HOME: 'Home',
   ARROW_LEFT: 'ArrowLeft',
-  ARROW_UP: 'ArrowUp',
   ARROW_RIGHT: 'ArrowRight',
-  ARROW_DOWN: 'ArrowDown',
 };
 
 function decorateNextPreviousBtns() {
@@ -218,7 +216,6 @@ function moveSlides(event, carouselElements, jumpToIndex) {
   // Next arrow button, swipe, keyboard navigation
   if ((event.currentTarget).dataset.toggle === 'next'
     || event.key === KEY_CODES.ARROW_RIGHT
-    || event.key === KEY_CODES.ARROW_DOWN
     || (direction === 'left' && event.type === 'touchend')) {
     nextPreviousBtns[1].focus();
     referenceSlide = handleNext(referenceSlide, slides);
@@ -230,7 +227,6 @@ function moveSlides(event, carouselElements, jumpToIndex) {
   // Previous arrow button, swipe, keyboard navigation
   if ((event.currentTarget).dataset.toggle === 'previous'
     || event.key === KEY_CODES.ARROW_LEFT
-    || event.key === KEY_CODES.ARROW_UP
     || (direction === 'right' && event.type === 'touchend')) {
     nextPreviousBtns[0].focus();
     referenceSlide = handlePrevious(referenceSlide, slides);
@@ -324,9 +320,7 @@ function handleChangingSlides(carouselElements) {
   // Handle keyboard navigation
   el.addEventListener('keydown', (event) => {
     if (event.key === KEY_CODES.ARROW_RIGHT
-      || event.key === KEY_CODES.ARROW_LEFT
-      || event.key === KEY_CODES.ARROW_UP
-      || event.key === KEY_CODES.ARROW_DOWN) { moveSlides(event, carouselElements); }
+      || event.key === KEY_CODES.ARROW_LEFT) { moveSlides(event, carouselElements); }
   });
 
   // Handle slide indictors
