@@ -1,17 +1,3 @@
-/*
- * Copyright 2022 Adobe. All rights reserved.
- * This file is licensed to you under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License. You may obtain a copy
- * of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under
- * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
- * OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
-/*
- * Carousel - v1.0.0
- */
 import { createTag, getConfig } from '../../utils/utils.js';
 
 const { miloLibs, codeRoot } = getConfig();
@@ -27,7 +13,7 @@ const CLOSE_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="2
     <line x1="8" y1="8" transform="translate(10506 -3397)" fill="none" stroke="#fff" stroke-width="2"/>
   </g>
 </svg>`;
-// const SWIPE_PROPS = { event: '', direction: '' };
+
 const KEY_CODES = {
   SPACE: 'Space',
   END: 'End',
@@ -185,32 +171,22 @@ function moveSlides(event, carouselElements, jumpToIndex) {
   activeSlideIndicator.setAttribute('tabindex', -1);
 
   /*
-   * If jumpto buttons are clicked
-   * update reference slide, indicator dot, and active slide
+   * If indicator dot buttons are clicked update:
+   * reference slide, active indicator dot, and active slide
   */
   if (jumpToIndex >= 0) {
     if (jumpToIndex === 0) {
-      slides[slides.length - 1].classList.add('reference-slide');
-      slides[slides.length - 1].style.order = '1';
       referenceSlide = slides[slides.length - 1];
-      activeSlideIndicator = slideIndicators[jumpToIndex];
-      activeSlide = slides[jumpToIndex];
-      jumpToDirection(activeSlideIndex, jumpToIndex, slideContainer);
     } else if (jumpToIndex === slides.length - 1) {
-      slides[slides.length - 2].classList.add('reference-slide');
-      slides[slides.length - 2].style.order = '1';
       referenceSlide = slides[slides.length - 2];
-      activeSlideIndicator = slideIndicators[jumpToIndex];
-      activeSlide = slides[jumpToIndex];
-      jumpToDirection(activeSlideIndex, jumpToIndex, slideContainer);
     } else {
-      slides[jumpToIndex - 1].classList.add('reference-slide');
-      slides[jumpToIndex - 1].style.order = '1';
       referenceSlide = slides[jumpToIndex - 1];
-      activeSlideIndicator = slideIndicators[jumpToIndex];
-      activeSlide = slides[jumpToIndex];
-      jumpToDirection(activeSlideIndex, jumpToIndex, slideContainer);
     }
+    referenceSlide.classList.add('reference-slide');
+    referenceSlide.style.order = '1';
+    activeSlideIndicator = slideIndicators[jumpToIndex];
+    activeSlide = slides[jumpToIndex];
+    jumpToDirection(activeSlideIndex, jumpToIndex, slideContainer);
   }
 
   // Next arrow button, swipe, keyboard navigation
@@ -258,22 +234,22 @@ function moveSlides(event, carouselElements, jumpToIndex) {
   return setTimeout(() => slideContainer.classList.add('is-ready'), 60);
 }
 
-const getSwipeDistance = (start, end) => {
+export function getSwipeDistance(start, end) {
   if (end === 0) {
     const updateStart = 0;
     return Math.abs(updateStart - end);
   }
   return Math.abs(start - end);
-};
+}
 
-const getSwipeDirection = (swipe, swipeDistance) => {
+export function getSwipeDirection(swipe, swipeDistance) {
   const { xDistance } = swipeDistance;
 
   if (xDistance !== swipe.xStart && xDistance > swipe.xMin) {
     return (swipe.xEnd > swipe.xStart) ? 'right' : 'left';
   }
   return undefined;
-};
+}
 
 /**
   * Mobile swipe/touch direction detection
@@ -281,7 +257,7 @@ const getSwipeDirection = (swipe, swipeDistance) => {
 function mobileSwipeDetect(carouselElements) {
   const { el } = carouselElements;
   const swipe = { xMin: 50 };
-
+  /* c8 ignore start */
   el.addEventListener('touchstart', (event) => {
     const touch = event.touches[0];
     swipe.xStart = touch.screenX;
@@ -305,6 +281,7 @@ function mobileSwipeDetect(carouselElements) {
       moveSlides(event, carouselElements);
     }
   });
+  /* c8 ignore end */
 }
 
 function handleChangingSlides(carouselElements) {
