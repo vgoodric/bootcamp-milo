@@ -7,6 +7,12 @@
   align-items: center;
 }
 
+.merch.inline {
+  margin: unset;
+  padding: initial;
+  display: inline;
+}
+
 .merch div {
   display: none;
 }
