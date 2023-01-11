@@ -596,6 +596,8 @@ export async function loadArea(area = document) {
       const { addRichResults } = await import('../features/richresults.js');
       addRichResults(type, { createTag, getMetadata });
     }
+    const { default: loadOfferPoc } = await import('../features/offerpoc.js');
+    loadOfferPoc(config, getMetadata, loadBlock);
     loadFooter();
     const { default: loadFavIcon } = await import('./favicon.js');
     loadFavIcon(createTag, getConfig(), getMetadata);
@@ -651,14 +653,12 @@ export function loadLana(options = {}) {
   if (window.lana) return;
 
   const lanaError = (e) => {
-    window.lana.log(e.reason || e.error || e.message, {
-      errorType: 'i',
-    });
-  }
+    window.lana.log(e.reason || e.error || e.message, { errorType: 'i' });
+  };
 
   window.lana = {
     log: async (...args) => {
-      await import('../utils/lana.js');
+      await import('./lana.js');
       window.removeEventListener('error', lanaError);
       window.removeEventListener('unhandledrejection', lanaError);
       return window.lana.log(...args);
