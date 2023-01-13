@@ -114,3 +114,5 @@ export const colorMap = {
   flaky: 'yellow',
   total: 'blue',
 };
+
+export const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);

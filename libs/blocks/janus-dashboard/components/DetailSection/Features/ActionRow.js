@@ -45,12 +45,14 @@ export default function ActionRow({
       text: SortingConfigs[key].name,
     };
   });
+  // FIXME: add sort icon
   const sortDropdown = html`
+  <div class='mr2'>
     <${Dropdown}
       options=${sortOptions}
       onSelect=${(value) => setSorting(value)}
       value=${sortingState}
-    />
+    /></div>
   `;
   const filterRow = html`<form onsubmit=${filterOnSubmit}>
     ${inputFields}

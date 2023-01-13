@@ -2,7 +2,6 @@ import { html, useReducer } from '../../../../../deps/htm-preact.js';
 import DetailTable from './DetailTable.js';
 import CountRow from './CountRow.js';
 import ActionRow from './ActionRow.js';
-import { SortingConfigs } from './sortUtils.js';
 
 // manual enum
 export const ActionTypes = {
@@ -16,7 +15,7 @@ export const ActionTypes = {
 const initialState = {
   showDetail: false,
   filterState: {},
-  sorting: `DEFAULT`,
+  sorting: 'DEFAULT',
 };
 const reducer = (state, action) => {
   switch (action.type) {
@@ -63,12 +62,14 @@ export default function Feature({ data, feature }) {
     : null;
 
   const actionRow = state.showDetail
-    ? html`<div class='pt1 pb1'><${ActionRow}
-        feature=${feature}
-        setFilter=${setFilter}
-        sortingState=${state.sorting}
-        setSorting=${setSorting}
-      /></div>`
+    ? html`<div class="pt1 pb1 ml1">
+        <${ActionRow}
+          feature=${feature}
+          setFilter=${setFilter}
+          sortingState=${state.sorting}
+          setSorting=${setSorting}
+        />
+      </div>`
     : null;
 
   return html` <div class="mb1">
@@ -79,7 +80,9 @@ export default function Feature({ data, feature }) {
       showDetail=${showDetail}
       showingDetail=${state.showDetail}
     />
-    ${actionRow}
-    <div class="selected-background text-centered">${detailTable}</div>
+    <div class="selected-background">
+      ${actionRow}
+      <div class="text-centered">${detailTable}</div>
+    </div>
   </div>`;
 }

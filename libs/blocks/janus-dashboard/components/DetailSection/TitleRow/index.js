@@ -4,13 +4,9 @@ import { BranchContext } from '../../../wrappers/BranchWrapper.js';
 import GridContainer from '../../GridContainer.js';
 import GridItem from '../../GridItem.js';
 
-export default function TitleRow({ env }) {
-  const {
-    state: { repo },
-  } = useContext(RepoContext);
-  const {
-    state: { branch },
-  } = useContext(BranchContext);
+export default function TitleRow() {
+  const { state: { repo } } = useContext(RepoContext);
+  const { state: { branch } } = useContext(BranchContext);
   return html`
   <div class='mb2 detail-section-title-row'>
     <${GridContainer}>
@@ -20,7 +16,7 @@ export default function TitleRow({ env }) {
       <${GridItem} centered>Total<//>
       <${GridItem} centered>Passed<//>
       <${GridItem} centered>Failed<//>
-      <${GridItem} centered>
+      <${GridItem}>
         <input type="text" placeholder="Search" class='search-bar' />
       <//>
     </${GridContainer}>

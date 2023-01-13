@@ -2,21 +2,19 @@ import { buildRow } from '../../TableRow.js';
 import { html } from '../../../../../deps/htm-preact.js';
 import TableHeaderCell from '../../TableHeaderCell.js';
 import TableDataCell from '../../TableDataCell.js';
-import { SortingFuncs } from './sortUtils.js';
+import { SortingConfigs } from './sortUtils.js';
 
 export default function DetailTable({ data, filterState, sortingState }) {
   const dataRows = data
     .filter((datum) =>
-      Object.keys(filterState).reduce(
-        (accumulator, currField) =>
-          accumulator &&
-          (filterState[currField] === null ||
-            filterState[currField] === '' ||
-            filterState[currField] === datum[currField]),
-        true
+      Object.keys(filterState).every(
+        (currField) =>
+          filterState[currField] === null ||
+          filterState[currField] === '' ||
+          filterState[currField] === datum[currField]
       )
     )
-    .sort(SortingFuncs[sortingState])
+    .sort(SortingConfigs[sortingState].sortingFunc)
     .map((d, index) =>
       buildRow(
         [
