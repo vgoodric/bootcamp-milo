@@ -85,14 +85,12 @@ const addInner = (el, cardType, card) => {
   }
 
   title?.classList.add(`consonant-${cardType}-title`);
-  text?.classList.add(`consonant-${cardType}-text`);
 };
 
-const addFooter = (links, container) => {
-  debugger;
-  const linksArr = Array.from(links);
+const addFooter = (buttons, container) => {
+  const linksArr = Array.from(buttons);
   const linksLeng = linksArr.length;
-  let footer = `<div class="consonant-CardFooter"><div class="consonant-CardFooter-row" data-cells="${linksLeng}">`;
+  let footer = `<div class="consonant-CardFooter"><hr><div class="consonant-CardFooter-row" data-cells="${linksLeng}">`;
   footer = linksArr.reduce(
     (combined, link, index) => (
       `${combined}<div class="consonant-CardFooter-cell consonant-CardFooter-cell--${(linksLeng === 2 && index === 0) ? 'left' : 'right'}">${link.outerHTML}</div>`),
@@ -101,7 +99,7 @@ const addFooter = (links, container) => {
   footer += '</div></div>';
 
   container.insertAdjacentHTML('beforeend', footer);
-  links[0]?.parentElement?.remove();
+  buttons[0]?.parentElement?.remove();
 };
 
 const init = (el) => {
@@ -113,7 +111,7 @@ const init = (el) => {
   section.classList.add('milo-card-section');
   const row = el.querySelector(':scope > div');
   const picture = el.querySelector('picture');
-  const links = el.querySelectorAll('a');
+  const links = el.querySelectorAll('a.con-button');
   const styles = Array.from(el.classList);
   const cardType = getCardType(styles);
   const card = el;

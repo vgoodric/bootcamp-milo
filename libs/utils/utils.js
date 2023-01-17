@@ -335,8 +335,8 @@ export async function loadBlock(block) {
     (async () => {
       try {
         const { default: init } = await import(`${base}/blocks/${name}/${name}.js`);
-        await init(block);
         await decButtons(block);
+        await init(block);
       } catch (err) {
         // eslint-disable-next-line no-console
         console.log(`Failed loading ${name}`, err);
