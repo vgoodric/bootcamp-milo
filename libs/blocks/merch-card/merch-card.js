@@ -36,7 +36,7 @@ const addWrapper = (el, section, cardType) => {
   const collection = createTag('div', { class: 'consonant-Wrapper-collection' }, grid);
   const inner = createTag('div', { class: 'consonant-Wrapper-inner' }, collection);
   const wrapper = createTag('div', { class: 'milo-card-wrapper consonant-Wrapper consonant-Wrapper--1200MaxWidth' }, inner);
-  const cards = section.querySelectorAll('.card');
+  const cards = section.querySelectorAll('.merch-card');
   const prevSib = cards[0].previousElementSibling;
 
   grid.append(...cards);
@@ -89,6 +89,7 @@ const addInner = (el, cardType, card) => {
 };
 
 const addFooter = (links, container) => {
+  debugger;
   const linksArr = Array.from(links);
   const linksLeng = linksArr.length;
   let footer = `<div class="consonant-CardFooter"><div class="consonant-CardFooter-row" data-cells="${linksLeng}">`;
@@ -115,22 +116,9 @@ const init = (el) => {
   const links = el.querySelectorAll('a');
   const styles = Array.from(el.classList);
   const cardType = getCardType(styles);
-  let card = el;
+  const card = el;
 
   addWrapper(el, section, cardType);
-
-  if (cardType === HALF_HEIGHT) {
-    const [link] = links;
-
-    if (link) {
-      card = link;
-    } else {
-      card = document.createElement('a');
-      card.href = '';
-    }
-
-    el.prepend(card);
-  }
 
   card.classList.add('consonant-Card', `consonant-${cardType}`);
   if (!styles.includes('border')) card.classList.add('consonant-u-noBorders');

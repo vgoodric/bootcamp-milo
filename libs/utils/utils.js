@@ -305,7 +305,6 @@ export async function loadTemplate() {
 }
 
 export async function decButtons(el) {
-  debugger;
   const buttons = Array.from(el.querySelectorAll('p em a, p strong a, p a:has(em), p a:has(strong)')).filter((b) => {
     if (b.href.includes('#_dns')) {
       b.href = b.href.replace('#_dns', '');
