@@ -1,36 +1,53 @@
-import { html, useContext } from '../../../../deps/htm-preact.js';
-import { FilterContext, ActionTypes } from '../../wrappers/FilterWrapper.js';
+import { html } from '../../../../deps/htm-preact.js';
 import {
-  RepoContext,
-  ActionTypes as RepoActionTypes,
-} from '../../wrappers/RepoWrapper.js';
-import {
-  BranchContext,
-  ActionTypes as BranchActionTypes,
-} from '../../wrappers/BranchWrapper.js';
+  ActionTypes,
+  useFilterDispatch,
+} from '../../wrappers/FilterProvider.js';
+import { useDataState } from '../../wrappers/DataProvider.js';
 import GridContainer from '../GridContainer.js';
 import GridItem from '../GridItem.js';
 import { colorMap } from '../utils.js';
+import SmallLoader from '../SmallLoader.js';
 
-export default function StatusCard({ status, date, cnt, percent }) {
-  const { dispatch } = useContext(FilterContext);
-  const { state: repoState } = useContext(RepoContext);
-  const { state: branchState } = useContext(BranchContext);
+export default function StatusCard({ status, date, cnt, percent, loading }) {
+  const dataState = useDataState();
+  const filterDispatch = useFilterDispatch();
+  const { selectedRepo, selectedBranch } = dataState;
 
-  const displayRepo = repoState?.repo?.toUpperCase() ?? 'noEnv';
-  const displayBranch = branchState?.branch?.toUpperCase() ?? 'noBranch';
+  const displayRepoBranch =
+    selectedRepo && selectedBranch
+      ? `${selectedRepo.toUpperCase()} ${selectedBranch.toUpperCase()}`
+      : 'No Data';
 
   const color = colorMap[status];
 
-  const getStatusSetter = (newStatus) => () => {
-    dispatch({
+  const statusSetter = () => {
+    filterDispatch({
       type: ActionTypes.SET_STATE,
       payload: {
-        status: newStatus === 'total' ? null : newStatus,
+        status,
         showDetail: true,
       },
     });
   };
+
+  const cntPercentRow = loading
+    ? html`<${SmallLoader} />`
+    : html`
+      <${GridContainer} spaceAround>
+        <${GridItem}>
+          <div class="cnt-percent">
+            <div class=${`clickable ${color}`} onClick=${statusSetter}>
+              <span class=${'cnt'}>
+                ${cnt}
+              </span>
+              <span class=${'percent'}>
+                /${percent}%
+              </span>
+            </div>
+          </div>
+        </${GridItem}>
+      </${GridContainer}>`;
 
   return html`<div class="summary-card text-centered">
 
@@ -42,7 +59,7 @@ export default function StatusCard({ status, date, cnt, percent }) {
 
   <${GridContainer} spaceAround>
     <${GridItem}>
-    <div class="branch">${displayRepo} ${displayBranch}</div>
+    <div class="branch">${displayRepoBranch}</div>
     </${GridItem}>
   </${GridContainer}>
 
@@ -52,19 +69,7 @@ export default function StatusCard({ status, date, cnt, percent }) {
     </${GridItem}>
   </${GridContainer}>
 
-  <${GridContainer} spaceAround>
-    <${GridItem}>
-      <div class="cnt-percent">
-        <div class=${`clickable ${color}`} onClick=${getStatusSetter(status)}>
-          <span class=${'cnt'}>
-            ${cnt}
-          </span>
-          <span class=${'percent'}>
-            /${percent}%
-          </span>
-        </div>
-      </div>
-    </${GridItem}>
-  </${GridContainer}>
+  ${cntPercentRow}
+
   </div> `;
 }

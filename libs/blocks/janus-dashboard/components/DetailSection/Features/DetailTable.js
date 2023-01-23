@@ -11,8 +11,8 @@ export default function DetailTable({ data, filterState, sortingState }) {
         (currField) =>
           filterState[currField] === null ||
           filterState[currField] === '' ||
-          filterState[currField] === datum[currField]
-      )
+          filterState[currField] === datum[currField],
+      ),
     )
     .sort(SortingConfigs[sortingState].sortingFunc)
     .map((d, index) =>
@@ -33,8 +33,8 @@ export default function DetailTable({ data, filterState, sortingState }) {
             config: { textLeft: true },
           },
         ],
-        TableDataCell
-      )
+        TableDataCell,
+      ),
     );
   const headerRow = buildRow(
     [
@@ -46,7 +46,7 @@ export default function DetailTable({ data, filterState, sortingState }) {
       { content: 'Tag' },
       { content: 'Error Msg', config: { textLeft: true } },
     ],
-    TableHeaderCell
+    TableHeaderCell,
   );
   return html`<div class="table-wrapper">
     <table class="detail-table">

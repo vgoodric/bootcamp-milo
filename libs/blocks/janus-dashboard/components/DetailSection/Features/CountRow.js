@@ -1,5 +1,4 @@
 import { html } from '../../../../../deps/htm-preact.js';
-// import { FilterContext } from '../../../wrappers/FilterWrapper.js';
 import GridContainer from '../../GridContainer.js';
 import GridItem from '../../GridItem.js';
 import Clickable from '../../Clickable.js';

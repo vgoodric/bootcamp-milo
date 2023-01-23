@@ -1,4 +1,4 @@
-export const fetchData = async (url) => {
+export const getData = async (url) => {
   const res = await fetch(url);
   const { ok, status, statusText } = res;
   if (!ok) {
@@ -7,6 +7,23 @@ export const fetchData = async (url) => {
   }
   const results = await res.json();
   return results.data;
+};
+
+export const postData = async (url, stringifiedParams) => {
+  const res = await fetch(url, {
+    method: 'POST', // or 'PUT'
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: stringifiedParams,
+  });
+  const { ok, status, statusText } = res;
+  if (!ok) {
+    console.error(`${status}: ${statusText}`);
+    throw new Error('res not ok!');
+  }
+  const results = await res.json();
+  return results;
 };
 
 export function extractTimeFromTestId(testId) {

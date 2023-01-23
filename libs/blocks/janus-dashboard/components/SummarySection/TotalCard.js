@@ -1,33 +1,62 @@
-import { html, useContext } from '../../../../deps/htm-preact.js';
+import { html } from '../../../../deps/htm-preact.js';
 import {
-  RepoContext,
-  ActionTypes as RepoActionTypes,
-} from '../../wrappers/RepoWrapper.js';
-import {
-  BranchContext,
-  ActionTypes as BranchActionTypes,
-} from '../../wrappers/BranchWrapper.js';
-import {
-  FilterContext,
+  useFilterDispatch,
   ActionTypes as FilterActionTypes,
-} from '../../wrappers/FilterWrapper.js';
+} from '../../wrappers/FilterProvider.js';
+import {
+  useDataState,
+  useDataDispatch,
+  ActionTypes,
+  initialState,
+} from '../../wrappers/DataProvider.js';
+import { useMetaData } from '../../wrappers/MetaDataProvider.js';
 import GridContainer from '../GridContainer.js';
 import GridItem from '../GridItem.js';
 import { colorMap } from '../utils.js';
-import DropdownBig from '../DropdownBig.js';
 import Dropdown from '../Dropdown.js';
+import SmallLoader from '../SmallLoader.js';
 
 const status = 'total';
 
-export default function TotalCard({ date, cnt }) {
-  const { dispatch: repoDispatch, state: repoState } = useContext(RepoContext);
-  const { dispatch: branchDispatch, state: branchState } =
-    useContext(BranchContext);
-  const { dispatch: filterDispatch } = useContext(FilterContext);
-  const { repo, repos } = repoState;
-  const { branch, branches } = branchState;
-  const repoOptions = [...repos.map((c) => ({ value: c, text: c }))];
-  const branchOptions = [...branches.map((c) => ({ value: c, text: c }))];
+export default function TotalCard({ date, cnt, loading }) {
+  const { defaultRepo, defaultBranch } = useMetaData();
+  const dataDispatch = useDataDispatch();
+  const dataState = useDataState();
+  const filterDispatch = useFilterDispatch();
+  const {
+    selectedRepo,
+    repoBranchMap,
+    availableTestruns,
+    selectedBranch,
+    selectedTestrunName,
+  } = dataState;
+
+  const repoOptions = repoBranchMap.value
+    ? Object.keys(repoBranchMap.value).map((r) => ({
+        value: r,
+        text: r,
+      }))
+    : [];
+  const branchOptions =
+    repoBranchMap.value && selectedRepo
+      ? repoBranchMap.value[selectedRepo].map((b) => ({
+          value: b,
+          text: b,
+        }))
+      : [];
+  const testrunOptions = availableTestruns.value?.names
+    ? availableTestruns.value.names.map((t) => ({ value: t, text: t }))
+    : [];
+
+  const repoOnSelect = (repo) =>
+    dataDispatch({ type: ActionTypes.SET_SELECTED_REPO, payload: repo });
+  const branchOnSelect = (branch) =>
+    dataDispatch({ type: ActionTypes.SET_SELECTED_BRANCH, payload: branch });
+  const testrunOnSelect = (testrunName) =>
+    dataDispatch({
+      type: ActionTypes.SET_SELECTED_TESTRUN_NAME,
+      payload: testrunName,
+    });
 
   const color = colorMap[status];
 
@@ -41,10 +70,29 @@ export default function TotalCard({ date, cnt }) {
     });
   };
 
+  const cntRow = loading
+    ? html`<${SmallLoader} />`
+    : html`<${GridContainer} spaceAround>
+  <${GridItem}>
+      <div class=${`clickable ${color} cnt-total mt03`} onClick=${setFilterStatusTotal}>
+        ${cnt}
+    </div>
+  </${GridItem}>
+</${GridContainer}>`;
+
   return html`<div class="summary-card text-centered">
   <${GridContainer} spaceBetween>
     <${GridItem}>
-      <${DropdownBig} options=${repoOptions} />
+      <${Dropdown}
+        options=${repoOptions}
+        onSelect=${repoOnSelect}
+        value=${selectedRepo}
+        defaultValue=${initialState.selectedRepo}
+        defaultText=${'select repo'}
+        isLoading=${repoBranchMap.loading}
+        isError=${repoBranchMap.error}
+        bigDropdown
+      />
     </${GridItem}>
     <${GridItem}>
       <div class="date">${date}</div>
@@ -53,7 +101,27 @@ export default function TotalCard({ date, cnt }) {
 
   <${GridContainer} >
     <${GridItem}>
-      <${Dropdown} options=${branchOptions} labelText='BRANCH' />
+      <${Dropdown}
+        options=${branchOptions}
+        labelText='BRANCH'
+        onSelect=${branchOnSelect}
+        value=${selectedBranch}
+        defaultValue=${initialState.selectedBranch}
+        defaultText=${'select branch'}
+        isError=${repoBranchMap.error}
+      />
+    </${GridItem}>
+    <${GridItem}>
+      <${Dropdown}
+        options=${testrunOptions}
+        labelText='TESTRUN'
+        onSelect=${testrunOnSelect}
+        value=${selectedTestrunName}
+        defaultValue=${initialState.selectedTestrunName}
+        defaultText=${'select testrun'}
+        isLoading=${availableTestruns.loading}
+        isError=${repoBranchMap.error || availableTestruns.error}
+      />
     </${GridItem}>
   </${GridContainer}>
 
@@ -61,12 +129,7 @@ export default function TotalCard({ date, cnt }) {
 
   <div>TOTAL TESTS</div>
   
-  <${GridContainer} spaceAround>
-    <${GridItem}>
-        <div class=${`clickable ${color} cnt-total mt03`} onClick=${setFilterStatusTotal}>
-          ${cnt}
-      </div>
-    </${GridItem}>
-  </${GridContainer}>
+  ${cntRow}
+  
   </div> `;
 }

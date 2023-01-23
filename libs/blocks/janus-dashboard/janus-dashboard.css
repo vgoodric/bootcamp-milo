@@ -293,7 +293,7 @@
 .dropdown .select {
   color: var(--main-text-color);
   background-color: var(--main-background-color);
-  width: 150px;
+  width: 140px;
   border: 2px;
   border-color: grey;
   border-style: solid;
@@ -301,7 +301,6 @@
 }
 
 .dropdown-big {
-  /* float: left; */
   position: relative;
   right: 1em;
   bottom: 1em;
@@ -314,12 +313,12 @@
   /* background: linear-gradient(290deg, transparent 20px, var(--selected-background-color) 0); */
   background-image: url('../../ui/img/chevron-up-down.svg');
   background-repeat: no-repeat;
-  background-position: right 12px center;
+  background-position: right 10px center;
   background-size: 20px;
   appearance: none;
   background-color: var(--selected-background-color);
-  width: 150px;
-  padding: 10px 25px 10px 0;
+  width: 180px;
+  padding: 10px 1em 10px 0;
   font-size: 130%;
   font-weight: bold;
   text-align-last: center;

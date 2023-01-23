@@ -1,20 +1,47 @@
 import { html } from '../../../deps/htm-preact.js';
 
-export default function Dropdown({ options, onSelect, value, labelText }) {
-  const optionSelections = options.map(
-    (o) => html`<option
-      key=${o}
-      selected=${o.value === value}
-      value=${o.value}
-    >
-      ${o.text}
-    </option>`,
+export default function Dropdown({
+  options = [],
+  onSelect,
+  value,
+  defaultValue,
+  defaultText,
+  isLoading,
+  isError,
+  labelText,
+  bigDropdown,
+}) {
+  const defaultOption = html`<option
+    key=${defaultValue}
+    value=${defaultValue}
+    disabled
+  >
+    ${defaultText}
+  </option>`;
+
+  const errorOption = html`<option disabled>Error loading data</option>`;
+  const loadingOption = html`<option disabled>Loading...</option>`;
+  const selectableOptions = options.map(
+    (o) => html`<option key=${o} value=${o.value}>${o.text}</option>`
   );
-  return html`<div class="dropdown">
-    <label class="label">${labelText}</label>
+
+  let optionSelections;
+  if (isError) {
+    optionSelections = [errorOption];
+  } else if (isLoading) {
+    optionSelections = [defaultOption, loadingOption];
+  } else {
+    optionSelections = [defaultOption, ...selectableOptions];
+  }
+
+  const label = !bigDropdown && html`<label class="label">${labelText}</label>`;
+  return html`<div class=${bigDropdown ? 'dropdown-big' : 'dropdown'}>
+    ${label}
     <select
+      value=${value}
       class="select"
       onChange=${(e) => {
+        e.preventDefault();
         onSelect(e.target.value);
       }}
     >
