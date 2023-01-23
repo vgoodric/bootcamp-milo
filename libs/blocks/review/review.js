@@ -1,6 +1,6 @@
 import { html, render } from '../../deps/htm-preact.js';
 
-import { loadStyle } from '../../utils/utils.js';
+import { loadStyle, createTag, getMetadata } from '../../utils/utils.js';
 import HelixReview from './components/helixReview/HelixReview.js';
 
 const COMMENT_THRESHOLD = 3;
@@ -101,13 +101,32 @@ const removeMetaDataElements = (el) => {
   });
 };
 
+const reviewSchema = (el) => {
+  const totalReviews = el.querySelector('.hlx-ReviewStats-total');
+  const reviewAverage = el.querySelector('.hlx-ReviewStats-average');
+  const jsonLd = {
+    'name': getMetadata('og:title'),
+    'description': getMetadata('og:description'),
+    '@type': 'Product',
+    '@context': 'http://schema.org',
+    'aggregateRating': {
+      '@type': 'AggregateRating',
+      'ratingValue': reviewAverage?.textContent,
+      'ratingCount': totalReviews?.textContent,
+    }
+  };
+  const script = createTag('script', { type: 'application/ld+json' }, JSON.stringify(jsonLd));
+  document.head.append(script);
+}
+
 export default async function init(el) {
   loadStyle('/libs/ui/page/page.css');
   const metaData = getMetaData(el);
   const strings = getStrings(metaData);
+  const isSeo = el.classList.contains('seo');
   removeMetaDataElements(el);
 
   const app = html` <${App} rootEl=${el} strings="${strings}" /> `;
-
+  if(isSeo) {setTimeout(() => { reviewSchema(el) }, 1000)};
   render(app, el);
 }
