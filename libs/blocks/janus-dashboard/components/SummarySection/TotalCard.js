@@ -72,14 +72,17 @@ export default function TotalCard({ date, cnt, loading }) {
   };
 
   const cntRow = loading
-    ? html`<${SmallLoader} />`
-    : html`<${GridContainer} spaceAround>
-  <${GridItem}>
-      <div class=${`clickable ${color} cnt-total mt03`} onClick=${setFilterStatusTotal}>
-        ${cnt}
-    </div>
-  </${GridItem}>
-</${GridContainer}>`;
+    ? html`<${SmallLoader} color="blue" />`
+    : html`
+      <${GridContainer} spaceAround>
+        <${GridItem}>
+            <div class=${`clickable ${color} cnt-total mt03`} onClick=${setFilterStatusTotal}>
+              ${cnt}
+          </div>
+        </${GridItem}>
+      </${GridContainer}>`;
+
+  const title = !loading && 'TOTAL TESTS';
 
   return html`<div class="summary-card text-centered">
   <${GridContainer} spaceBetween>
@@ -128,7 +131,7 @@ export default function TotalCard({ date, cnt, loading }) {
 
   <hr />
 
-  <div>TOTAL TESTS</div>
+  ${title}
   
   ${cntRow}
   

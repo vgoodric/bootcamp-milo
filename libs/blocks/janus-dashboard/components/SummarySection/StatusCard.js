@@ -32,7 +32,7 @@ export default function StatusCard({ status, date, cnt, percent, loading }) {
   };
 
   const cntPercentRow = loading
-    ? html`<${SmallLoader} />`
+    ? html`<${SmallLoader} color=${color} />`
     : html`
       <${GridContainer} spaceAround>
         <${GridItem}>
@@ -65,7 +65,7 @@ export default function StatusCard({ status, date, cnt, percent, loading }) {
 
   <${GridContainer} spaceAround>
     <${GridItem}>
-      <div class="status">${status?.toUpperCase()}</div>
+      <div class=${`status ${color}`}>${status?.toUpperCase()}</div>
     </${GridItem}>
   </${GridContainer}>
 

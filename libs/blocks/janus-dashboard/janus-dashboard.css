@@ -218,21 +218,6 @@
   background-color: var(--selected-text-alternative-color);
 } */
 
-.loader-text {
-  font-weight: lighter;
-  font-size: 300%;
-}
-
-.loader-container {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-around;
-  list-style: none;
-  align-items: center;
-  position: relative;
-  height: 400px;
-}
-
 .summary-card {
   border: 2px;
   border-color: var(--secondary-background-color);
@@ -358,3 +343,153 @@
   width: auto;
   max-width: 4em;
 }
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loader-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  list-style: none;
+  align-items: center;
+  position: relative;
+}
+
+.loader-container-small {
+  height: 100px;
+}
+
+.loader-container-big {
+  height: 400px;
+}
+
+.small-loader {
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
+}
+
+.small-loader .blue {
+  border-color: var(--main-blue);
+}
+
+/* from https://www.htmllion.com/css3-toggle-switch-button.html */
+.switch {
+  position: relative;
+  display: block;
+  width: 100px;
+  height: 30px;
+  padding: 3px;
+  margin: 0 10px 10px 0;
+  background: linear-gradient(to bottom, #eee, #FFF 25px);
+  border-radius: 18px;
+  box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0 0 0 5%);
+  cursor: pointer;
+  box-sizing:content-box;
+}
+
+.switch-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  box-sizing:content-box;
+}
+
+.switch-label {
+  position: relative;
+  display: block;
+  height: inherit;
+  font-size: 10px;
+  text-transform: uppercase;
+  background: #eceeef;
+  border-radius: inherit;
+  box-shadow: inset 0 1px 2px rgba(0 0 0 12%), inset 0 0 2px rgba(0 0 0 15%);
+  box-sizing:content-box;
+  transition: all 0.3s ease;
+}
+ 
+.switch-handle {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(to bottom, #FFF 40%, #f0f0f0);
+  border-radius: 100%;
+  box-shadow: 1px 1px 5px rgba(0 0 0 20%);
+  transition: all 0.3s ease;
+}
+
+.switch-label::before, .switch-label::after {
+  position: absolute;
+  top: 50%;
+  margin-top: -.5em;
+  line-height: 1;
+  transition: inherit;
+  box-sizing:content-box;
+}
+
+.switch-label::before {
+  content: attr(data-off);
+  right: 11px;
+  color: #aaa;
+  text-shadow: 0 1px rgba(255 255 255 50%);
+}
+
+.switch-label::after {
+  content: attr(data-on);
+  left: 11px;
+  color: #FFF;
+  text-shadow: 0 1px rgba(0 0 0 20%);
+  opacity: 0;
+}
+
+.switch-input:checked ~ .switch-label {
+  background: var(--main-blue);
+  box-shadow: inset 0 1px 2px rgba(0 0 0 15%), inset 0 0 3px rgba(0 0 0 20%);
+}
+
+.switch-input:checked ~ .switch-label::before {
+  opacity: 0;
+}
+
+.switch-input:checked ~ .switch-label::after {
+  opacity: 1;
+}
+
+/* .switch-handle {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(to bottom, #FFF 40%, #f0f0f0);
+  border-radius: 100%;
+  box-shadow: 1px 1px 5px rgba(0 0 0 20%);
+} */
+
+.switch-handle::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -6px 0 0 -6px;
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(to bottom, #eee, #FFF);
+  border-radius: 6px;
+  box-shadow: inset 0 1px rgba(0 0 0 2%);
+}
+
+.switch-input:checked ~ .switch-handle {
+  left: 74px;
+  box-shadow: -1px 1px 5px rgba(0 0 0 20%);
+}
+

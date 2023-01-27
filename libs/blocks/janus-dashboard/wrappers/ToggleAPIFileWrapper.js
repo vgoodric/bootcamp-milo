@@ -14,11 +14,19 @@ export default function ToggleAPIFileWrapper({ children }) {
     dataDispatch({ type: ActionTypes.RESET_STATE });
   };
 
+  const toggleSwitch = html`<label class="switch">
+    <input
+      class="switch-input"
+      type="checkbox"
+      checked=${usingFile}
+      onClick=${toggleOnClick}
+    />
+    <span class="switch-label" data-on="API" data-off="Upload"></span>
+    <span class="switch-handle"></span>
+  </label>`;
+
   return html`<div>
-    <button onClick=${toggleOnClick}
-    >
-      ${!usingFile ? 'Use Local Files' : 'Fetch from APIs'}
-    </button>
+    ${toggleSwitch}
     <${wrapper}>
       ${children}
     </${wrapper}>

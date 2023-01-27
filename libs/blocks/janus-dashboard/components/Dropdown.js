@@ -29,7 +29,7 @@ export default function Dropdown({
   if (isError) {
     optionSelections = [errorOption];
   } else if (isLoading) {
-    optionSelections = [defaultOption, loadingOption];
+    optionSelections = [loadingOption];
   } else {
     optionSelections = [defaultOption, ...selectableOptions];
   }
