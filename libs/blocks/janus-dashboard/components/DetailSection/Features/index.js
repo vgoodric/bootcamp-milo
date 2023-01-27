@@ -3,9 +3,8 @@ import DetailTable from './DetailTable.js';
 import CountRow from './CountRow.js';
 import ActionRow from './ActionRow.js';
 
-// manual enum
+// manual enum again
 export const ActionTypes = {
-  // SET_STATUS: 0,
   CLOSE_DETAIL: 1,
   SHOW_DETAIL: 2,
   SET_FILTER: 3,
@@ -19,12 +18,9 @@ const initialState = {
 };
 const reducer = (state, action) => {
   switch (action.type) {
-    // case ActionTypes.SET_STATUS:
-    //   return { ...state, showDetail: true, status: action.payload };
     case ActionTypes.CLOSE_DETAIL:
-      // TODO: maybe reset filterState here
       return { ...state, showDetail: false };
-    case ActionTypes.SHOW_DETAIL:
+    case ActionTypes.OPEN_DETAIL:
       return { ...state, showDetail: true };
     case ActionTypes.SET_FILTER:
       return { ...state, filterState: action.payload };
@@ -36,37 +32,38 @@ const reducer = (state, action) => {
 };
 
 export default function Feature({ data, feature }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  // const getSetStatusCB = (status) => () => {
-  //   dispatch({ type: ActionTypes.SET_STATUS, payload: status });
-  // };
+  const [{ showDetail, filterState, sorting }, dispatch] = useReducer(
+    reducer,
+    initialState,
+  );
   const closeDetail = () => {
     dispatch({ type: ActionTypes.CLOSE_DETAIL });
   };
-  const showDetail = () => {
-    dispatch({ type: ActionTypes.SHOW_DETAIL });
+  const openDetail = () => {
+    dispatch({ type: ActionTypes.OPEN_DETAIL });
   };
   const setFilter = (filter) => {
     dispatch({ type: ActionTypes.SET_FILTER, payload: filter });
   };
-  const setSorting = (sorting) => {
-    dispatch({ type: ActionTypes.SET_SORTING, payload: sorting });
+  const setSorting = (order) => {
+    dispatch({ type: ActionTypes.SET_SORTING, payload: order });
   };
 
-  const detailTable = state.showDetail
+  const detailTable = showDetail
     ? html`<${DetailTable}
         data=${data}
-        filterState=${state.filterState}
-        sortingState=${state.sorting}
+        filterState=${filterState}
+        sortingState=${sorting}
       />`
     : null;
 
-  const actionRow = state.showDetail
+  const actionRow = showDetail
     ? html`<div class="pt1 pb1 ml1">
         <${ActionRow}
           feature=${feature}
           setFilter=${setFilter}
-          sortingState=${state.sorting}
+          filterState=${filterState}
+          sortingState=${sorting}
           setSorting=${setSorting}
         />
       </div>`
@@ -77,8 +74,8 @@ export default function Feature({ data, feature }) {
       data=${data}
       feature=${feature}
       closeDetail=${closeDetail}
-      showDetail=${showDetail}
-      showingDetail=${state.showDetail}
+      openDetail=${openDetail}
+      showingDetail=${showDetail}
     />
     <div class="selected-background">
       ${actionRow}

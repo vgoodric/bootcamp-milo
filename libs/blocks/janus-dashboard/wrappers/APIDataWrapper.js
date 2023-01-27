@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from '../../../deps/htm-preact.js';
 import { useMetaData } from './MetaDataProvider.js';
-import { postData } from '../utils/utils.js';
+import { postData, processData } from '../utils/utils.js';
 import { useDataDispatch, useDataState, ActionTypes } from './DataProvider.js';
 import useFetchAPI from '../hooks/useFetchAPI.js';
 
@@ -10,9 +10,7 @@ const actionGetTestrun = 'gettestrun';
 
 function useFetchRepoBranchMap({ dataLink, dataDispatch }) {
   const memoizedFetchFunc = useMemo(
-    // FIXME: remove
-    // () => async () => postData(`${dataLink}/${actionGetReposBranches}`, null),
-    () => async () => ({ milo: ['main'] }),
+    () => async () => postData(`${dataLink}/${actionGetReposBranches}`, null),
     [dataLink],
   );
   useFetchAPI(
@@ -31,17 +29,12 @@ function useFetchAvailableTestruns({
 }) {
   const skipEffect = !selectedBranch || !selectedRepo;
   const memoizedFetchFunc = useMemo(
-    () => async () => ({
-      names: ['testruns/milo/main/2023-01-19T08:08:42.061Z-w0eo.json'],
-    }),
-    [
-      // FIXME: remove
-      // postData(
-      //   `${dataLink}/${actionGetTestrunsByRepoBranch}`,
-      //   JSON.stringify({ repo: selectedRepo, branch: selectedBranch })
-      // ),
-      (selectedBranch, selectedRepo, dataLink),
-    ],
+    () => async () =>
+      postData(
+        `${dataLink}/${actionGetTestrunsByRepoBranch}`,
+        JSON.stringify({ repo: selectedRepo, branch: selectedBranch }),
+      ),
+    [selectedBranch, selectedRepo, dataLink],
   );
   useFetchAPI(
     skipEffect,
@@ -53,13 +46,16 @@ function useFetchAvailableTestruns({
 
 function useFetchTestrunData({ dataLink, selectedTestrunName, dataDispatch }) {
   const skipEffect = !selectedTestrunName;
-  console.log('skipEffect:', skipEffect);
   const memoizedFetchFunc = useMemo(
-    () => async () =>
-      postData(
+    () => async () => {
+      const res = await postData(
         `${dataLink}/${actionGetTestrun}`,
         JSON.stringify({ name: selectedTestrunName }),
-      ),
+      );
+      const { data, error } = processData(res.data);
+      if (error) throw error;
+      return { data };
+    },
     [selectedTestrunName, dataLink],
   );
   useFetchAPI(
@@ -137,11 +133,9 @@ export default function APIDataWrapper({ children }) {
     defaultBranch,
     defaultRepo,
     firstTestrun: availableTestrunsValue?.names?.[0],
-    // FIXME: remove
-    // noReady: !(
-    //   defaultRepo === selectedRepo && defaultBranch === selectedBranch
-    // ),
-    noReady: true,
+    noReady: !(
+      defaultRepo === selectedRepo && defaultBranch === selectedBranch
+    ),
   });
   return children;
 }

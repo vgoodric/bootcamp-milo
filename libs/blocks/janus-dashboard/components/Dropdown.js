@@ -22,7 +22,7 @@ export default function Dropdown({
   const errorOption = html`<option disabled>Error loading data</option>`;
   const loadingOption = html`<option disabled>Loading...</option>`;
   const selectableOptions = options.map(
-    (o) => html`<option key=${o} value=${o.value}>${o.text}</option>`
+    (o) => html`<option key=${o} value=${o.value}>${o.text}</option>`,
   );
 
   let optionSelections;
@@ -35,16 +35,13 @@ export default function Dropdown({
   }
 
   const label = !bigDropdown && html`<label class="label">${labelText}</label>`;
+  const selectOnChange = (e) => {
+    e.preventDefault();
+    onSelect(e.target.value);
+  };
   return html`<div class=${bigDropdown ? 'dropdown-big' : 'dropdown'}>
     ${label}
-    <select
-      value=${value}
-      class="select"
-      onChange=${(e) => {
-        e.preventDefault();
-        onSelect(e.target.value);
-      }}
-    >
+    <select value=${value} class="select" onChange=${selectOnChange}>
       ${optionSelections}
     </select>
   </div>`;

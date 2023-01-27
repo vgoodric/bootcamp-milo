@@ -1,7 +1,7 @@
 import { html } from '../../../../deps/htm-preact.js';
 import { useFilterState } from '../../wrappers/FilterProvider.js';
 import Features from './Features/index.js';
-import TitleRow from './TitleRow/index.js';
+import TitleRow from './TitleRow.js';
 import { useTestrunData } from '../../wrappers/DataProvider.js';
 
 function groupByFeatureNames(data) {

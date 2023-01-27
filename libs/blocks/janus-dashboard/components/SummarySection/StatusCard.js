@@ -23,7 +23,7 @@ export default function StatusCard({ status, date, cnt, percent, loading }) {
 
   const statusSetter = () => {
     filterDispatch({
-      type: ActionTypes.SET_STATE,
+      type: ActionTypes.MERGE_STATE,
       payload: {
         status,
         showDetail: true,

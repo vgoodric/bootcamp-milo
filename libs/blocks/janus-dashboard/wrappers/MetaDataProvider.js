@@ -7,10 +7,7 @@ const backupDefaultDataLink =
 
 function getDataLink(el) {
   const children = el.querySelectorAll(':scope > div');
-  const node = children[0]
-    .querySelector(':scope > div')
-    // FIXME: change to 0
-    .querySelectorAll('a')[1];
+  const node = children[0].querySelector(':scope > div').querySelector('a');
   const dataLink = node.innerText || backupDefaultDataLink;
   node.remove();
   return dataLink;
@@ -38,7 +35,7 @@ function MetaDataProvider({ el, children }) {
   const defaultBranch = getDefaultBranch(el);
   if (!defaultRepo && defaultBranch) {
     throw new Error(
-      'Block usage error: defaultRepo is needed to have defaultBranch'
+      'Block usage error: defaultRepo is needed to have defaultBranch',
     );
   }
   return html`

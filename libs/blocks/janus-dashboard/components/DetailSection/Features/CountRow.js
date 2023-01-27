@@ -11,14 +11,14 @@ export default function CountRow({
   feature,
   data,
   closeDetail,
-  showDetail,
+  openDetail,
   showingDetail,
 }) {
   const total = data.length;
   const passed = data.filter((d) => d.status === PASSED).length;
   const failed = total - passed;
 
-  const onClickHandler = showingDetail ? closeDetail : showDetail;
+  const onClickHandler = showingDetail ? closeDetail : openDetail;
   const chevron = showingDetail
     ? html`<${ChevronUp} />`
     : html`<${ChevronDown} />`;

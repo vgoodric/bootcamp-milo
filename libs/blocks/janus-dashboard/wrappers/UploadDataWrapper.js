@@ -5,7 +5,7 @@ import { useDataDispatch, useDataState } from './DataProvider.js';
 function UploadDataWrapper({ children }) {
   const dataDispatch = useDataDispatch();
   const dataState = useDataState();
-  const { uploadFileOnChange, uploadInvalidErrMsg } =
+  const { uploadFileOnInput, uploadInvalidErrMsg } =
     useUploadData(dataDispatch);
   let wrappedContent;
   if (uploadInvalidErrMsg) {
@@ -23,7 +23,7 @@ function UploadDataWrapper({ children }) {
           type="file"
           name="persistedResults"
           accept=".json"
-          onchange=${uploadFileOnChange}
+          onInput=${uploadFileOnInput}
         />
       </div>
       ${wrappedContent}

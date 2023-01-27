@@ -4,55 +4,57 @@ import Dropdown from '../../Dropdown.js';
 import GridContainer from '../../GridContainer.js';
 import GridItem from '../../GridItem.js';
 
-const filterFields = ['status', 'env', 'branch', 'browser', 'tag'];
+const FILTERS = ['status', 'env', 'branch', 'browser', 'tag'];
 
 export default function ActionRow({
   feature,
+  filterState,
   setFilter,
   sortingState,
   setSorting,
 }) {
-  const fieldIDMap = filterFields.reduce(
-    (acc, field) => ({
+  const filterToID = FILTERS.reduce(
+    (acc, filter) => ({
       ...acc,
-      [field]: `${feature}-filter-${field}`,
+      [filter]: `${feature}-filter-${filter}`,
     }),
-    {}
+    {},
   );
   const filterOnSubmit = (e) => {
-    const newFilter = filterFields.reduce((acc, field) => {
-      const fieldValue = e?.target?.elements?.[fieldIDMap?.[field]]?.value;
-      if (!fieldValue) return acc;
-      return { ...acc, [field]: fieldValue };
+    const newFilter = FILTERS.reduce((acc, filter) => {
+      const value = e.target.elements[filterToID[filter]]?.value;
+      if (!value) return acc;
+      return { ...acc, [filter]: value };
     }, {});
     setFilter(newFilter);
     e.preventDefault();
   };
-  const inputFields = Object.keys(fieldIDMap).map(
-    (field) => html`<span><label for=${fieldIDMap[field]}>${field}: </label>
+  const inputFields = FILTERS.map(
+    (filter) => html`<span
+      ><label for=${filterToID[filter]}>${filter}: </label>
       <input
         type="text"
         placeholder=""
         class="text-input-filter"
-        id=${fieldIDMap[field]}
-        name=${fieldIDMap[field]}
-      /></span>`
+        id=${filterToID[filter]}
+        name=${filterToID[filter]}
+        value=${filterState[filter]}
+    /></span>`,
   );
 
-  const sortOptions = Object.keys(SortingConfigs).map((key) => {
-    return {
-      value: key,
-      text: SortingConfigs[key].name,
-    };
-  });
+  const sortOptions = Object.keys(SortingConfigs).map((key) => ({
+    value: key,
+    text: SortingConfigs[key].name,
+  }));
   // FIXME: add sort icon
   const sortDropdown = html`
-  <div class='mr2'>
-    <${Dropdown}
-      options=${sortOptions}
-      onSelect=${(value) => setSorting(value)}
-      value=${sortingState}
-    /></div>
+    <div class="mr2">
+      <${Dropdown}
+        options=${sortOptions}
+        onSelect=${(value) => setSorting(value)}
+        value=${sortingState}
+      />
+    </div>
   `;
   const filterRow = html`<form onsubmit=${filterOnSubmit}>
     ${inputFields}

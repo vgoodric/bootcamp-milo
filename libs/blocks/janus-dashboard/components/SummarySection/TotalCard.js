@@ -6,10 +6,9 @@ import {
 import {
   useDataState,
   useDataDispatch,
-  ActionTypes,
+  ActionTypes as DataActionTypes,
   initialState,
 } from '../../wrappers/DataProvider.js';
-import { useMetaData } from '../../wrappers/MetaDataProvider.js';
 import GridContainer from '../GridContainer.js';
 import GridItem from '../GridItem.js';
 import { colorMap } from '../utils.js';
@@ -19,7 +18,6 @@ import SmallLoader from '../SmallLoader.js';
 const status = 'total';
 
 export default function TotalCard({ date, cnt, loading }) {
-  const { defaultRepo, defaultBranch } = useMetaData();
   const dataDispatch = useDataDispatch();
   const dataState = useDataState();
   const filterDispatch = useFilterDispatch();
@@ -49,12 +47,15 @@ export default function TotalCard({ date, cnt, loading }) {
     : [];
 
   const repoOnSelect = (repo) =>
-    dataDispatch({ type: ActionTypes.SET_SELECTED_REPO, payload: repo });
+    dataDispatch({ type: DataActionTypes.SET_SELECTED_REPO, payload: repo });
   const branchOnSelect = (branch) =>
-    dataDispatch({ type: ActionTypes.SET_SELECTED_BRANCH, payload: branch });
+    dataDispatch({
+      type: DataActionTypes.SET_SELECTED_BRANCH,
+      payload: branch,
+    });
   const testrunOnSelect = (testrunName) =>
     dataDispatch({
-      type: ActionTypes.SET_SELECTED_TESTRUN_NAME,
+      type: DataActionTypes.SET_SELECTED_TESTRUN_NAME,
       payload: testrunName,
     });
 
@@ -62,7 +63,7 @@ export default function TotalCard({ date, cnt, loading }) {
 
   const setFilterStatusTotal = () => {
     filterDispatch({
-      type: FilterActionTypes.SET_STATE,
+      type: FilterActionTypes.MERGE_STATE,
       payload: {
         status: null,
         showDetail: true,

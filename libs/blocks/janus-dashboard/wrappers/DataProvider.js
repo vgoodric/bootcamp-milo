@@ -20,8 +20,8 @@ export const ActionTypes = {
   SET_REPO_BRANCH_MAP: 3,
   SET_AVAILABLE_TESTRUNS: 4,
   SET_TESTRUN_DATA: 5,
-  SET_UPLOAD_DATA_STATES: 6,
-  RESET_STATE: 8,
+  SET_STATE: 6,
+  RESET_STATE: 7,
 };
 export const prefetchValue = { value: null, loading: false, error: null };
 export const initialState = {
@@ -80,22 +80,11 @@ const reducer = (state, { type, payload }) => {
         ...state,
         testrunData: payload,
       };
-    case ActionTypes.SET_UPLOAD_DATA_STATES: {
-      const { data, fileName } = payload;
-      const { repo, branch } = data;
-      return {
-        ...state,
-        repoBranchMap: {
-          ...prefetchValue,
-          value: { [repo]: [branch] },
-        },
-        selectedTestrunName: payload.fileName,
-        selectedRepo: repo,
-        selectedBranch: branch,
-        availableTestruns: { ...prefetchValue, value: { names: [fileName] } },
-        testrunData: { ...prefetchValue, value: { data } },
-      };
-    }
+    case ActionTypes.SET_STATE:
+      return Object.keys(payload).reduce(
+        (acc, currKey) => ({ ...acc, [currKey]: payload[currKey] }),
+        { ...state },
+      );
     case ActionTypes.RESET_STATE:
       return initialState;
     default:
@@ -105,7 +94,6 @@ const reducer = (state, { type, payload }) => {
 
 export default function DataProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log({ state });
   return html` <${DataContext.Provider} value=${{ state, dispatch }}>
     ${children}
   <//>`;

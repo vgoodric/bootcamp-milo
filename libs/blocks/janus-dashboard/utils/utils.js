@@ -49,7 +49,24 @@ export function generateTestRunID() {
     'xxxxxxxxxxxxxxxx'.replace(/[x]/g, () =>
       Math.floor(Math.random() * 16)
         .toString(16)
-        .toLowerCase()
+        .toLowerCase(),
     )
   );
+}
+
+function throwForInvalidJSON(field) {
+  throw new Error(`invalid or missing field: ${field}`);
+}
+
+export function processData(data) {
+  try {
+    const { results, timestamp, branch, repo } = data;
+    if (!timestamp) throwForInvalidJSON('timestamp');
+    if (!branch) throwForInvalidJSON('branch');
+    if (!repo) throwForInvalidJSON('repo');
+    if (!results || !Array.isArray(results)) throwForInvalidJSON('results');
+    return { data };
+  } catch (error) {
+    return { error };
+  }
 }

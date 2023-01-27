@@ -8,7 +8,7 @@ import {
 // manual enum
 export const ActionTypes = {
   SET_SHOW_DETAIL: 0,
-  SET_STATE: 1,
+  MERGE_STATE: 1,
   TOGGLE_SHOW_DETAIL: 2,
 };
 
@@ -24,7 +24,7 @@ const reducer = (state, action) => {
       return { ...state, showDetail: action.payload };
     case ActionTypes.TOGGLE_SHOW_DETAIL:
       return { ...state, showDetail: !state.showDetail };
-    case ActionTypes.SET_STATE:
+    case ActionTypes.MERGE_STATE:
       return Object.keys(action.payload).reduce(
         (acc, currKey) => ({ ...acc, [currKey]: action.payload[currKey] }),
         { ...state },
@@ -38,6 +38,7 @@ const FilterContext = createContext();
 
 function FilterProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  console.log({ state });
   return html`
     <${FilterContext.Provider} value=${{ state, dispatch }}> ${children} <//>
   `;
