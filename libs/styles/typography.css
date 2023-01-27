@@ -168,6 +168,7 @@ svg.icon-milo {
   top: .1em;
   position: relative;
   overflow: visible;
+  min-width: 18px;
 }
 
 span.icon.margin-right { margin-right: 8px; }
