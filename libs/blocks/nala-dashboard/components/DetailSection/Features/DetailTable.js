@@ -29,7 +29,7 @@ export default function DetailTable({ data, filterState, sortingState }) {
           { content: d.env },
           { content: d.tag },
           {
-            content: html`<div class="long-text-block">${d.errorMessage}</div>`,
+            content: html`<div class="long-text-block">${d.errorMessage + d.errorStack}</div>`,
             config: { textLeft: true },
           },
         ],
@@ -44,7 +44,7 @@ export default function DetailTable({ data, filterState, sortingState }) {
       { content: 'Browser' },
       { content: 'Env' },
       { content: 'Tag' },
-      { content: 'Error Msg', config: { textLeft: true } },
+      { content: 'Error Message + Error Stack', config: { textLeft: true } },
     ],
     TableHeaderCell,
   );

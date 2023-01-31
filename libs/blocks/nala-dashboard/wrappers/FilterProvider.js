@@ -38,7 +38,6 @@ const FilterContext = createContext();
 
 function FilterProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log({ state });
   return html`
     <${FilterContext.Provider} value=${{ state, dispatch }}> ${children} <//>
   `;

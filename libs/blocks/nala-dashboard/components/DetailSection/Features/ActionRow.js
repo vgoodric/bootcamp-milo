@@ -20,7 +20,7 @@ export default function ActionRow({
     }),
     {},
   );
-  const filterOnSubmit = (e) => {
+  const filterOnSubmitHandler = (e) => {
     const newFilter = FILTERS.reduce((acc, filter) => {
       const value = e.target.elements[filterToID[filter]]?.value;
       if (!value) return acc;
@@ -56,7 +56,7 @@ export default function ActionRow({
       />
     </div>
   `;
-  const filterRow = html`<form onsubmit=${filterOnSubmit}>
+  const filterRow = html`<form onsubmit=${filterOnSubmitHandler}>
     ${inputFields}
     <input type="submit" value="SetFilter" />
   </form>`;

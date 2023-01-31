@@ -9,23 +9,19 @@ export default function ToggleAPIFileWrapper({ children }) {
 
   const wrapper = usingFile ? UploadDataWrapper : APIDataWrapper;
 
-  const toggleOnClick = () => {
+  const toggleOnClickHandler = () => {
     setUsingFile((curr) => !curr);
     dataDispatch({ type: ActionTypes.RESET_STATE });
   };
 
-  const toggleSwitch = html`<label class="switch">
-    <input
-      class="switch-input"
-      type="checkbox"
-      checked=${usingFile}
-      onClick=${toggleOnClick}
-    />
-    <span class="switch-label" data-on="API" data-off="Upload"></span>
-    <span class="switch-handle"></span>
-  </label>`;
+  const toggleSwitch = html`<div class="toggle-button mt2 mb1">
+    <button class=${usingFile ? 'on' : 'off'} onClick=${toggleOnClickHandler}>
+      ${usingFile ? 'Use API' : 'Upload Data'}
+    </button>
+  </div> `;
 
-  return html`<div>
+  return html`
+  <div>
     ${toggleSwitch}
     <${wrapper}>
       ${children}

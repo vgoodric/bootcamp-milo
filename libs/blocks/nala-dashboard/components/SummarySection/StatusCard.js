@@ -21,7 +21,7 @@ export default function StatusCard({ status, date, cnt, percent, loading }) {
 
   const color = colorMap[status];
 
-  const statusSetter = () => {
+  const statusOnClickHandler = () => {
     filterDispatch({
       type: ActionTypes.MERGE_STATE,
       payload: {
@@ -37,7 +37,7 @@ export default function StatusCard({ status, date, cnt, percent, loading }) {
       <${GridContainer} spaceAround>
         <${GridItem}>
           <div class="cnt-percent">
-            <div class=${`clickable ${color}`} onClick=${statusSetter}>
+            <div class=${`clickable ${color}`} onClick=${statusOnClickHandler}>
               <span class=${'cnt'}>
                 ${cnt}
               </span>

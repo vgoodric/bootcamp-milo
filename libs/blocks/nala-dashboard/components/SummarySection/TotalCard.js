@@ -46,14 +46,14 @@ export default function TotalCard({ date, cnt, loading }) {
     ? availableTestruns.value.names.map((t) => ({ value: t, text: t }))
     : [];
 
-  const repoOnSelect = (repo) =>
+  const repoOnSelectHandler = (repo) =>
     dataDispatch({ type: DataActionTypes.SET_SELECTED_REPO, payload: repo });
-  const branchOnSelect = (branch) =>
+  const branchOnSelectHandler = (branch) =>
     dataDispatch({
       type: DataActionTypes.SET_SELECTED_BRANCH,
       payload: branch,
     });
-  const testrunOnSelect = (testrunName) =>
+  const testrunOnSelectHandler = (testrunName) =>
     dataDispatch({
       type: DataActionTypes.SET_SELECTED_TESTRUN_NAME,
       payload: testrunName,
@@ -89,7 +89,7 @@ export default function TotalCard({ date, cnt, loading }) {
     <${GridItem}>
       <${Dropdown}
         options=${repoOptions}
-        onSelect=${repoOnSelect}
+        onSelect=${repoOnSelectHandler}
         value=${selectedRepo}
         defaultValue=${initialState.selectedRepo}
         defaultText=${'select repo'}
@@ -108,7 +108,7 @@ export default function TotalCard({ date, cnt, loading }) {
       <${Dropdown}
         options=${branchOptions}
         labelText='BRANCH'
-        onSelect=${branchOnSelect}
+        onSelect=${branchOnSelectHandler}
         value=${selectedBranch}
         defaultValue=${initialState.selectedBranch}
         defaultText=${'select branch'}
@@ -119,7 +119,7 @@ export default function TotalCard({ date, cnt, loading }) {
       <${Dropdown}
         options=${testrunOptions}
         labelText='TESTRUN'
-        onSelect=${testrunOnSelect}
+        onSelect=${testrunOnSelectHandler}
         value=${selectedTestrunName}
         defaultValue=${initialState.selectedTestrunName}
         defaultText=${'select testrun'}

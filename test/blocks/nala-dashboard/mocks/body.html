@@ -1,0 +1,587 @@
+<div class="section">
+  <div class="nala-dashboard">
+    <div class="whole-block">
+      <div>
+        <div class="toggle-button mt2 mb1">
+          <button class="off">Upload Data</button>
+        </div>
+        <div class="mb5">
+          <ul class="grid-container space-between">
+            <li class="grid-item">
+              <div class="summary-card text-centered">
+                <ul class="grid-container space-between">
+                  <li class="grid-item">
+                    <div class="dropdown-big">
+                      <select class="select">
+                        <option disabled="" value="">select repo</option>
+                        <option value="local">local</option>
+                        <option value="milo">milo</option>
+                        <option value="nala">nala</option>
+                      </select>
+                    </div>
+                  </li>
+                  <li class="grid-item"><div class="date">1/18/2023</div></li>
+                </ul>
+                <ul class="grid-container">
+                  <li class="grid-item">
+                    <div class="dropdown">
+                      <label class="label">BRANCH</label
+                      ><select class="select">
+                        <option disabled="" value="">select branch</option>
+                        <option value="390/merge">390/merge</option>
+                        <option value="main">main</option>
+                      </select>
+                    </div>
+                  </li>
+                  <li class="grid-item">
+                    <div class="dropdown">
+                      <label class="label">TESTRUN</label
+                      ><select class="select">
+                        <option disabled="" value="">select testrun</option>
+                        <option
+                          value="testruns/milo/main/2023-01-27T19:29:08.184Z-ev1c.json"
+                        >
+                          testruns/milo/main/2023-01-27T19:29:08.184Z-ev1c.json
+                        </option>
+                        <option
+                          value="testruns/milo/main/2023-01-19T08:08:42.061Z-w0eo.json"
+                        >
+                          testruns/milo/main/2023-01-19T08:08:42.061Z-w0eo.json
+                        </option>
+                        <option
+                          value="testruns/milo/main/2023-01-19T07:42:39.215Z-thz5.json"
+                        >
+                          testruns/milo/main/2023-01-19T07:42:39.215Z-thz5.json
+                        </option>
+                        <option
+                          value="testruns/milo/main/2023-01-17T22:44:28.948Z-ekjd.json"
+                        >
+                          testruns/milo/main/2023-01-17T22:44:28.948Z-ekjd.json
+                        </option>
+                      </select>
+                    </div>
+                  </li>
+                </ul>
+                <hr />
+                TOTAL TESTS
+                <ul class="grid-container space-around">
+                  <li class="grid-item">
+                    <div class="clickable blue cnt-total mt03">86</div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="grid-item">
+              <div class="summary-card text-centered">
+                <ul class="grid-container flex-end">
+                  <li class="grid-item"><div class="date">1/18/2023</div></li>
+                </ul>
+                <ul class="grid-container space-around">
+                  <li class="grid-item"><div class="branch">MILO MAIN</div></li>
+                </ul>
+                <ul class="grid-container space-around">
+                  <li class="grid-item">
+                    <div class="status red">FAILED</div>
+                  </li>
+                </ul>
+                <ul class="grid-container space-around">
+                  <li class="grid-item">
+                    <div class="cnt-percent">
+                      <div class="clickable red">
+                        <span class="cnt">15</span
+                        ><span class="percent">/17.4%</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="grid-item">
+              <div class="summary-card text-centered">
+                <ul class="grid-container flex-end">
+                  <li class="grid-item"><div class="date">1/18/2023</div></li>
+                </ul>
+                <ul class="grid-container space-around">
+                  <li class="grid-item"><div class="branch">MILO MAIN</div></li>
+                </ul>
+                <ul class="grid-container space-around">
+                  <li class="grid-item">
+                    <div class="status green">PASSED</div>
+                  </li>
+                </ul>
+                <ul class="grid-container space-around">
+                  <li class="grid-item">
+                    <div class="cnt-percent">
+                      <div class="clickable green">
+                        <span class="cnt">71</span
+                        ><span class="percent">/82.6%</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="grid-item">
+              <div class="summary-card text-centered">
+                <ul class="grid-container flex-end">
+                  <li class="grid-item"><div class="date">1/18/2023</div></li>
+                </ul>
+                <ul class="grid-container space-around">
+                  <li class="grid-item"><div class="branch">MILO MAIN</div></li>
+                </ul>
+                <ul class="grid-container space-around">
+                  <li class="grid-item">
+                    <div class="status yellow">FLAKY</div>
+                  </li>
+                </ul>
+                <ul class="grid-container space-around">
+                  <li class="grid-item">
+                    <div class="cnt-percent">
+                      <div class="clickable yellow">
+                        <span class="cnt">0</span
+                        ><span class="percent">/0.0%</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <div class="mb2 detail-section-title-row">
+            <ul class="grid-container">
+              <li class="grid-item3">
+                <span class="pl1">MILO MAIN TESTS</span>
+              </li>
+              <li class="grid-item text-centered">Total</li>
+              <li class="grid-item text-centered">Passed</li>
+              <li class="grid-item text-centered">Failed</li>
+              <li class="grid-item">
+                <input type="search" placeholder="Search" class="search-bar" />
+              </li>
+            </ul>
+          </div>
+          <div class="mb1">
+            <div class="unselected-table-row">
+              <span class="clickable"
+                ><div>
+                  <ul class="grid-container">
+                    <li class="grid-item3">
+                      <span class="pl1 bold">Columns</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">12</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">12</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">0</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        width="18"
+                      >
+                        <defs>
+                          <style>
+                            .fill {
+                              fill: #464646;
+                            }
+                          </style>
+                        </defs>
+                        <title>S ChevronDown 18 N</title>
+                        <rect
+                          id="Canvas"
+                          fill="#ff13dc"
+                          opacity="0"
+                          width="18"
+                          height="18"
+                        ></rect>
+                        <path
+                          class="fill"
+                          d="M4,7.01a1,1,0,0,1,1.7055-.7055l3.289,3.286,3.289-3.286a1,1,0,0,1,1.437,1.3865l-.0245.0245L9.7,11.7075a1,1,0,0,1-1.4125,0L4.293,7.716A.9945.9945,0,0,1,4,7.01Z"
+                        ></path>
+                      </svg>
+                    </li>
+                  </ul></div
+              ></span>
+            </div>
+            <div class="selected-background">
+              <div class="text-centered"></div>
+            </div>
+          </div>
+          <div class="mb1">
+            <div class="unselected-table-row">
+              <span class="clickable"
+                ><div>
+                  <ul class="grid-container">
+                    <li class="grid-item3">
+                      <span class="pl1 bold">Faas</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">12</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">12</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">0</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        width="18"
+                      >
+                        <defs>
+                          <style>
+                            .fill {
+                              fill: #464646;
+                            }
+                          </style>
+                        </defs>
+                        <title>S ChevronDown 18 N</title>
+                        <rect
+                          id="Canvas"
+                          fill="#ff13dc"
+                          opacity="0"
+                          width="18"
+                          height="18"
+                        ></rect>
+                        <path
+                          class="fill"
+                          d="M4,7.01a1,1,0,0,1,1.7055-.7055l3.289,3.286,3.289-3.286a1,1,0,0,1,1.437,1.3865l-.0245.0245L9.7,11.7075a1,1,0,0,1-1.4125,0L4.293,7.716A.9945.9945,0,0,1,4,7.01Z"
+                        ></path>
+                      </svg>
+                    </li>
+                  </ul></div
+              ></span>
+            </div>
+            <div class="selected-background">
+              <div class="text-centered"></div>
+            </div>
+          </div>
+          <div class="mb1">
+            <div class="unselected-table-row">
+              <span class="clickable"
+                ><div>
+                  <ul class="grid-container">
+                    <li class="grid-item3">
+                      <span class="pl1 bold">Failedblock</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">20</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">17</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">3</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        width="18"
+                      >
+                        <defs>
+                          <style>
+                            .fill {
+                              fill: #464646;
+                            }
+                          </style>
+                        </defs>
+                        <title>S ChevronDown 18 N</title>
+                        <rect
+                          id="Canvas"
+                          fill="#ff13dc"
+                          opacity="0"
+                          width="18"
+                          height="18"
+                        ></rect>
+                        <path
+                          class="fill"
+                          d="M4,7.01a1,1,0,0,1,1.7055-.7055l3.289,3.286,3.289-3.286a1,1,0,0,1,1.437,1.3865l-.0245.0245L9.7,11.7075a1,1,0,0,1-1.4125,0L4.293,7.716A.9945.9945,0,0,1,4,7.01Z"
+                        ></path>
+                      </svg>
+                    </li>
+                  </ul></div
+              ></span>
+            </div>
+            <div class="selected-background">
+              <div class="text-centered"></div>
+            </div>
+          </div>
+          <div class="mb1">
+            <div class="unselected-table-row">
+              <span class="clickable"
+                ><div>
+                  <ul class="grid-container">
+                    <li class="grid-item3">
+                      <span class="pl1 bold">Imslogin</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">12</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">3</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">9</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        width="18"
+                      >
+                        <defs>
+                          <style>
+                            .fill {
+                              fill: #464646;
+                            }
+                          </style>
+                        </defs>
+                        <title>S ChevronDown 18 N</title>
+                        <rect
+                          id="Canvas"
+                          fill="#ff13dc"
+                          opacity="0"
+                          width="18"
+                          height="18"
+                        ></rect>
+                        <path
+                          class="fill"
+                          d="M4,7.01a1,1,0,0,1,1.7055-.7055l3.289,3.286,3.289-3.286a1,1,0,0,1,1.437,1.3865l-.0245.0245L9.7,11.7075a1,1,0,0,1-1.4125,0L4.293,7.716A.9945.9945,0,0,1,4,7.01Z"
+                        ></path>
+                      </svg>
+                    </li>
+                  </ul></div
+              ></span>
+            </div>
+            <div class="selected-background">
+              <div class="text-centered"></div>
+            </div>
+          </div>
+          <div class="mb1">
+            <div class="unselected-table-row">
+              <span class="clickable"
+                ><div>
+                  <ul class="grid-container">
+                    <li class="grid-item3">
+                      <span class="pl1 bold">Marketo</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">6</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">6</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">0</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        width="18"
+                      >
+                        <defs>
+                          <style>
+                            .fill {
+                              fill: #464646;
+                            }
+                          </style>
+                        </defs>
+                        <title>S ChevronDown 18 N</title>
+                        <rect
+                          id="Canvas"
+                          fill="#ff13dc"
+                          opacity="0"
+                          width="18"
+                          height="18"
+                        ></rect>
+                        <path
+                          class="fill"
+                          d="M4,7.01a1,1,0,0,1,1.7055-.7055l3.289,3.286,3.289-3.286a1,1,0,0,1,1.437,1.3865l-.0245.0245L9.7,11.7075a1,1,0,0,1-1.4125,0L4.293,7.716A.9945.9945,0,0,1,4,7.01Z"
+                        ></path>
+                      </svg>
+                    </li>
+                  </ul></div
+              ></span>
+            </div>
+            <div class="selected-background">
+              <div class="text-centered"></div>
+            </div>
+          </div>
+          <div class="mb1">
+            <div class="unselected-table-row">
+              <span class="clickable"
+                ><div>
+                  <ul class="grid-container">
+                    <li class="grid-item3">
+                      <span class="pl1 bold">Marquee</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">6</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">6</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">0</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        width="18"
+                      >
+                        <defs>
+                          <style>
+                            .fill {
+                              fill: #464646;
+                            }
+                          </style>
+                        </defs>
+                        <title>S ChevronDown 18 N</title>
+                        <rect
+                          id="Canvas"
+                          fill="#ff13dc"
+                          opacity="0"
+                          width="18"
+                          height="18"
+                        ></rect>
+                        <path
+                          class="fill"
+                          d="M4,7.01a1,1,0,0,1,1.7055-.7055l3.289,3.286,3.289-3.286a1,1,0,0,1,1.437,1.3865l-.0245.0245L9.7,11.7075a1,1,0,0,1-1.4125,0L4.293,7.716A.9945.9945,0,0,1,4,7.01Z"
+                        ></path>
+                      </svg>
+                    </li>
+                  </ul></div
+              ></span>
+            </div>
+            <div class="selected-background">
+              <div class="text-centered"></div>
+            </div>
+          </div>
+          <div class="mb1">
+            <div class="unselected-table-row">
+              <span class="clickable"
+                ><div>
+                  <ul class="grid-container">
+                    <li class="grid-item3">
+                      <span class="pl1 bold">Button</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">12</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">12</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">0</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        width="18"
+                      >
+                        <defs>
+                          <style>
+                            .fill {
+                              fill: #464646;
+                            }
+                          </style>
+                        </defs>
+                        <title>S ChevronDown 18 N</title>
+                        <rect
+                          id="Canvas"
+                          fill="#ff13dc"
+                          opacity="0"
+                          width="18"
+                          height="18"
+                        ></rect>
+                        <path
+                          class="fill"
+                          d="M4,7.01a1,1,0,0,1,1.7055-.7055l3.289,3.286,3.289-3.286a1,1,0,0,1,1.437,1.3865l-.0245.0245L9.7,11.7075a1,1,0,0,1-1.4125,0L4.293,7.716A.9945.9945,0,0,1,4,7.01Z"
+                        ></path>
+                      </svg>
+                    </li>
+                  </ul></div
+              ></span>
+            </div>
+            <div class="selected-background">
+              <div class="text-centered"></div>
+            </div>
+          </div>
+          <div class="mb1">
+            <div class="unselected-table-row">
+              <span class="clickable"
+                ><div>
+                  <ul class="grid-container">
+                    <li class="grid-item3">
+                      <span class="pl1 bold">Modal</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">6</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">3</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <span class="bold">3</span>
+                    </li>
+                    <li class="grid-item text-centered">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        width="18"
+                      >
+                        <defs>
+                          <style>
+                            .fill {
+                              fill: #464646;
+                            }
+                          </style>
+                        </defs>
+                        <title>S ChevronDown 18 N</title>
+                        <rect
+                          id="Canvas"
+                          fill="#ff13dc"
+                          opacity="0"
+                          width="18"
+                          height="18"
+                        ></rect>
+                        <path
+                          class="fill"
+                          d="M4,7.01a1,1,0,0,1,1.7055-.7055l3.289,3.286,3.289-3.286a1,1,0,0,1,1.437,1.3865l-.0245.0245L9.7,11.7075a1,1,0,0,1-1.4125,0L4.293,7.716A.9945.9945,0,0,1,4,7.01Z"
+                        ></path>
+                      </svg>
+                    </li>
+                  </ul></div
+              ></span>
+            </div>
+            <div class="selected-background">
+              <div class="text-centered"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div></div>
+    <div></div>
+  </div>
+</div>

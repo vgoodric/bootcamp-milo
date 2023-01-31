@@ -35,13 +35,13 @@ export default function Dropdown({
   }
 
   const label = !bigDropdown && html`<label class="label">${labelText}</label>`;
-  const selectOnChange = (e) => {
+  const selectHandler = (e) => {
     e.preventDefault();
     onSelect(e.target.value);
   };
   return html`<div class=${bigDropdown ? 'dropdown-big' : 'dropdown'}>
     ${label}
-    <select value=${value} class="select" onChange=${selectOnChange}>
+    <select value=${value} class="select" onChange=${selectHandler}>
       ${optionSelections}
     </select>
   </div>`;

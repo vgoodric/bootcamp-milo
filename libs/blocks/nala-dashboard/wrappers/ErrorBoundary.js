@@ -1,25 +1,12 @@
-import { Component, html } from '../../../deps/htm-preact.js';
+import { html, useErrorBoundary } from '../../../deps/htm-preact.js';
 
-class ErrorBoundary extends Component {
-  state = { error: null };
-
-  static getDerivedStateFromError(error) {
-    return { error: error.message };
-  }
-
-  componentDidCatch(error) {
+export default function ErrorBoundary({ children }) {
+  const [error] = useErrorBoundary();
+  if (error) {
     console.error(error);
-    this.setState({ error: error.message });
+    return html`<div class="whole-block">
+      <p>Oh no! We ran into an error: ${error.message}</p>
+    </div>`;
   }
-
-  render() {
-    if (this.state.error) {
-      return html`<div class="whole-block">
-        <p>Oh no! We ran into an error: ${this.state.error}</p>
-      </div>`;
-    }
-    return this.props.children;
-  }
+  return children;
 }
-
-export default ErrorBoundary;
