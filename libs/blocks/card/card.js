@@ -5,6 +5,7 @@ const HALF = 'OneHalfCard';
 const HALF_HEIGHT = 'HalfHeightCard';
 const PRODUCT = 'ProductCard';
 const DOUBLE_WIDE = 'DoubleWideCard';
+const MERCH = 'MerchCard';
 
 const getCardType = (styles) => {
   const cardTypes = {
@@ -12,6 +13,7 @@ const getCardType = (styles) => {
     'half-height-card': HALF_HEIGHT,
     'product-card': PRODUCT,
     'double-width-card': DOUBLE_WIDE,
+    merch: MERCH,
   };
   const authoredType = styles?.find((style) => style in cardTypes);
   return cardTypes[authoredType] || HALF;
@@ -78,6 +80,11 @@ const addInner = (el, cardType, card) => {
   card.append(inner);
 
   if (cardType === PRODUCT) {
+    inner.querySelector(':scope > div')?.classList.add('consonant-ProductCard-row');
+    if (text) inner.append(text);
+  }
+
+  if (cardType === MERCH) {
     inner.querySelector(':scope > div')?.classList.add('consonant-ProductCard-row');
     if (text) inner.append(text);
   }
