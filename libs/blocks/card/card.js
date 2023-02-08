@@ -73,6 +73,7 @@ const addInner = (el, cardType, card) => {
       const priceType = url.searchParams.get('priceType');
       const price = getPrice(osi, priceType);
       priceLink.parentElement.insertBefore(price, priceLink);
+      priceLink.parentElement.classList.add('price');
       priceLink.remove();
     }
   }
@@ -107,7 +108,6 @@ const addFooter = (links, container) => {
   const linksArr = Array.from(links);
   const linksLeng = linksArr.length;
   const hrTag = container.parentElement.classList.contains('merch') ? '<hr>' : '';
-  debugger;
   let footer = `<div class="consonant-CardFooter">${hrTag}<div class="consonant-CardFooter-row" data-cells="${linksLeng}">`;
   footer = linksArr.reduce(
     (combined, link, index) => (
@@ -131,7 +131,7 @@ const init = (el) => {
   const cardType = getCardType(styles);
   const row = el.querySelector(':scope > div');
   const picture = el.querySelector('picture');
-  const links = el.classList.contains('merch') ? el.querySelector(':scope > div:last-of-type').querySelectorAll('a') : el.querySelectorAll('a');
+  const links = el.classList.contains('merch') ? el.querySelector(':scope > div > div > p:last-of-type').querySelectorAll('a') : el.querySelectorAll('a');
   let card = el;
 
   addWrapper(el, section, cardType);
