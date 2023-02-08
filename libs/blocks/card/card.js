@@ -1,11 +1,11 @@
 import { loadStyle, getConfig, createTag } from '../../utils/utils.js';
 import { getMetadata } from '../section-metadata/section-metadata.js';
+import { decorateButton, getPrice, runTacocat } from '../../features/merch.js';
 
 const HALF = 'OneHalfCard';
 const HALF_HEIGHT = 'HalfHeightCard';
 const PRODUCT = 'ProductCard';
 const DOUBLE_WIDE = 'DoubleWideCard';
-const MERCH = 'MerchCard';
 
 const getCardType = (styles) => {
   const cardTypes = {
@@ -13,7 +13,6 @@ const getCardType = (styles) => {
     'half-height-card': HALF_HEIGHT,
     'product-card': PRODUCT,
     'double-width-card': DOUBLE_WIDE,
-    merch: MERCH,
   };
   const authoredType = styles?.find((style) => style in cardTypes);
   return cardTypes[authoredType] || HALF;
@@ -66,6 +65,18 @@ const addInner = (el, cardType, card) => {
   const text = Array.from(el.querySelectorAll('p'))?.find((p) => !p.querySelector('picture, a'));
   let inner = el.querySelector(':scope > div:not([class])');
 
+  if (el.classList.contains('merch')) {
+    const priceLink = el.querySelector('a[href*="tools/ost?osi="]');
+    if (priceLink) {
+      const url = new URL(priceLink.href);
+      const osi = url.searchParams.get('osi');
+      const priceType = url.searchParams.get('priceType');
+      const price = getPrice(osi, priceType);
+      priceLink.parentElement.insertBefore(price, priceLink);
+      priceLink.remove();
+    }
+  }
+
   if (cardType === DOUBLE_WIDE) {
     inner = document.createElement('a');
     inner.href = el.querySelector('a')?.href || '';
@@ -84,11 +95,6 @@ const addInner = (el, cardType, card) => {
     if (text) inner.append(text);
   }
 
-  if (cardType === MERCH) {
-    inner.querySelector(':scope > div')?.classList.add('consonant-ProductCard-row');
-    if (text) inner.append(text);
-  }
-
   if (cardType === HALF_HEIGHT) {
     text?.remove();
   }
@@ -100,15 +106,17 @@ const addInner = (el, cardType, card) => {
 const addFooter = (links, container) => {
   const linksArr = Array.from(links);
   const linksLeng = linksArr.length;
-  let footer = `<div class="consonant-CardFooter"><div class="consonant-CardFooter-row" data-cells="${linksLeng}">`;
+  const hrTag = container.parentElement.classList.contains('merch') ? '<hr>' : '';
+  debugger;
+  let footer = `<div class="consonant-CardFooter">${hrTag}<div class="consonant-CardFooter-row" data-cells="${linksLeng}">`;
   footer = linksArr.reduce(
     (combined, link, index) => (
       `${combined}<div class="consonant-CardFooter-cell consonant-CardFooter-cell--${(linksLeng === 2 && index === 0) ? 'left' : 'right'}">${link.outerHTML}</div>`),
     footer,
   );
   footer += '</div></div>';
-
   container.insertAdjacentHTML('beforeend', footer);
+
   links[0]?.parentElement?.remove();
 };
 
@@ -119,11 +127,11 @@ const init = (el) => {
 
   const section = el.closest('.section');
   section.classList.add('milo-card-section');
-  const row = el.querySelector(':scope > div');
-  const picture = el.querySelector('picture');
-  const links = el.querySelectorAll('a');
   const styles = Array.from(el.classList);
   const cardType = getCardType(styles);
+  const row = el.querySelector(':scope > div');
+  const picture = el.querySelector('picture');
+  const links = el.classList.contains('merch') ? el.querySelector(':scope > div:last-of-type').querySelectorAll('a') : el.querySelectorAll('a');
   let card = el;
 
   addWrapper(el, section, cardType);
@@ -149,10 +157,22 @@ const init = (el) => {
   }
 
   picture?.parentElement.remove();
+
   addInner(el, cardType, card);
 
+  if (el.classList.contains('merch')) {
+    const priceLink = el.querySelector('a[href*="osi="]');
+    if (priceLink) {
+      const url = new URL(priceLink.href);
+      const osi = url.searchParams.get('osi');
+      decorateButton(osi, priceLink);
+    }
+  }
   if (cardType === HALF || cardType === PRODUCT) {
     addFooter(links, row);
+  }
+  if (el.classList.contains('merch')) {
+    runTacocat();
   }
 };
 

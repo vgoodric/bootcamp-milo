@@ -3,10 +3,9 @@ import { loadScript, getConfig, createTag } from '../utils/utils.js';
 const { miloLibs, codeRoot, env } = getConfig();
 const base = miloLibs || codeRoot;
 
-function buildButton(osi) {
-  const a = createTag('a');
+export function decorateButton(osi, a) {
+  if (!osi || !a) return;
   a.href = '#';
-  a.className = 'con-button blue button-M';
   a.dataset.checkoutClientid = 'mini_plans';
   a.dataset.checkoutWorkflow = 'UCv3';
   a.dataset.checkoutWorkflowStep = 'email';
@@ -30,7 +29,7 @@ function getPriceType(name) {
   }
 }
 
-export function runTacocat() {
+export async function runTacocat() {
   if (!window.tacocat) {
     await loadScript(`${base}/deps/tacocat-index.js`);
   }
@@ -39,15 +38,9 @@ export function runTacocat() {
   window.tacocat({ environment: env.name, wcs });
 }
 
-export async function getPrice(osi, priceType) {
-  if (!osi) return;
+export function getPrice(osi, priceType) {
+  if (!osi) return null;
   const mappedPriceType = getPriceType(priceType) ?? 'price';
   const price = buildPrice(osi, mappedPriceType);
   return price;
-}
-
-
-export async function getButton(osi, div) {
-  if (!osi) return;
-  return buildButton(div.querySelector('a'), osi);
 }
