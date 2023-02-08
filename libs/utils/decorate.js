@@ -53,20 +53,32 @@ export function decorateBlockBg(block, node) {
 export function getBlockSize(el, defaultSize = 1) {
   const sizes = ['small', 'medium', 'large', 'xlarge'];
   if (defaultSize < 0 || defaultSize > sizes.length - 1) return null;
-  return sizes.find((size) => el.classList.contains(size)) || sizes[defaultSize];
+  return sizes.find((size) => el?.classList.contains(size)) || sizes[defaultSize];
 }
 
-export function decorateButtons(el, buttons) {
-  const blockSize = getBlockSize(el);
+function getCopyDescendants(node, fragment = document.createDocumentFragment()) {
+  for (let i = 0; i < node.childNodes.length; i += 1) {
+    const child = node.childNodes[i];
+    fragment.appendChild(child.cloneNode(true));
+  }
+  return fragment;
+}
+
+export function decorateButtons(buttons) {
   const mapBtnSize = { large: 'button-L', xlarge: 'button-XL' };
-  const size = mapBtnSize[blockSize] ?? blockSize;
+  const isStrongOrEm = (node) => node.nodeName === 'STRONG' || node.nodeName === 'EM';
   buttons.forEach((button) => {
+    const block = button.closest('.section div[class]:not(.content)');
+    const blockSize = getBlockSize(block);
+    const size = mapBtnSize[blockSize] ?? blockSize;
     const parent = button.parentElement;
-    const child = button.childNodes?.length === 1 ? button.childNodes[0] : null;
-    const grandChild = child?.childNodes?.length === 1 ? child?.childNodes[0] : null;
+
+    const child = button.childNodes?.length > 0
+      ? Array.from(button.childNodes).filter(isStrongOrEm)[0] : null;
+    const grandChild = child?.childNodes?.length > 0
+      ? Array.from(child.childNodes).filter(isStrongOrEm)[0] : null;
     const nodes = [parent.nodeName, child?.nodeName, grandChild?.nodeName];
-    const text = [button.textContent, child?.textContent, grandChild?.textContent]
-      .filter((t) => !!t)[0];
+    const text = parent.textContent || '';
     const buttonTypes = [];
     if (nodes.includes('STRONG') && nodes.includes('EM')) {
       buttonTypes.push('fill');
@@ -82,18 +94,22 @@ export function decorateButtons(el, buttons) {
     } else {
       button.classList.add(size);
     }
-    if (parent.nodeName !== 'P') parent.insertAdjacentElement('afterend', button);
-    [parent, child, grandChild].forEach((n) => {
-      if (n && n.nodeName !== 'P') n.remove();
+    const validParent = parent.nodeName === 'P' ? null : parent;
+    [grandChild, child, validParent].forEach((n) => {
+      if (n && ['STRONG', 'EM'].some((t) => t === n.nodeName)) {
+        n.replaceWith(getCopyDescendants(n));
+      }
     });
+    const span = button.querySelector('span');
     button.textContent = text;
-  });
-  const allowedArea = buttons[0].closest('.marquee, .aside, .icon-block, .media, .text-block');
-  if (allowedArea) {
-    const actionArea = buttons[0].closest('p, div');
-    if (actionArea && !actionArea.classList.contains('action-area')) {
-      actionArea.classList.add('action-area');
-      actionArea.nextElementSibling?.classList.add('supplemental-text', 'body-XL');
+    if (span) button.prepend(span);
+    const allowedArea = button.closest('.marquee, .aside, .icon-block, .media, .text-block');
+    if (allowedArea) {
+      const actionArea = button.closest('p, div');
+      if (actionArea && !actionArea.parentElement.querySelector('.action-area')) {
+        actionArea.classList.add('action-area');
+        actionArea.nextElementSibling?.classList.add('supplemental-text', 'body-XL');
+      }
     }
-  }
+  });
 }

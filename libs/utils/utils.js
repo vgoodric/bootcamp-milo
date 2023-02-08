@@ -27,7 +27,6 @@ const MILO_BLOCKS = [
   'instagram',
   'marketo',
   'card',
-  'merch-card',
   'marquee',
   'media',
   'merch',
@@ -50,7 +49,6 @@ const MILO_BLOCKS = [
   'youtube',
   'z-pattern',
   'share',
-  'reading-time',
 ];
 const AUTO_BLOCKS = [
   { adobetv: 'https://video.tv.adobe.com' },
@@ -332,23 +330,45 @@ export async function loadTemplate() {
   await Promise.all([styleLoaded, scriptLoaded]);
 }
 
-export async function decButtons(el) {
-  const buttons = Array.from(el.querySelectorAll('p em a, p strong a, p a:has(em), p a:has(strong)')).filter((b) => {
+export async function decorateLinksToButtons(links) {
+  const ignoreEmptyText = (s) => !(s.nodeType === Node.TEXT_NODE && !s.textContent.trim());
+  const buttonable = (b) => {
+    if (b.nodeName !== 'A') return false;
+    const isStrongOrEm = (node) => node.nodeName === 'STRONG' || node.nodeName === 'EM';
+    const isPara = (node) => node.nodeName === 'P';
+    return (isStrongOrEm(b.parentElement) && isPara(b.parentElement.parentElement))
+      || (Array.from(b.childNodes).some(isStrongOrEm) && isPara(b.parentElement));
+  };
+  const buttons = Array.from(links).filter((b) => {
     if (b.href.includes('#_dns')) {
       b.href = b.href.replace('#_dns', '');
       return false;
     }
-    const block = b.parentElement.nodeName === 'P' ? b.parentElement : b.parentElement.parentElement;
-    const btnAndSiblings = Array.from(block.childNodes)
-      .filter((s) => !(s.nodeType === Node.TEXT_NODE && !s.textContent.trim()));
-    // if any btn siblings are not met by the following selector the link is not buttonable
-    return block.querySelectorAll(':scope > em a, :scope > strong a, :scope > a')
-      .length === btnAndSiblings.length;
+    if (!buttonable(b)) {
+      return false;
+    }
+    const block = b.closest('p');
+    let validSiblings = true;
+    Array.from(block.childNodes).filter(ignoreEmptyText).forEach((child) => {
+      if (buttonable(child) || child.nodeName === 'A') {
+        return;
+      }
+      const grandChildren = Array.from(child.childNodes).filter(ignoreEmptyText);
+      if (!grandChildren || grandChildren.length === 0) {
+        validSiblings = false;
+      }
+      grandChildren.forEach((g) => {
+        if (!(buttonable(g) || g.nodeName === 'A')) {
+          validSiblings = false;
+        }
+      });
+    });
+    return validSiblings;
   });
   if (buttons.length === 0) return;
 
   const { decorateButtons } = await import('./decorate.js');
-  decorateButtons(el, buttons);
+  decorateButtons(buttons);
 }
 
 export async function loadBlock(block) {
@@ -363,7 +383,6 @@ export async function loadBlock(block) {
     (async () => {
       try {
         const { default: init } = await import(`${base}/blocks/${name}/${name}.js`);
-        await decButtons(block);
         await init(block);
       } catch (err) {
         // eslint-disable-next-line no-console
@@ -441,19 +460,19 @@ export function decorateAutoBlock(a) {
         a.dataset.modalPath = url.pathname;
         a.dataset.modalHash = url.hash;
         a.href = url.hash;
-        a.className = 'modal link-block';
-        return true;
+        a.classList.add('modal', 'link-block');
+      } else {
+        a.classList.add(key, 'link-block');
       }
-      a.className = `${key} link-block`;
       return true;
     }
     return false;
   });
 }
 
-export function decorateLinks(el) {
+export async function decorateLinks(el) {
   const anchors = el.getElementsByTagName('a');
-  return [...anchors].reduce((rdx, a) => {
+  const links = [...anchors].reduce((rdx, a) => {
     a.href = localizeLink(a.href);
     decorateSVG(a);
     if (a.href.includes('#_blank')) {
@@ -466,6 +485,8 @@ export function decorateLinks(el) {
     }
     return rdx;
   }, []);
+  await decorateLinksToButtons(anchors);
+  return links;
 }
 
 function decorateContent(el) {
@@ -545,17 +566,18 @@ async function loadFooter() {
   await loadBlock(footer);
 }
 
-function decorateSections(el, isDoc) {
+async function decorateSections(el, isDoc) {
   const selector = isDoc ? 'body > main > div' : ':scope > div';
-  return [...el.querySelectorAll(selector)].map((section, idx) => {
-    const links = decorateLinks(section);
+  const res = await Promise.all([...el.querySelectorAll(selector)].map(async (section, idx) => {
     decorateDefaults(section);
     const blocks = section.querySelectorAll('div[class]:not(.content)');
     section.className = 'section';
     section.dataset.status = 'decorated';
     section.dataset.idx = idx;
+    const links = await decorateLinks(section, blocks);
     return { el: section, blocks: [...links, ...blocks] };
-  });
+  }));
+  return res;
 }
 
 async function loadMartech(config) {
@@ -632,7 +654,7 @@ export async function loadArea(area = document) {
     });
   }
 
-  const sections = decorateSections(area, isDoc);
+  const sections = await decorateSections(area, isDoc);
 
   const areaBlocks = [];
   // eslint-disable-next-line no-restricted-syntax
@@ -645,7 +667,7 @@ export async function loadArea(area = document) {
     await Promise.all(loaded);
 
     // eslint-disable-next-line no-await-in-loop
-    await Promise.all([decButtons(section.el), decorateIcons(section.el, config)]);
+    await decorateIcons(section.el, config);
 
     // Post LCP operations.
     if (isDoc && section.el.dataset.idx === '0') {
