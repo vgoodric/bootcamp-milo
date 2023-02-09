@@ -1,0 +1,172 @@
+:root {
+  /* Core units
+  ================================================================= */
+
+  /* 
+  --base-unit:        0.25rem;
+  --base-half-unit:   calc(var(--base-unit) / 2); 
+  */
+
+  /* Typography
+  ================================================================= */
+
+  /* Fonts */
+  --font-family-body: 'Adobe Clean', adobe-clean, 'Trebuchet MS', sans-serif;
+  --font-family-fixed: 'Roboto Mono', menlo, consolas, 'Liberation Mono', monospace;
+  --font-family-body-ko-kr: adobe-han-k, 'Adobe Clean', adobe-clean, 'Trebuchet MS', sans-serif;
+  --font-family-body-ja-jp: adobe-clean-han-japanese, 'Adobe Clean', adobe-clean, 'Trebuchet MS', sans-serif;
+
+  /* heading (weight, size, line height) */
+  --font-weight-heading-all: 700;
+  --font-size-heading-xxxl: 44px;
+  --font-size-heading-xxl: 36px;
+  --font-size-heading-xl: 28px;
+  --font-size-heading-l: 24px;
+  --font-size-heading-m: 20px;
+  --font-size-heading-s: 18px;
+  --font-size-heading-xs: 16px;
+  --font-size-heading-xxs: 14px;
+  --line-height-heading-xxxl: 55px;
+  --line-height-heading-xxl: 45px;
+  --line-height-heading-xl: 35px;
+  --line-height-heading-l: 30px;
+  --line-height-heading-m: 25px;
+  --line-height-heading-s: 22.5px;
+  --line-height-heading-xs: 20px;
+  --line-height-heading-xxs: 18px;
+
+  /* Font sizes body */
+  --font-size-body-xxl: 28px;
+  --font-size-body-xl: 22px;
+  --font-size-body-l: 20px;
+  --font-size-body-m: 18px;
+  --font-size-body-s: 16px;
+  --font-size-body-xs: 14px;
+  --font-size-body-xxs: 12px;
+  --line-height-body-xxl: 42px;
+  --line-height-body-xl: 33px;
+  --line-height-body-l: 30px;
+  --line-height-body-m: 27px;
+  --line-height-body-s: 24px;
+  --line-height-body-xs: 21px;
+  --line-height-body-xxs: 18px;
+
+  /* Font sizes detail */
+  --font-weight-detail-all: 700;
+  --font-transform-detail-all: uppercase;
+  --font-size-detail-xl: 20px;
+  --font-size-detail-l: 16px;
+  --font-size-detail-m: 12px;
+  --font-size-detail-s: 10px;
+  --line-height-detail-xl: 25px;
+  --line-height-detail-l: 20px;
+  --line-height-detail-m: 15px;
+  --line-height-detail-s: 12px;
+
+  /* Colors
+  ================================================================= */
+  --color-link: #035fe6;  
+  --color-link-hover: #136ff6;  
+  --color-dark-link: #1473e6;  
+  --color-dark-link-hover: #1473e6;
+  --color-background: #fff;  
+  --color-background-overlay: #ffffff20;  
+  --color-background-highlight: #ffffff40;  
+  --color-text: #2c2c2c;  
+  --color-white: #FFF;
+  --color-gray-100: #F8F8F8;
+  --color-gray-200: #E8E8E8;
+  --color-gray-300: #D4D4D4;
+  --color-gray-400: #B6B6B6;
+  --color-gray-500: #909090;
+  --color-gray-600: #686868;
+  --color-gray-700: #444;
+  --color-gray-800: #242424;
+  --color-black: #000;
+  --color-brand-title: #000B1D;
+  --color-accent: #1473e6;
+  --color-accent-hover: #0d66d0;
+  --color-accent-down: #095aba;
+  --color-accent-focus-ring: #378ef0;
+  --color-info-accent: #5C5CE0;
+  --color-info-accent-hover: #4646C6;
+  --color-info-accent-down: #3D3DB4;
+  --color-info-accent-light: #DEDEF9;
+
+  /* Spacing
+  ================================================================= */
+  --spacing-xxs: 8px;
+  --spacing-xs: 16px;
+  --spacing-s: 24px;
+  --spacing-m: 32px;
+  --spacing-l: 40px;
+  --spacing-xl: 48px;
+  --spacing-xxl: 56px;
+  --spacing-xxxl: 80px;
+
+  /* Spacing Static */
+  --spacing-static-xl: 56px;
+  --spacing-static-xxl: 80px;
+  --spacing-static-xxxl: 104px;
+
+  /* Grid sizes
+  ================================================================= */
+  --grid-container-width: 83.4%;
+  --grid-column-width: calc(var(--grid-container-width) / 12);
+  --grid-margins-width: calc((100vw - var(--grid-container-width)) / 2);
+  --grid-margins-width-10: calc((100vw - (var(--grid-column-width) * 10)) / 2);
+  --grid-margins-width-8: calc((100vw - (var(--grid-column-width) * 8)) / 2);
+  --grid-margins-width-6: calc((100vw - (var(--grid-column-width) * 6)) / 2);
+
+  /* Breakpoints ? 
+  ================================================================= */
+  --breakpoint-small:     600px;
+  --breakpoint-medium:    900px;
+  --breakpoint-large:     1200px;
+  --breakpoint-xlarge:    1440px;
+  --breakpoint-xxlarge:   1600px;
+
+  /* Border ?
+  ================================================================= */
+
+  /* Box shadow ?
+  ================================================================= */
+
+}
+
+:root:lang(ko-KR) {
+  --body-font-family: var(--font-family-body-ko-kr);
+}
+
+:root:lang(ja-JP) {
+  --body-font-family: var(--font-family-body-ja-jp);
+}
+
+
+@media (min-width: 1200px) {
+  :root {
+    --spacing-xl: 56px;
+    --spacing-xxl: 80px;
+    --spacing-xxxl: 104px;
+    --font-size-heading-xxxl: 80px;
+    --font-size-heading-xxl: 44px;
+    --font-size-heading-xl: 36px;
+    --font-size-heading-l: 28px;
+    --font-size-heading-m: 24px;
+    --font-size-heading-s: 20px;
+    --font-size-heading-xs: 18px;
+    --line-height-heading-xxxl: 88px;
+    --line-height-heading-xxl: 55px;
+    --line-height-heading-xl: 45px;
+    --line-height-heading-l: 35px;
+    --line-height-heading-m: 30px;
+    --line-height-heading-s: 25px;
+    --line-height-heading-xs: 22.5px;
+  }
+}
+
+@media (min-width: 1440px) {
+  :root {
+    --grid-container-width: 1200px;
+  }
+}
