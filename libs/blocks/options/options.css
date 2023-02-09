@@ -1,0 +1,8 @@
+div.options {
+  margin: 0 auto;
+  max-width: var(--grid-container-width);
+}
+
+.options label {
+  display: flex;
+}
