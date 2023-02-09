@@ -1,6 +1,6 @@
 import { loadStyle, getConfig, createTag } from '../../utils/utils.js';
 import { getMetadata } from '../section-metadata/section-metadata.js';
-import { decorateButton, getPrice, runTacocat } from '../../features/merch.js';
+import { decorateCommerce } from '../../features/merch.js';
 
 const HALF = 'OneHalfCard';
 const HALF_HEIGHT = 'HalfHeightCard';
@@ -94,7 +94,7 @@ const addInner = (el, cardType, card) => {
 const addFooter = (links, container) => {
   const linksArr = Array.from(links);
   const linksLeng = linksArr.length;
-  const hrTag = container.parentElement.classList.contains('merch') ? '<hr>' : '';
+  const hrTag = container.parentElement.classList.contains('footer-separator') ? '<hr>' : '';
   let footer = `<div class="consonant-CardFooter">${hrTag}<div class="consonant-CardFooter-row" data-cells="${linksLeng}">`;
   footer = linksArr.reduce(
     (combined, link, index) => (
@@ -118,7 +118,7 @@ const init = (el) => {
   const cardType = getCardType(styles);
   const row = el.querySelector(':scope > div');
   const picture = el.querySelector('picture');
-  const links = el.classList.contains('merch') ? el.querySelector(':scope > div > div > p:last-of-type').querySelectorAll('a') : el.querySelectorAll('a');
+  const links = el.classList.contains('footer-separator') ? el.querySelector(':scope > div > div > p:last-of-type').querySelectorAll('a') : el.querySelectorAll('a');
   let card = el;
 
   addWrapper(el, section, cardType);
@@ -150,23 +150,10 @@ const init = (el) => {
   if (cardType === HALF || cardType === PRODUCT) {
     addFooter(links, row);
   }
+
   if (el.classList.contains('merch')) {
     const merchLinks = el.querySelectorAll('a[href*="tools/ost?osi="], a[href*="tools/ost/?osi="]');
-    merchLinks.forEach((l) => {
-      const url = new URL(l.href);
-      const osi = url.searchParams.get('osi');
-      const type = url.searchParams.get('type');
-      if (type === 'checkoutUrl') {
-        const text = url.searchParams.get('text');
-        decorateButton(osi, l, text);
-      } else {
-        const price = getPrice(osi, type);
-        l.parentElement.insertBefore(price, l);
-        l.parentElement.classList.add('price');
-        l.remove();
-      }
-    });
-    runTacocat();
+    decorateCommerce(merchLinks);
   }
 };
 
