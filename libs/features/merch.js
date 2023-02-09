@@ -3,7 +3,7 @@ import { loadScript, getConfig, createTag } from '../utils/utils.js';
 const { miloLibs, codeRoot, env } = getConfig();
 const base = miloLibs || codeRoot;
 
-export function decorateButton(osi, a) {
+export function decorateButton(osi, a, text) {
   if (!osi || !a) return;
   a.href = '#';
   a.dataset.checkoutClientid = 'mini_plans';
@@ -11,7 +11,7 @@ export function decorateButton(osi, a) {
   a.dataset.checkoutWorkflowStep = 'email';
   a.dataset.wcsOsi = osi;
   a.dataset.template = 'checkoutUrl';
-  return a;
+  a.textContent = text;
 }
 
 function buildPrice(osi, type) {
@@ -25,7 +25,7 @@ function getPriceType(name) {
     case 'strikethrough': { return 'priceStrikethrough'; }
     case 'with-tax': { return 'priceWithTax'; }
     case 'with-strikethrough-tax': { return 'priceWithTaxStrikethrough'; }
-    default: return null;
+    default: return 'price';
   }
 }
 
@@ -38,9 +38,9 @@ export async function runTacocat() {
   window.tacocat({ environment: env.name, wcs });
 }
 
-export function getPrice(osi, priceType) {
+export function getPrice(osi, type) {
   if (!osi) return null;
-  const mappedPriceType = getPriceType(priceType) ?? 'price';
-  const price = buildPrice(osi, mappedPriceType);
+  const priceType = getPriceType(type);
+  const price = buildPrice(osi, priceType);
   return price;
 }

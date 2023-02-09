@@ -65,19 +65,6 @@ const addInner = (el, cardType, card) => {
   const text = Array.from(el.querySelectorAll('p'))?.find((p) => !p.querySelector('picture, a'));
   let inner = el.querySelector(':scope > div:not([class])');
 
-  if (el.classList.contains('merch')) {
-    const priceLink = el.querySelector('a[href*="tools/ost?osi="]');
-    if (priceLink) {
-      const url = new URL(priceLink.href);
-      const osi = url.searchParams.get('osi');
-      const priceType = url.searchParams.get('priceType');
-      const price = getPrice(osi, priceType);
-      priceLink.parentElement.insertBefore(price, priceLink);
-      priceLink.parentElement.classList.add('price');
-      priceLink.remove();
-    }
-  }
-
   if (cardType === DOUBLE_WIDE) {
     inner = document.createElement('a');
     inner.href = el.querySelector('a')?.href || '';
@@ -160,18 +147,25 @@ const init = (el) => {
 
   addInner(el, cardType, card);
 
-  if (el.classList.contains('merch')) {
-    const priceLink = el.querySelector('a[href*="osi="]');
-    if (priceLink) {
-      const url = new URL(priceLink.href);
-      const osi = url.searchParams.get('osi');
-      decorateButton(osi, priceLink);
-    }
-  }
   if (cardType === HALF || cardType === PRODUCT) {
     addFooter(links, row);
   }
   if (el.classList.contains('merch')) {
+    const merchLinks = el.querySelectorAll('a[href*="tools/ost?osi="], a[href*="tools/ost/?osi="]');
+    merchLinks.forEach((l) => {
+      const url = new URL(l.href);
+      const osi = url.searchParams.get('osi');
+      const type = url.searchParams.get('type');
+      if (type === 'checkoutUrl') {
+        const text = url.searchParams.get('text');
+        decorateButton(osi, l, text);
+      } else {
+        const price = getPrice(osi, type);
+        l.parentElement.insertBefore(price, l);
+        l.parentElement.classList.add('price');
+        l.remove();
+      }
+    });
     runTacocat();
   }
 };
