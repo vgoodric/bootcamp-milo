@@ -15,7 +15,7 @@ export function decorateButton(osi, a, text) {
 }
 
 function buildPrice(osi, type) {
-  return createTag('span', { 'data-wcs-osi': osi, 'data-template': type, class: 'price' });
+  return createTag('span', { 'data-wcs-osi': osi, 'data-template': type, class: type });
 }
 
 function getPriceType(name) {
@@ -45,19 +45,22 @@ export function getPrice(osi, type) {
   return price;
 }
 
-export function decorateCommerce(links) {
+export async function decorateCommerce(links) {
   links.forEach((l) => {
     const url = new URL(l.href);
     const osi = url.searchParams.get('osi');
+    if (!osi) return;
     const type = url.searchParams.get('type');
     if (type === 'checkoutUrl') {
       const text = url.searchParams.get('text');
       decorateButton(osi, l, text);
     } else {
-      const price = getPrice(osi, type);
+      const priceType = url.searchParams.get('priceType');
+      const price = getPrice(osi, priceType);
+      if (!price) return;
       l.parentElement.insertBefore(price, l);
       l.remove();
     }
   });
-  runTacocat();
+  await runTacocat();
 }

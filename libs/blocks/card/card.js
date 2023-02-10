@@ -91,10 +91,10 @@ const addInner = (el, cardType, card) => {
   text?.classList.add(`consonant-${cardType}-text`);
 };
 
-const addFooter = (links, container) => {
+const addFooter = (links, container, merch) => {
   const linksArr = Array.from(links);
   const linksLeng = linksArr.length;
-  const hrTag = container.parentElement.classList.contains('footer-separator') ? '<hr>' : '';
+  const hrTag = merch ? '<hr>' : '';
   let footer = `<div class="consonant-CardFooter">${hrTag}<div class="consonant-CardFooter-row" data-cells="${linksLeng}">`;
   footer = linksArr.reduce(
     (combined, link, index) => (
@@ -118,7 +118,9 @@ const init = (el) => {
   const cardType = getCardType(styles);
   const row = el.querySelector(':scope > div');
   const picture = el.querySelector('picture');
-  const links = el.classList.contains('footer-separator') ? el.querySelector(':scope > div > div > p:last-of-type').querySelectorAll('a') : el.querySelectorAll('a');
+  const merch = el.classList.contains('merch') && cardType === HALF;
+  const links = merch ? el.querySelector(':scope > div > div > p:last-of-type')
+    .querySelectorAll('a') : el.querySelectorAll('a');
   let card = el;
 
   addWrapper(el, section, cardType);
@@ -148,7 +150,7 @@ const init = (el) => {
   addInner(el, cardType, card);
 
   if (cardType === HALF || cardType === PRODUCT) {
-    addFooter(links, row);
+    addFooter(links, row, merch);
   }
 
   if (el.classList.contains('merch')) {
