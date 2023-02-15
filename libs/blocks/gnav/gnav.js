@@ -59,20 +59,16 @@ class Gnav {
     nav.append(mobileToggle);
 
     const brand = this.decorateBrand();
-    if (brand) {
-      nav.append(brand);
-    }
+    if (brand) nav.append(brand);
 
     const scrollWrapper = createTag('div', { class: 'mainnav-wrapper' });
 
-    const mainNav = this.decorateMainNav();
-    if (mainNav) {
-      const cta = this.decorateCta();
-      if (cta) {
-        mainNav.append(cta);
-      }
-      scrollWrapper.append(mainNav);
-    }
+    // const mainNav = this.decorateMainNav();
+    // if (mainNav) {
+    //   const cta = this.decorateCta();
+    //   if (cta) mainNav.append(cta);
+    //   scrollWrapper.append(mainNav);
+    // }
 
     // const search = this.decorateSearch();
     // if (search) {
