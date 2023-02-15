@@ -306,28 +306,28 @@ class Gnav {
   };
 
   decorateLargeMenu = (navLink, navItem, menu) => {
-    let path = navLink.href;
-    path = localizeLink(path);
-    const promise = fetch(`${path}.plain.html`);
-    promise.then(async (resp) => {
-      if (resp.status === 200) {
-        const text = await resp.text();
-        menu.insertAdjacentHTML('beforeend', text);
-        const links = menu.querySelectorAll('a');
-        links.forEach((link) => {
-          decorateSVG(link);
-        });
-        const decoratedMenu = this.decorateMenu(navItem, navLink, menu);
-        const menuSections = decoratedMenu.querySelectorAll('.gnav-menu-container > div');
-        menuSections.forEach((sec) => { sec.classList.add('section'); });
-        const sectionMetas = decoratedMenu.querySelectorAll('.section-metadata');
-        sectionMetas.forEach(async (meta) => {
-          const { default: sectionMetadata } = await import('../section-metadata/section-metadata.js');
-          sectionMetadata(meta);
-        });
-        navItem.appendChild(decoratedMenu);
-      }
-    });
+    // let path = navLink.href;
+    // path = localizeLink(path);
+    // const promise = fetch(`${path}.plain.html`);
+    // promise.then(async (resp) => {
+    //   if (resp.status === 200) {
+    //     const text = await resp.text();
+    //     menu.insertAdjacentHTML('beforeend', text);
+    //     const links = menu.querySelectorAll('a');
+    //     links.forEach((link) => {
+    //       decorateSVG(link);
+    //     });
+    //     const decoratedMenu = this.decorateMenu(navItem, navLink, menu);
+    //     const menuSections = decoratedMenu.querySelectorAll('.gnav-menu-container > div');
+    //     menuSections.forEach((sec) => { sec.classList.add('section'); });
+    //     const sectionMetas = decoratedMenu.querySelectorAll('.section-metadata');
+    //     sectionMetas.forEach(async (meta) => {
+    //       const { default: sectionMetadata } = await import('../section-metadata/section-metadata.js');
+    //       sectionMetadata(meta);
+    //     });
+    //     navItem.appendChild(decoratedMenu);
+    //   }
+    // });
   };
 
   decorateCta = () => {
@@ -415,9 +415,7 @@ class Gnav {
     const profileEl = createTag('div', { class: 'gnav-profile' });
     if (blockEl.children.length > 1) profileEl.classList.add('has-menu');
 
-    const defaultOnReady = () => {
-      this.imsReady(blockEl, profileEl); ;
-    }
+    const defaultOnReady = () => this.imsReady(blockEl, profileEl);
 
     const { locale, imsClientId, env, onReady } = getConfig();
     if (!imsClientId) return null;
