@@ -83,10 +83,10 @@ class Gnav {
       nav.append(scrollWrapper);
     }
 
-    const profile = this.decorateProfile();
-    if (profile) {
-      nav.append(profile);
-    }
+    // const profile = this.decorateProfile();
+    // if (profile) {
+    //   nav.append(profile);
+    // }
 
     const logo = this.decorateLogo();
     if (logo) {
