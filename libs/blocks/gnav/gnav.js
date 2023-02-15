@@ -71,32 +71,22 @@ class Gnav {
     }
 
     // const search = this.decorateSearch();
-    // if (search) {
-    //   scrollWrapper.append(search);
-    // }
+    // if (search) scrollWrapper.append(search);
 
-    if (scrollWrapper.children.length > 0) {
-      nav.append(scrollWrapper);
-    }
+    nav.append(scrollWrapper);
 
-    // const profile = this.decorateProfile();
-    // if (profile) {
-    //   nav.append(profile);
-    // }
+    const profile = this.decorateProfile();
+    if (profile) nav.append(profile);
 
     const logo = this.decorateLogo();
-    if (logo) {
-      nav.append(logo);
-    }
+    if (logo) nav.append(logo);
 
     const wrapper = createTag('div', { class: 'gnav-wrapper' }, nav);
 
     this.setBreadcrumbSEO();
     const breadcrumbs = this.decorateBreadcrumbs();
-    if (breadcrumbs) {
-      wrapper.append(breadcrumbs);
-    }
-    // decorateLinks(wrapper);
+    if (breadcrumbs) wrapper.append(breadcrumbs);
+
     this.el.append(this.curtain, wrapper);
   };
 
@@ -620,6 +610,7 @@ export default async function init(header) {
     const initEvent = new Event('gnav:init');
     const parser = new DOMParser();
     const gnavDoc = parser.parseFromString(html, 'text/html');
+    // decorateLinks(gnavDoc);
     const gnav = new Gnav(gnavDoc.body, header);
     gnav.init();
     header.dispatchEvent(initEvent);
