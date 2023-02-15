@@ -74,10 +74,10 @@ class Gnav {
       scrollWrapper.append(mainNav);
     }
 
-    const search = this.decorateSearch();
-    if (search) {
-      scrollWrapper.append(search);
-    }
+    // const search = this.decorateSearch();
+    // if (search) {
+    //   scrollWrapper.append(search);
+    // }
 
     if (scrollWrapper.children.length > 0) {
       nav.append(scrollWrapper);
