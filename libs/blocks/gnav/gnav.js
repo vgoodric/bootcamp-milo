@@ -63,12 +63,12 @@ class Gnav {
 
     const scrollWrapper = createTag('div', { class: 'mainnav-wrapper' });
 
-    // const mainNav = this.decorateMainNav();
-    // if (mainNav) {
-    //   const cta = this.decorateCta();
-    //   if (cta) mainNav.append(cta);
-    //   scrollWrapper.append(mainNav);
-    // }
+    const mainNav = this.decorateMainNav();
+    if (mainNav) {
+      const cta = this.decorateCta();
+      if (cta) mainNav.append(cta);
+      scrollWrapper.append(mainNav);
+    }
 
     // const search = this.decorateSearch();
     // if (search) {
@@ -96,7 +96,7 @@ class Gnav {
     if (breadcrumbs) {
       wrapper.append(breadcrumbs);
     }
-    decorateLinks(wrapper);
+    // decorateLinks(wrapper);
     this.el.append(this.curtain, wrapper);
   };
 
