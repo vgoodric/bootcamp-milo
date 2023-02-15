@@ -143,12 +143,12 @@ class Gnav {
     brand.setAttribute('daa-ll', 'Brand');
     if (brand.textContent !== '') brand.textContent = '';
     if (brand.classList.contains('logo')) {
-      if (brandLinks.length > 0) {
-        decorateSVG(brandLinks[0]);
-        brand.insertAdjacentElement('afterbegin', brandBlock.querySelector('img'));
-      } else {
-        brand.insertAdjacentHTML('afterbegin', BRAND_IMG);
-      }
+      // if (brandLinks.length > 0) {
+      //   decorateSVG(brandLinks[0]);
+      //   brand.insertAdjacentElement('afterbegin', brandBlock.querySelector('img'));
+      // } else {
+      //   brand.insertAdjacentHTML('afterbegin', BRAND_IMG);
+      // }
     }
     brand.append(title);
     return brand;
@@ -161,7 +161,7 @@ class Gnav {
     logo.setAttribute('aria-label', logo.textContent);
     logo.setAttribute('daa-ll', 'Logo');
     logo.textContent = '';
-    logo.insertAdjacentHTML('afterbegin', COMPANY_IMG);
+    // logo.insertAdjacentHTML('afterbegin', COMPANY_IMG);
     return logo;
   };
 
