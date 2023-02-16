@@ -158,7 +158,7 @@ class Gnav {
   };
 
   buildMainNav = (mainNav, navLinks) => {
-    navLinks.forEach((navLink, idx) => {
+    const items = [...navLinks].map((navLink, idx) => {
       navLink.href = localizeLink(navLink.href);
       const navItem = createTag('div', { class: 'gnav-navitem' });
       const navBlock = navLink.closest('.large-menu');
@@ -187,8 +187,9 @@ class Gnav {
         }
         this.decorateLargeMenu(navLink, navItem, menu);
       }
-      mainNav.appendChild(navItem);
+      return navItem;
     });
+    mainNav.append(...items);
     return mainNav;
   };
 
