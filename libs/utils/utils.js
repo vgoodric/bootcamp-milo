@@ -564,7 +564,7 @@ async function loadMartech(config) {
 async function loadPostLCP(config) {
   loadMartech(config);
   const header = document.querySelector('header');
-  if (header) { loadBlock(header); }
+  if (header) { setTimeout(() => { loadBlock(header); }, 500); }
   loadTemplate();
   const { default: loadFonts } = await import('./fonts.js');
   loadFonts(config.locale, loadStyle);
