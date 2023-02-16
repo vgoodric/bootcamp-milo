@@ -13,8 +13,6 @@ import {
   analyticsGetLabel,
 } from '../../martech/attributes.js';
 
-const COMPANY_IMG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 133.46 118.11"><defs><style>.cls-1{fill:#fa0f00;}</style></defs><polygon class="cls-1" points="84.13 0 133.46 0 133.46 118.11 84.13 0"/><polygon class="cls-1" points="49.37 0 0 0 0 118.11 49.37 0"/><polygon class="cls-1" points="66.75 43.53 98.18 118.11 77.58 118.11 68.18 94.36 45.18 94.36 66.75 43.53"/></svg>';
-const BRAND_IMG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 234"><defs><style>.cls-1{fill:#fa0f00;}.cls-2{fill:#fff;}</style></defs><rect class="cls-1" width="240" height="234" rx="42.5"/><path id="_256" data-name="256" class="cls-2" d="M186.617,175.95037H158.11058a6.24325,6.24325,0,0,1-5.84652-3.76911L121.31715,99.82211a1.36371,1.36371,0,0,0-2.61145-.034l-19.286,45.94252A1.63479,1.63479,0,0,0,100.92626,148h21.1992a3.26957,3.26957,0,0,1,3.01052,1.99409l9.2814,20.65452a3.81249,3.81249,0,0,1-3.5078,5.30176H53.734a3.51828,3.51828,0,0,1-3.2129-4.90437L99.61068,54.14376A6.639,6.639,0,0,1,105.843,50h28.31354a6.6281,6.6281,0,0,1,6.23289,4.14376L189.81885,171.046A3.51717,3.51717,0,0,1,186.617,175.95037Z"/></svg>';
 const SEARCH_ICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false"><path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path></svg>';
 const SEARCH_DEBOUNCE_MS = 300;
 export const IS_OPEN = 'is-open';
@@ -83,7 +81,6 @@ class Gnav {
 
     const wrapper = createTag('div', { class: 'gnav-wrapper' }, nav);
 
-    this.setBreadcrumbSEO();
     const breadcrumbs = this.decorateBreadcrumbs();
     if (breadcrumbs) wrapper.append(breadcrumbs);
 
@@ -250,7 +247,11 @@ class Gnav {
     }
   };
 
-  decorateAnalytics = (menu) => [...menu.children].forEach((child) => this.setMenuAnalytics(child));
+  decorateAnalytics = (menu) => {
+    [...menu.children].forEach((child) => {
+      setTimeout(() => { this.setMenuAnalytics(child); }, 200);
+    });
+  };
 
   decorateButtons = (menu) => {
     const buttons = menu.querySelectorAll('strong a');
@@ -463,21 +464,19 @@ class Gnav {
     profileEl.append(signIn);
   };
 
-  setBreadcrumbSEO = () => {
-    const seoEnabled = getMetadata('breadcrumb-seo') !== 'off';
-    if (!seoEnabled) return;
-    const breadcrumb = this.el.querySelector('.breadcrumbs');
-    if (!breadcrumb) return;
-    const breadcrumbSEO = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [] };
-    const items = breadcrumb.querySelectorAll('ul > li');
-    items.forEach((item, idx) => {
+  // eslint-disable-next-line class-methods-use-this
+  setBreadcrumbSEO = (ul) => {
+    if (getMetadata('breadcrumb-seo') === 'off') return;
+    const breadcrumbSEO = { '@context': 'https://schema.org', '@type': 'BreadcrumbList' };
+    const items = ul.querySelectorAll(':scope > li');
+    breadcrumbSEO.itemListElement = items.map((item, idx) => {
       const link = item.querySelector('a');
-      breadcrumbSEO.itemListElement.push({
+      return {
         '@type': 'ListItem',
         position: idx + 1,
         name: link ? link.innerHTML : item.innerHTML,
         item: link?.href,
-      });
+      };
     });
     const script = createTag('script', { type: 'application/ld+json' }, JSON.stringify(breadcrumbSEO));
     document.head.append(script);
@@ -488,6 +487,7 @@ class Gnav {
     if (parent) {
       const ul = parent.querySelector('ul');
       if (ul) {
+        this.setBreadcrumbSEO(ul);
         ul.querySelector('li:last-of-type')?.setAttribute('aria-current', 'page');
         const nav = createTag('nav', { class: 'breadcrumbs', 'aria-label': 'Breadcrumb' }, ul);
         parent.remove();

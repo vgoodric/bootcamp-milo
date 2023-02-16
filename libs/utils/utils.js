@@ -458,9 +458,7 @@ export function decorateLinks(el) {
       a.href = a.href.replace('#_blank', '');
     }
     const autoBLock = decorateAutoBlock(a);
-    if (autoBLock) {
-      rdx.push(a);
-    }
+    if (autoBLock) rdx.push(a);
     return rdx;
   }, []);
 }
