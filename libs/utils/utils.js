@@ -537,7 +537,7 @@ async function loadFooter() {
     return;
   }
   footer.className = footerMeta || 'footer';
-  setTimeout(() => { loadBlock(footer); }, 200);
+  setTimeout(() => { loadBlock(footer); }, 500);
 }
 
 function decorateSections(el, isDoc) {
