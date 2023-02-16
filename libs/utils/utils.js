@@ -537,7 +537,7 @@ async function loadFooter() {
     return;
   }
   footer.className = footerMeta || 'footer';
-  await loadBlock(footer);
+  setTimeout(() => { loadBlock(footer); }, 200);
 }
 
 function decorateSections(el, isDoc) {
@@ -564,7 +564,7 @@ async function loadMartech(config) {
 async function loadPostLCP(config) {
   loadMartech(config);
   const header = document.querySelector('header');
-  if (header) { setTimeout(() => { loadBlock(header); }, 500); }
+  if (header) { setTimeout(() => { loadBlock(header); }, 200); }
   loadTemplate();
   const { default: loadFonts } = await import('./fonts.js');
   loadFonts(config.locale, loadStyle);
