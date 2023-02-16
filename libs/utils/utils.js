@@ -537,7 +537,7 @@ async function loadFooter() {
     return;
   }
   footer.className = footerMeta || 'footer';
-  setTimeout(() => { loadBlock(footer); }, 500);
+  loadBlock(footer);
 }
 
 function decorateSections(el, isDoc) {
@@ -672,7 +672,7 @@ export async function loadArea(area = document) {
       const { default: addRichResults } = await import('../features/richresults.js');
       addRichResults(richResults, { createTag, getMetadata });
     }
-    loadFooter();
+    setTimeout(() => { loadFooter(); }, 500);
     const { default: loadFavIcon } = await import('./favicon.js');
     loadFavIcon(createTag, getConfig(), getMetadata);
     initSidekick();
