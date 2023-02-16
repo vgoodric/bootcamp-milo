@@ -249,7 +249,7 @@ class Gnav {
 
   decorateAnalytics = (menu) => {
     [...menu.children].forEach((child) => {
-      setTimeout(() => { this.setMenuAnalytics(child); }, 200);
+      setTimeout(() => { this.setMenuAnalytics(child); }, 1000);
     });
   };
 
