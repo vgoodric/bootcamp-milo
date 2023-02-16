@@ -468,7 +468,7 @@ class Gnav {
   setBreadcrumbSEO = (ul) => {
     if (getMetadata('breadcrumb-seo') === 'off') return;
     const breadcrumbSEO = { '@context': 'https://schema.org', '@type': 'BreadcrumbList' };
-    const items = ul.querySelectorAll(':scope > li');
+    const items = [...ul.querySelectorAll(':scope > li')];
     breadcrumbSEO.itemListElement = items.map((item, idx) => {
       const link = item.querySelector('a');
       return {
