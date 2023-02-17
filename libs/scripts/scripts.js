@@ -10,13 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  loadArea,
-  loadDelayed,
-  loadLana,
-  setConfig,
-} from '../utils/utils.js';
-
 // Production Domain
 const prodDomains = ['milo.adobe.com'];
 
@@ -119,10 +112,16 @@ const config = {
 
 (async function loadLCPImage() {
   const lcpImg = document.querySelector('img');
-  lcpImg?.setAttribute('loading', 'eager');
+  lcpImg?.removeAttribute('loading');
 }());
 
 (async function loadPage() {
+  const {
+    loadArea,
+    loadDelayed,
+    loadLana,
+    setConfig,
+  } = await import('../utils/utils.js');
   setConfig(config);
   loadLana({ clientId: 'milo' });
   await loadArea();
