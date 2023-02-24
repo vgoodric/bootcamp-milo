@@ -531,9 +531,8 @@ async function decoratePlaceholders(area, config) {
 }
 
 async function loadFooter() {
-  const footer = document.querySelector('footer');
-  if (!footer) return;
   const footerMeta = getMetadata('footer');
+  const footer = document.querySelector('footer');
   if (footerMeta === 'off') {
     footer.remove();
     return;
@@ -631,9 +630,8 @@ function decorateMeta() {
     try {
       const url = new URL(meta.content);
       meta.setAttribute('content', `${origin}${url.pathname}${url.search}${url.hash}`);
+    } catch {
       window.lana.log('Cannot make URL from metadata');
-    } catch (e) {
-      // Not a valid URL.
     }
   });
 }
@@ -679,6 +677,7 @@ export async function loadArea(area = document) {
 
   // Post section loading on document
   if (isDoc) {
+    await loadFooter();
     const georouting = getMetadata('georouting') || config.geoRouting;
     if (georouting === 'on') {
       const { default: loadGeoRouting } = await import('../features/georouting/georouting.js');
@@ -689,7 +688,6 @@ export async function loadArea(area = document) {
       const { default: addRichResults } = await import('../features/richresults.js');
       addRichResults(richResults, { createTag, getMetadata });
     }
-    loadFooter();
     const { default: loadFavIcon } = await import('./favicon.js');
     loadFavIcon(createTag, getConfig(), getMetadata);
     initSidekick();

@@ -302,35 +302,28 @@ class Footer {
   };
 }
 
-async function fetchFooter(url) {
-  const resp = await fetch(`${url}.plain.html`);
-  const respText = await resp.text();
-
-  if (!resp.ok) {
-    return { error: respText }; // can pass additional Response info if needed
-  }
-
-  return { html: respText };
+function decorateFooter(dom, el) {
+  const { children } = dom.body;
+  const nav = createTag('nav', null, [...children]);
+  return el.append(nav);
 }
 
-export default async function init(block) {
+export default async function init(el) {
   const { prefix } = locale;
   const url = getMetadata('footer-source') || `${prefix}/footer`;
   if (url) {
-    const { html, error } = await fetchFooter(url);
-    if (error) {
-      console.log(`Could not create footer: ${error}`);
-      return;
-    }
+    const resp = await fetch(`${url}.plain.html`);
+    if (!resp.ok) return null;
+    const html = await resp.text();
     if (html) {
       try {
         const parser = new DOMParser();
-        const footerDoc = parser.parseFromString(html, 'text/html');
-        const footer = new Footer(footerDoc.body, block);
-        footer.init();
+        const dom = parser.parseFromString(html, 'text/html');
+        return decorateFooter(dom, el);
       } catch {
         console.log('Could not create footer.');
       }
     }
   }
+  return el;
 }
