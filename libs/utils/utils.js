@@ -226,10 +226,10 @@ export function loadStyle(href, callback) {
   return link;
 }
 
-const shouldNotConvert = (href, pageUrl, relativeAutoBlocks, htmlExclude) => {
-  if (!(href.startsWith('/') || href.startsWith(pageUrl.origin))
+const shouldNotConvert = (origin, href, relativeAutoBlocks, htmlExclude) => {
+  if (!(href.startsWith('/') || href.startsWith(origin))
     || href.endsWith('/')
-    || href === pageUrl.origin
+    || href === origin
     || htmlExclude.includes(href)
     || /\..*$/.test(href.split('/').pop())) {
     return true;
@@ -239,12 +239,13 @@ const shouldNotConvert = (href, pageUrl, relativeAutoBlocks, htmlExclude) => {
   return false;
 };
 
-function decorateHtml(a, pageUrl, relativeAutoBlocks) {
+function decorateHtml(a, relativeAutoBlocks) {
+  const { origin } = window.location;
   const href = a.getAttribute('href');
-  if (!href || shouldNotConvert(href, pageUrl, relativeAutoBlocks)) return;
+  if (!href || shouldNotConvert(origin, href, relativeAutoBlocks)) return;
 
   try {
-    const linkUrl = new URL(href.startsWith('http') ? href : `${pageUrl.origin}${href}`);
+    const linkUrl = new URL(href.startsWith('http') ? href : `${origin}${href}`);
     if (linkUrl.pathname && !linkUrl.pathname.endsWith('.html')) {
       linkUrl.pathname = `${linkUrl.pathname}.html`;
       a.setAttribute('href', href.startsWith('/')
@@ -416,14 +417,14 @@ export function decorateAutoBlock(a) {
 export function decorateLinks(el) {
   // HTML Needs
   const { autoBlocks, htmlExclude = [] } = getConfig();
+  const { pathname } = window.location;
   const relativeAutoBlocks = autoBlocks
     .map((b) => Object.values(b)[0])
     .filter((b) => b.startsWith('/'));
-  const pageUrl = new URL(window.location.href);
 
   const anchors = el.getElementsByTagName('a');
   return [...anchors].reduce((rdx, a) => {
-    if (pageUrl.pathname.endsWith('.html')) decorateHtml(a, relativeAutoBlocks, htmlExclude);
+    if (pathname.endsWith('.html')) decorateHtml(a, relativeAutoBlocks, htmlExclude);
     a.href = localizeLink(a.href);
     decorateSVG(a);
     if (a.href.includes('#_blank')) {
