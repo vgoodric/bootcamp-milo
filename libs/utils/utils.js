@@ -457,10 +457,8 @@ export function decorateLinks(el) {
       a.setAttribute('target', '_blank');
       a.href = a.href.replace('#_blank', '');
     }
-    const autoBLock = decorateAutoBlock(a);
-    if (autoBLock) {
-      rdx.push(a);
-    }
+    const autoBlock = decorateAutoBlock(a);
+    if (autoBlock) rdx.push(a);
     return rdx;
   }, []);
 }
@@ -530,17 +528,6 @@ async function decoratePlaceholders(area, config) {
   el.innerHTML = await replaceText(el.innerHTML, config, regex);
 }
 
-async function loadFooter() {
-  const footerMeta = getMetadata('footer');
-  const footer = document.querySelector('footer');
-  if (footerMeta === 'off') {
-    footer.remove();
-    return;
-  }
-  footer.className = footerMeta || 'footer';
-  await loadBlock(footer);
-}
-
 function decorateSections(el, isDoc) {
   const selector = isDoc ? 'body > main > div' : ':scope > div';
   return [...el.querySelectorAll(selector)].map((section, idx) => {
@@ -569,58 +556,6 @@ async function loadPostLCP(config) {
   loadTemplate();
   const { default: loadFonts } = await import('./fonts.js');
   loadFonts(config.locale, loadStyle);
-}
-
-export async function loadDeferred(area, blocks, config) {
-  const event = new Event('milo:deferred');
-  area.dispatchEvent(event);
-  if (config.links === 'on') {
-    const path = `${config.contentRoot || ''}${getMetadata('links-path') || '/seo/links.json'}`;
-    import('../features/links.js').then((mod) => mod.default(path, area));
-  }
-
-  if (config.locale?.ietf === 'ja-JP') {
-    // Japanese word-wrap
-    import('../features/japanese-word-wrap.js').then(({ controlLineBreaksJapanese }) => {
-      controlLineBreaksJapanese(config, area);
-    });
-  }
-
-  import('./samplerum.js').then(({ sampleRUM }) => {
-    sampleRUM('lazy');
-    sampleRUM.observe(blocks);
-    sampleRUM.observe(area.querySelectorAll('picture > img'));
-  });
-}
-
-export function loadPrivacy() {
-  window.fedsConfig = {
-    privacy: {
-      otDomainId: '7a5eb705-95ed-4cc4-a11d-0cc5760e93db',
-    },
-};
-  loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/privacy-standalone.js');
-
-  const privacyTrigger = document.querySelector('footer a[href*="#openPrivacy"]');
-  privacyTrigger?.addEventListener('click', (event) => {
-    event.preventDefault();
-    window.adobePrivacy?.showPreferenceCenter();
-  });
-}
-
-function initSidekick() {
-  const initPlugins = async () => {
-    const { default: init } = await import('./sidekick.js');
-    init({ createTag, loadBlock, loadScript, loadStyle });
-  };
-
-  if (document.querySelector('helix-sidekick')) {
-    initPlugins();
-  } else {
-    document.addEventListener('sidekick-ready', () => {
-      initPlugins();
-    });
-  }
 }
 
 function decorateMeta() {
@@ -675,42 +610,9 @@ export async function loadArea(area = document) {
     delete section.el.dataset.idx;
   }
 
-  // Post section loading on document
-  if (isDoc) {
-    await loadFooter();
-    const georouting = getMetadata('georouting') || config.geoRouting;
-    if (georouting === 'on') {
-      const { default: loadGeoRouting } = await import('../features/georouting/georouting.js');
-      loadGeoRouting(config, createTag, getMetadata);
-    }
-    const richResults = getMetadata('richresults');
-    if (richResults) {
-      const { default: addRichResults } = await import('../features/richresults.js');
-      addRichResults(richResults, { createTag, getMetadata });
-    }
-    const { default: loadFavIcon } = await import('./favicon.js');
-    loadFavIcon(createTag, getConfig(), getMetadata);
-    initSidekick();
-  }
-
   // Load everything that can be deferred until after all blocks load.
-  await loadDeferred(area, areaBlocks, config);
-}
-
-// Load everything that impacts performance later.
-export function loadDelayed(delay = 3000) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      loadPrivacy();
-      if (getMetadata('interlinks') === 'on') {
-        const path = `${getConfig().locale.contentRoot}/keywords.json`;
-        import('../features/interlinks.js').then((mod) => { mod.default(path); resolve(mod); });
-      } else {
-        resolve(null);
-      }
-      import('./samplerum.js').then(({ sampleRUM }) => sampleRUM('cwv'));
-    }, delay);
-  });
+  const { default: loadDeferred } = await import('./deferred.js');
+  await loadDeferred(area, areaBlocks, config, isDoc);
 }
 
 export const utf8ToB64 = (str) => window.btoa(unescape(encodeURIComponent(str)));
