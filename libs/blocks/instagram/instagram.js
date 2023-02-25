@@ -1,4 +1,6 @@
-import { createIntersectionObserver, createTag, loadScript, isInTextNode } from '../../utils/utils.js';
+import { createTag, loadScript } from '../../utils/utils.js';
+import isInTextNode from '../../utils/text.js';
+import createIntersectionObserver from '../../utils/io.js';
 
 export default function init(a) {
   if (isInTextNode(a)) return;

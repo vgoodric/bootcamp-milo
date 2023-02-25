@@ -8,12 +8,8 @@ import {
   useReducer,
   useState,
 } from '../../deps/htm-preact.js';
-import {
-  getConfig,
-  parseEncodedConfig,
-  loadStyle,
-  utf8ToB64,
-} from '../../utils/utils.js';
+import { getConfig, loadStyle } from '../../utils/utils.js';
+import { parseEncodedConfig, utf8ToB64 } from '../../utils/converters.js';
 import Accordion from '../../ui/controls/Accordion.js';
 import { defaultState, initCaas, loadCaasFiles, loadCaasTags, loadStrings } from '../caas/utils.js';
 import { Input as FormInput, Select as FormSelect } from '../../ui/controls/formControls.js';

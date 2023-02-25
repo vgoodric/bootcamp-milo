@@ -1,7 +1,4 @@
-const MILO_TEMPLATES = [
-  '404',
-  'featured-story',
-];
+const MILO_TEMPLATES = ['404', 'featured-story'];
 const MILO_BLOCKS = [
   'accordion',
   'adobetv',
@@ -97,8 +94,6 @@ const ENVS = {
     pdfViewerClientId: '3c0a5ddf2cc04d3198d9e48efc390fa9',
   },
 };
-const SUPPORTED_RICH_RESULTS_TYPES = ['NewsArticle'];
-const LANGSTORE = 'langstore';
 
 function getEnv(conf) {
   const { host, href } = window.location;
@@ -125,7 +120,7 @@ export function getLocale(locales, pathname = window.location.pathname) {
   const split = pathname.split('/');
   const localeString = split[1];
   const locale = locales[localeString] || locales[''];
-  if (localeString === LANGSTORE) {
+  if (localeString === 'langstore') {
     locale.prefix = `/${localeString}/${split[2]}`;
     return locale;
   }
@@ -142,7 +137,7 @@ export const [setConfig, getConfig] = (() => {
       config = { env: getEnv(conf), ...conf };
       config.codeRoot = conf.codeRoot ? `${origin}${conf.codeRoot}` : origin;
       config.locale = pathname ? getLocale(conf.locales, pathname) : getLocale(conf.locales);
-      config.autoBlocks = conf.autoBlocks ? [ ...AUTO_BLOCKS, ...conf.autoBlocks ] : AUTO_BLOCKS;
+      config.autoBlocks = conf.autoBlocks ? [...AUTO_BLOCKS, ...conf.autoBlocks] : AUTO_BLOCKS;
       document.documentElement.setAttribute('lang', config.locale.ietf);
       try {
         document.documentElement.setAttribute('dir', (new Intl.Locale(config.locale.ietf)).textInfo.direction);
@@ -156,10 +151,6 @@ export const [setConfig, getConfig] = (() => {
     () => config,
   ];
 })();
-
-export function isInTextNode(node) {
-  return node.parentElement.firstChild.nodeType === Node.TEXT_NODE;
-}
 
 export function getMetadata(name, doc = document) {
   const attr = name && name.includes(':') ? 'property' : 'name';
@@ -208,7 +199,7 @@ export function localizeLink(href, originHostName = window.location.hostname) {
     if (!locale || !locales) return processedHref;
     const isLocalizable = relative || (prodDomains && prodDomains.includes(url.hostname));
     if (!isLocalizable) return processedHref;
-    const isLocalizedLink = path.startsWith(`/${LANGSTORE}`) || Object.keys(locales)
+    const isLocalizedLink = path.startsWith('/langstore') || Object.keys(locales)
       .some((loc) => loc !== '' && (path.startsWith(`/${loc}/`) || path.endsWith(`/${loc}`)));
     if (isLocalizedLink) return processedHref;
     const urlPath = `${locale.prefix}${path}${url.search}${hash}`;
@@ -235,61 +226,36 @@ export function loadStyle(href, callback) {
   return link;
 }
 
-export function appendHtmlPostfix(area = document) {
-  const config = getConfig();
-  const pageUrl = new URL(window.location.href);
-  if (!pageUrl.pathname.endsWith('.html')) return;
-
-  const relativeAutoBlocks = config.autoBlocks
-    .map((b) => Object.values(b)[0])
-    .filter((b) => b.startsWith('/'));
-
-  const { htmlExclude = [] } = getConfig();
-
-  const HAS_EXTENSION = /\..*$/;
-  const shouldNotConvert = (href) => {
-    if (!(href.startsWith('/') || href.startsWith(pageUrl.origin))
-      || href.endsWith('/')
-      || href === pageUrl.origin
-      || htmlExclude.includes(href)
-      || HAS_EXTENSION.test(href.split('/').pop())) {
-      return true;
-    }
-    const isAutoblockLink = relativeAutoBlocks.some((block) => href.includes(block));
-    if (isAutoblockLink) return true;
-    return false;
-  };
-
-  if (area === document) {
-    const canonEl = document.head.querySelector('link[rel="canonical"]');
-    if (!canonEl) return;
-    const { href } = canonEl;
-    const canonUrl = new URL(href);
-    if (canonUrl.pathname.endsWith('/') || canonUrl.pathname.endsWith('.html')) return;
-    const pagePath = pageUrl.pathname.replace('.html', '');
-    if (pagePath !== canonUrl.pathname) return;
-    canonEl.setAttribute('href', `${href}.html`);
+const shouldNotConvert = (href, pageUrl, relativeAutoBlocks, htmlExclude) => {
+  if (!(href.startsWith('/') || href.startsWith(pageUrl.origin))
+    || href.endsWith('/')
+    || href === pageUrl.origin
+    || htmlExclude.includes(href)
+    || /\..*$/.test(href.split('/').pop())) {
+    return true;
   }
+  const isAutoblockLink = relativeAutoBlocks.some((block) => href.includes(block));
+  if (isAutoblockLink) return true;
+  return false;
+};
 
-  const links = area.querySelectorAll('a');
-  links.forEach((el) => {
-    const href = el.getAttribute('href');
-    if (!href || shouldNotConvert(href)) return;
+function decorateHtml(a, pageUrl, relativeAutoBlocks) {
+  const href = a.getAttribute('href');
+  if (!href || shouldNotConvert(href, pageUrl, relativeAutoBlocks)) return;
 
-    try {
-      const linkUrl = new URL(href.startsWith('http') ? href : `${pageUrl.origin}${href}`);
-      if (linkUrl.pathname && !linkUrl.pathname.endsWith('.html')) {
-        linkUrl.pathname = `${linkUrl.pathname}.html`;
-        el.setAttribute('href', href.startsWith('/')
-          ? `${linkUrl.pathname}${linkUrl.search}${linkUrl.hash}`
-          : linkUrl.href);
-      }
-    } catch (err) {
-      /* c8 ignore next 3 */
-      // eslint-disable-next-line no-console
-      console.log(err);
+  try {
+    const linkUrl = new URL(href.startsWith('http') ? href : `${pageUrl.origin}${href}`);
+    if (linkUrl.pathname && !linkUrl.pathname.endsWith('.html')) {
+      linkUrl.pathname = `${linkUrl.pathname}.html`;
+      a.setAttribute('href', href.startsWith('/')
+        ? `${linkUrl.pathname}${linkUrl.search}${linkUrl.hash}`
+        : linkUrl.href);
     }
-  });
+  } catch (err) {
+    /* c8 ignore next 3 */
+    // eslint-disable-next-line no-console
+    console.log(err);
+  }
 }
 
 export const loadScript = (url, type) => new Promise((resolve, reject) => {
@@ -356,7 +322,6 @@ export async function loadBlock(block) {
   const styleLoaded = new Promise((resolve) => {
     loadStyle(`${base}/blocks/${name}/${name}.css`, resolve);
   });
-
   const scriptLoaded = new Promise((resolve) => {
     (async () => {
       try {
@@ -449,8 +414,16 @@ export function decorateAutoBlock(a) {
 }
 
 export function decorateLinks(el) {
+  // HTML Needs
+  const { autoBlocks, htmlExclude = [] } = getConfig();
+  const relativeAutoBlocks = autoBlocks
+    .map((b) => Object.values(b)[0])
+    .filter((b) => b.startsWith('/'));
+  const pageUrl = new URL(window.location.href);
+
   const anchors = el.getElementsByTagName('a');
   return [...anchors].reduce((rdx, a) => {
+    if (pageUrl.pathname.endsWith('.html')) decorateHtml(a, relativeAutoBlocks, htmlExclude);
     a.href = localizeLink(a.href);
     decorateSVG(a);
     if (a.href.includes('#_blank')) {
@@ -559,7 +532,20 @@ async function loadPostLCP(config) {
   loadFonts(config.locale, loadStyle);
 }
 
+function decorateMetaHtml() {
+  const { pathname } = new URL(window.location.href);
+  const canonEl = document.head.querySelector('link[rel="canonical"]');
+  if (!canonEl) return;
+  const { href } = canonEl;
+  const canonUrl = new URL(href);
+  if (canonUrl.pathname.endsWith('/') || canonUrl.pathname.endsWith('.html')) return;
+  const pagePath = pathname.replace('.html', '');
+  if (pagePath !== canonUrl.pathname) return;
+  canonEl.setAttribute('href', `${href}.html`);
+}
+
 function decorateMeta() {
+  decorateMetaHtml();
   const { origin } = window.location;
   const contents = document.head.querySelectorAll('[content*=".hlx."]');
   contents.forEach((meta) => {
@@ -576,7 +562,6 @@ export async function loadArea(area = document) {
   const config = getConfig();
   const isDoc = area === document;
 
-  appendHtmlPostfix(area);
   await decoratePlaceholders(area, config);
 
   if (isDoc) {
@@ -596,17 +581,14 @@ export async function loadArea(area = document) {
     const loaded = section.blocks.map((block) => loadBlock(block));
     areaBlocks.push(...section.blocks);
 
-    // Only move on to the next section when all blocks are loaded.
     // eslint-disable-next-line no-await-in-loop
     await Promise.all(loaded);
 
     // eslint-disable-next-line no-await-in-loop
     await decorateIcons(section.el, config);
 
-    // Post LCP operations.
     if (isDoc && section.el.dataset.idx === '0') { loadPostLCP(config); }
 
-    // Show the section when all blocks inside are done.
     delete section.el.dataset.status;
     delete section.el.dataset.idx;
   }
@@ -614,31 +596,6 @@ export async function loadArea(area = document) {
   // Load everything that can be deferred until after all blocks load.
   const { default: loadDeferred } = await import('./deferred.js');
   await loadDeferred(area, areaBlocks, config, isDoc);
-}
-
-export const utf8ToB64 = (str) => window.btoa(unescape(encodeURIComponent(str)));
-export const b64ToUtf8 = (str) => decodeURIComponent(escape(window.atob(str)));
-
-export function parseEncodedConfig(encodedConfig) {
-  try {
-    return JSON.parse(b64ToUtf8(decodeURIComponent(encodedConfig)));
-  } catch (e) {
-    console.log(e);
-  }
-  return null;
-}
-
-export function createIntersectionObserver({ el, callback, once = true, options = {} }) {
-  const io = new IntersectionObserver((entries, observer) => {
-    entries.forEach(async (entry) => {
-      if (entry.isIntersecting) {
-        if (once) observer.unobserve(entry.target);
-        callback(entry.target, entry);
-      }
-    });
-  }, options);
-  io.observe(el);
-  return io;
 }
 
 export function loadLana(options = {}) {
