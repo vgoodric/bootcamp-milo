@@ -497,15 +497,16 @@ function decorateDefaults(el) {
 
 function decorateHeader() {
   const header = document.querySelector('header');
+  const breadcrumbs = document.querySelector('.breadcrumbs');
   if (!header) return;
   const headerMeta = getMetadata('header');
   if (headerMeta === 'off') {
     document.body.classList.add('nav-off');
     header.remove();
+    breadcrumbs.remove();
     return;
   }
   header.className = headerMeta || 'gnav';
-  const breadcrumbs = document.querySelector('.breadcrumbs');
   if (breadcrumbs) {
     header.classList.add('has-breadcrumbs');
     header.append(breadcrumbs);
