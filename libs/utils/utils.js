@@ -503,7 +503,7 @@ function decorateHeader() {
   if (headerMeta === 'off') {
     document.body.classList.add('nav-off');
     header.remove();
-    breadcrumbs.remove();
+    breadcrumbs?.remove();
     return;
   }
   header.className = headerMeta || 'gnav';
