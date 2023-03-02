@@ -13,7 +13,7 @@
 /*
  * Marketo Form
  */
-import { loadScript, createTag, getConfig } from '../../utils/utils.js';
+import { loadScript, loadStyle, createTag, getConfig } from '../../utils/utils.js';
 
 const DESTINATION_URL = 'destination url';
 const HIDDEN_FIELDS = 'hidden fields';
@@ -22,10 +22,66 @@ const FORM_ID = 'form id';
 const MUNCHKIN_ID = 'munchkin id';
 const ERROR_MESSAGE = 'error message';
 
-/* Marketo adds default styles that we want to remove */
+const initMcz = () => {
+  window.mcz_marketoForm_pref = window.mcz_marketoForm_pref || [];
+  window.mcz_marketoForm_pref = {
+    profile: {
+      prefLanguage: '',
+      segLangCode: '',
+    },
+    form: {
+      type: 'marketo_form',
+      subType: 'formSubType', //seminar, whitepaper_form, nurture, webinar, strategy_webinar, demo, etc
+    },
+    program: {
+      prefLanguagePresent: true,
+      poi: '',
+      coPartnerNames: '', //Partner1, Partner2
+      submitButton: '', //Submit
+      campaignIds: {
+        sfdc: '',
+        external: '',
+        retouch: '',
+        onsite: '',
+      },
+    },
+    field_visibility: {
+      phone: 'required',
+      comments: 'visible',
+      functional_area: 'visible',
+      job_title: 'visible',
+      demo: 'visible',
+    },
+    field_filters: {
+      products: '', //POI-Dxonly
+      job_role: '', //Job Role-HiLevel
+      industry: '', //Industry-Manufacturing
+      functional_area: '', //Functional Area-DX
+    },
+  };
+}
+
+const mcz_marketoForm_pref_keys = {
+  'form channel': 'form.subType',
+  'hardcoded poi': 'program.poi',
+  'co-partner names': 'program.coPartnerNames',
+  'campaign id - sfdc': 'program.campaignIds.sfdc',
+  'campaign id - external': 'program.campaignIds.external',
+  'campaign id - retouch': 'program.campaignIds.retouch',
+  'campaign id - onsite': 'program.campaignIds.onsite',
+  'field - phone': 'field_visibility.phone',
+  'field - comments': 'field_visibility.comments',
+  'field - functional area': 'field_visibility.functional_area',
+  'field - job title': 'field_visibility.job_title',
+  'field - demo ': 'field_visibility.demo',
+  'filter - products': 'field_filters.products',
+  'filter - job role': 'field_filters.job_role',
+  'filter - industry': 'field_filters.industry',
+  'filter - functional area': 'field_filters.functional_area',
+};
+
 const cleanStyleSheets = (baseURL) => {
   const { styleSheets } = document;
-
   [...styleSheets].forEach((sheet) => {
     if (sheet.href?.includes(baseURL)) {
       sheet.disabled = true;
@@ -35,14 +91,14 @@ const cleanStyleSheets = (baseURL) => {
 
 const cleanFormStyles = (form) => {
   const formEl = form.getFormElem().get(0);
-
-  formEl?.querySelectorAll('style').forEach((e) => { e.remove(); });
+  formEl?.querySelectorAll('style').forEach((e) => {
+    e.remove();
+  });
   formEl?.parentElement?.querySelectorAll('*[style]').forEach((e) => e.removeAttribute('style'));
 };
 
 const loadForm = (form, formData) => {
   if (!form) return;
-
   cleanFormStyles(form);
   cleanStyleSheets(formData[BASE_URL]);
 
@@ -100,16 +156,20 @@ const readyForm = (error, form, formData) => {
   const errorMessage = formData[ERROR_MESSAGE];
 
   // Set row width of legal language, without knowing position
-  const formTexts = formEl.querySelectorAll('.mktoHtmlText');
-  formTexts[formTexts.length - 1].closest('.mktoFormRow').classList.add('marketo-privacy');
+  // const formTexts = formEl.querySelectorAll(".mktoHtmlText");
+  // formTexts[formTexts.length - 1].closest(".mktoFormRow").classList.add("marketo-privacy");
 
-  formEl.addEventListener('focus', (e) => {
-    if (e.target.type === 'submit') return;
-    const pageTop = document.querySelector('header')?.offsetHeight ?? 0;
-    const targetPosition = e.target?.getBoundingClientRect().top ?? 0;
-    const offsetPosition = targetPosition + window.pageYOffset - pageTop - window.innerHeight /2 ;
-    window.scrollTo(0, offsetPosition);
-  }, true);
+  formEl.addEventListener(
+    'focus',
+    (e) => {
+      if (e.target.type === 'submit') return;
+      const pageTop = document.querySelector('header')?.offsetHeight ?? 0;
+      const targetPosition = e.target?.getBoundingClientRect().top ?? 0;
+      const offsetPosition = targetPosition + window.pageYOffset - pageTop - window.innerHeight / 2;
+      window.scrollTo(0, offsetPosition);
+    },
+    true
+  );
   form.onValidate((success) => formValidate(form, success, error, errorMessage));
   form.onSuccess(() => formSuccess(form, redirectUrl));
 };
@@ -123,11 +183,38 @@ const init = (el) => {
     [MUNCHKIN_ID]: marketoMunchkinID,
   };
 
+  initMcz();
+
+  function get_fromDL(path) {
+    return path.split('.').reduce(function (prev, curr) {
+      return prev ? prev[curr] : undefined;
+    }, window.mcz_marketoForm_pref || self.mcz_marketoForm_pref);
+  }
+
+  function set_inDL(key, value) {
+    const dataLayerLocation = mcz_marketoForm_pref_keys[key.toLowerCase()];
+    if (dataLayerLocation) {
+      const path = dataLayerLocation.split('.');
+      path.reduce(function (prev, curr, index, array) {
+        if (index === array.length - 1) {
+          prev[curr] = value;
+        }
+        return prev ? prev[curr] : undefined;
+      }, window.mcz_marketoForm_pref || self.mcz_marketoForm_pref);
+    } else {
+      console.log('key not found: ', key, mcz_marketoForm_pref_keys[key]);
+    }
+  }
+
   children.forEach((element) => {
     const key = element.children[0]?.textContent.toLowerCase();
     const value = element.children[1]?.textContent;
-    if (key && value) { formData[key] = value; }
+    if (key && value) {
+      formData[key] = value;
+      set_inDL(key, value);
+    }
   });
+  console.log('mcz_marketoForm_pref', window.mcz_marketoForm_pref);
 
   const formID = formData[FORM_ID];
   const baseURL = formData[BASE_URL];
@@ -147,6 +234,10 @@ const init = (el) => {
       const error = createTag('p', { class: 'marketo-error', 'aria-live': 'polite' });
       const formWrapper = createTag('section', { class: 'marketo-form-wrapper' });
 
+      const span1 = createTag('span', { id: 'mktoForms2BaseStyle', style: 'display:none;' });
+      const span2 = createTag('span', { id: 'mktoForms2ThemeStyle', style: 'display:none;' });
+      formWrapper.append(span1, span2);
+
       if (formData.title) {
         const title = createTag('h3', { class: 'marketo-title' }, formData.title);
         formWrapper.append(title);
@@ -156,13 +247,19 @@ const init = (el) => {
         formWrapper.append(description);
       }
 
-      const marketoForm = createTag('form', { ID: `mktoForm_${formID}`, class: 'hide-errors' });
+      const marketoForm = createTag('form', { ID: `mktoForm_${formID}`, class: 'hide-errors', style: 'opacity:0; visibility:hidden' });
       formWrapper.append(marketoForm);
       fragment.append(error, formWrapper);
       el.replaceChildren(fragment);
 
-      MktoForms2.loadForm(baseURL, munchkinID, formID, (form) => { loadForm(form, formData); });
-      MktoForms2.whenReady((form) => { readyForm(error, form, formData); });
+      MktoForms2.loadForm(baseURL, munchkinID, formID, (form) => {
+        loadForm(form, formData);
+        // loadStyle('https://engage.adobe.com/rs/360-KCI-804/images/MCZ-LP-2023-v2-template-style.css');
+      });
+
+      MktoForms2.whenReady((form) => {
+        readyForm(error, form, formData);
+      });
     })
     .catch(() => {
       /* c8 ignore next */
