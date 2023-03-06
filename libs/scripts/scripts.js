@@ -118,8 +118,10 @@ const config = {
 };
 
 (async function loadLCPImage() {
-  const lcpImg = document.querySelector('img');
-  lcpImg?.setAttribute('loading', 'eager');
+  const lcpImgs = document.body.querySelectorAll('main > div:first-of-type img');
+  lcpImgs.forEach((img) => {
+    img.removeAttribute('loading');
+  });
 }());
 
 (async function loadPage() {
