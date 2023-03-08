@@ -54,6 +54,12 @@
       "id": "preflight",
       "environments": ["dev", "preview", "live"],
       "event": "preflight"
+    },
+    {
+      "title": "Hello World",
+      "id": "hello-world",
+      "environments": ["dev", "preview", "live"],
+      "event": "hello-world"
     }
   ]
 }
