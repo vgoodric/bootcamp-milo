@@ -623,7 +623,7 @@ export function loadPrivacy() {
       documentLanguage: true,
     },
   };
-  loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/privacy-standalone.js');
+  loadScript('https://www.dev02.adobe.com/etc.clientlibs/globalnav/clientlibs/base/privacy-standalone.js');
 
   const privacyTrigger = document.querySelector('footer a[href*="#openPrivacy"]');
   privacyTrigger?.addEventListener('click', (event) => {
