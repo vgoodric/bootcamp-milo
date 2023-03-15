@@ -1,7 +1,11 @@
 const fetchedPlaceholders = {};
 
 const getPlaceholdersPath = (config, sheet) => {
-  const path = `${config.locale.contentRoot}/placeholders.json`;
+  let path = `${config.locale.contentRoot}/placeholders.json`;
+  if (config.env.name === 'local') {
+    //localhost won't serve the json file, so we need to use the helix proxy
+    path = 'https://main--milo--adobecom.hlx.page/placeholders.json';
+  }
   const query = sheet !== 'default' && typeof sheet === 'string' && sheet.length ? `?sheet=${sheet}` : '';
   return `${path}${query}`;
 };
