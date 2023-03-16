@@ -1,0 +1,7 @@
+.uar-results {
+  display: none;
+}
+
+.uar-results.show {
+  display: unset;
+}
