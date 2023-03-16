@@ -55,6 +55,7 @@ const MILO_BLOCKS = [
   'z-pattern',
   'share',
   'reading-time',
+  'uar-results',
 ];
 const AUTO_BLOCKS = [
   { adobetv: 'https://video.tv.adobe.com' },
