@@ -28,6 +28,7 @@ function displayConfirmation(content, message) {
 
 export default function init(block) {
   const children = block.querySelectorAll(':scope > div');
+  if (children.length < 4) return;
 
   block.innerHTML = '';
 

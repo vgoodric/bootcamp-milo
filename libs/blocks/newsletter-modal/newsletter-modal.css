@@ -80,6 +80,7 @@ body.newsletter-no-scroll {
 }
 
 .newsletter-modal .newsletter-modal-cta {
+  flex-shrink: 0;
   background-color: #1473E6;
   color: white;
   border-radius: 100px;
