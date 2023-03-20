@@ -82,7 +82,9 @@
       "title": "Caas Tag Selector",
       "id": "caas-tag-selector",
       "environments": ["edit"],
-      "event": "caas-tag-selector"
+      "url": "/tools/locale-nav",
+      "isPalette": true,
+      "paletteRect": "top: 150px; left: 7%; height: 675px; width: 85vw;"
     }
   ]
 }

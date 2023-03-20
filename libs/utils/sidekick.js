@@ -22,14 +22,6 @@ export default function init({ createTag, loadBlock, loadScript, loadStyle }) {
     getModal(null, { id: 'preflight', content, closeEvent: 'closeModal' });
   };
 
-  const caasTagSelectorListener = async () => {
-    const preflight = createTag('div', { class: 'caas-tag-selector' });
-    const content = await loadBlock(preflight);
-
-    const { getModal } = await import('../blocks/modal/modal.js');
-    getModal(null, { id: 'caas-tag-selector', content, closeEvent: 'closeModal' });
-  };
-
   // Support for legacy manifest v2 - Delete once everyone is migrated to v3
   document.addEventListener('send-to-caas', async (e) => {
     const { host, project, branch, repo, owner } = e.detail;
@@ -43,5 +35,4 @@ export default function init({ createTag, loadBlock, loadScript, loadStyle }) {
   sk.addEventListener('custom:send-to-caas', sendToCaasListener);
   sk.addEventListener('custom:check-schema', checkSchemaListener);
   sk.addEventListener('custom:preflight', preflightListener);
-  sk.addEventListener('custom:caas-tag-selector', caasTagSelectorListener);
 }
