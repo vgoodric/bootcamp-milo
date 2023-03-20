@@ -51,6 +51,7 @@ function getUniqueId(el) {
 }
 
 export default function init(el) {
+  el.classList.add('hello-karl');
   const id = getUniqueId(el);
   const accordion = createTag('dl', { class: 'accordion', id: `accordion-${id}`, role: 'presentation' });
   const isSeo = el.classList.contains('seo');

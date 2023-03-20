@@ -76,6 +76,8 @@ function extendButtonsClass(text) {
 }
 
 export default function init(el) {
+  el.classList.add('hello-karl');
+
   decorateBlockAnalytics(el);
   const isLight = el.classList.contains('light');
   if (!isLight) el.classList.add('dark');
