@@ -76,6 +76,13 @@
       "paletteRect": "top: auto; bottom: 25px; left: 75px; height: 388px; width: 360px;",
       "url": "/tools/locale-nav",
       "includePaths": [ "**.docx**" ]
+    },
+    {
+      "containerId": "tools",
+      "title": "Caas Tag Selector",
+      "id": "caas-tag-selector",
+      "environments": ["edit"],
+      "event": "caas-tag-selector"
     }
   ]
 }
