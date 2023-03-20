@@ -6,7 +6,7 @@ body.newsletter-no-scroll {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: white;
+  background-color: var(--color-white);
   overflow: hidden;
 }
 
@@ -30,8 +30,8 @@ body.newsletter-no-scroll {
 .newsletter-modal-text {
   width: 80%;
   max-width: 420px;
-  font-size: 20px;
-  margin: 0 0 16px 0!important;
+  font-size: var(--type-body-l-size);
+  margin: 0 0 var(--spacing-xs) !important;
 }
 
 .newsletter-modal-form {
@@ -50,17 +50,17 @@ body.newsletter-no-scroll {
 }
 
 .newsletter-modal-email-label span {
-  font-size: 12px;
-  color: #747474;
+  font-size: var(--type-body-xxs-size);
+  color: var(--color-gray-600);
 }
 
 .newsletter-modal-email-label input {
   border: none;
-  border-bottom: 1px #D3D3D3 solid;
+  border-bottom: 1px var(--color-gray-300) solid;
   font-style: italic;
-  font-size: 14px;
+  font-size: var(--type-body-xs-size);
   padding: 4px 0 6px;
-  color: #959595;
+  color: var(--color-gray-500);
   font-family: var(--body-font-family);
 }
 
@@ -76,15 +76,15 @@ body.newsletter-no-scroll {
   color: #f00;
 }
 .newsletter-modal-email-label input::-webkit-input-placeholder {
-  color: #D3D3D3;
+  color: var(--color-gray-300);
 }
 
 .newsletter-modal .newsletter-modal-cta {
   flex-shrink: 0;
-  background-color: #1473E6;
-  color: white;
+  background-color: var(--link-color-dark);
+  color: var(--color-white);
   border-radius: 100px;
-  padding: 8px 16px;
+  padding: var(--spacing-xxs) var(--spacing-xs);
   border: none;
   cursor: pointer;
   margin: 0 0 15px 15px;
@@ -93,44 +93,44 @@ body.newsletter-no-scroll {
 }
 
 .newsletter-modal-cta:hover, .newsletter-modal-cta:active {
-  background-color: #0F66D0;
+  background-color: var(--link-hover-color-dark);
 }
 
 .newsletter-modal-disclaimer {
   width: 80%;
   max-width: 360px;
-  font-size: 10px;
-  color: #2C2C2C;
-  margin-bottom: 40px;
+  font-size: var(--type-detail-s-size);
+  color: var(--text-color);
+  margin-bottom: var(--spacing-l);
   line-height: var(--type-body-xxs-lh);
 }
 
 .newsletter-modal-disclaimer a, .newsletter-modal-disclaimer a:visited, .newsletter-modal-disclaimer a:active {
   text-decoration: none;
-  color: #1473E6
+  color: var(--link-color-dark); 
 }
 
 .newsletter-modal-confirmation {
   max-width: 270px;
   text-align: center;
   margin-top: 0;
-  font-size: 18px;
+  font-size: var(--type-body-m-size);
 }
 
 .newsletter-modal-confirmation-close {
-  background-color: white;
-  color: #1473E6;
+  background-color: var(--color-white);
+  color: var(--link-color-dark) ;
   border-radius: 100px;
-  padding: 8px 16px;
-  border: 2px #1473E6 solid;
+  padding: var(--spacing-xxs) var(--spacing-xs);
+  border: 2px var(--link-color-dark)  solid;
   margin-bottom: 15px;
   cursor: pointer;
   font-family: var(--body-font-family);
 }
 
 .newsletter-modal-confirmation-close:hover {
-  background-color: #1473E6;
-  color: white;
+  background-color: var(--link-color-dark) ;
+  color: var(--color-white);
 }
 
 @media (min-width: 600px) {
