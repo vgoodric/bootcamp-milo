@@ -82,7 +82,7 @@
       "title": "Caas Tag Selector",
       "id": "caas-tag-selector",
       "environments": ["edit", "dev"],
-      "url": "/tools/caas-tag-selector",
+      "url": "https://methomas-caas-tag-selector-poc--milo--adobecom.hlx.page/tools/caas-tag-selector",
       "isPalette": true,
       "paletteRect": "top: 150px; left: 7%; height: 675px; width: 85vw;"
     }
