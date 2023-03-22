@@ -492,6 +492,11 @@ const FilterPanel = ({ tagsData }) => {
     <${Select} label="Filter Location" prop="filterLocation" options=${defaultOptions.filterLocation} />
     <${Select} label="Filter logic within each tag panel" prop="filterLogic" options=${defaultOptions.filterLogic} />
     <${Select} label="Event Filter" prop="filterEvent" options=${defaultOptions.filterEvent} />
+    <${Select} label="Automatic or Custom Panel" prop="filterBuildPanel" options=${defaultOptions.filterBuildPanel} />
+  `;
+
+  const FilterBuildPanel = html`
+    <${FilterOptions}>
     <${MultiField}
       onChange=${onChange('filters')}
       className="filters"
@@ -499,16 +504,35 @@ const FilterPanel = ({ tagsData }) => {
       title="Filter Tags"
       subTitle=""
     >
-    <${TagSelect} id="filterTag" options=${allTags} label="Main Tag" singleSelect />
+      <${TagSelect} id="filterTag" options=${allTags} label="Main Tag" singleSelect />
       <${FormInput} label="Opened on load" name="openedOnLoad" type="checkbox" />
       <${FormInput} label="Icon Path" name="icon" />
       <${TagSelect} id="excludeTags" options=${allTags} label="Tags to Exclude" />
     <//>
   `;
 
+  const FilterCustomBuildPanel = html`
+    <${FilterOptions}>
+    <${MultiField}
+      onChange=${onChange('filtersCustom')}
+      className="filtersCustom"
+      values=${context.state.filtersCustom}
+      title="Filter Custom Tags"
+      subTitle=""
+    >
+      <${FormInput} label="Add a label for a Group Of Tags" name="label" />
+      <${TagSelect} id="filterCustomTag" options=${allTags} label="Main Tag" />
+      <${FormInput} label="Icon Path" name="icon" />
+      <${FormInput} label="Opened on load" name="openedOnLoad" type="checkbox" />
+    <//>
+  `;
+
   return html`
     <${Input} label="Show Filters" prop="showFilters" type="checkbox" />
-    ${state.showFilters && FilterOptions}
+    ${state.showFilters
+      && (state.filterBuildPanel === 'custom'
+        ? FilterCustomBuildPanel
+        : FilterBuildPanel)}
   `;
 };
 
