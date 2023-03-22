@@ -43,8 +43,8 @@ const cleanFormStyles = (form) => {
 const loadForm = (form, formData) => {
   if (!form) return;
 
-  cleanFormStyles(form);
-  cleanStyleSheets(formData[BASE_URL]);
+  // cleanFormStyles(form);
+  // cleanStyleSheets(formData[BASE_URL]);
 
   if (formData[HIDDEN_FIELDS]) {
     const hiddenFields = {};
@@ -61,7 +61,7 @@ export const formValidate = (form, success, error, errorMessage) => {
   formEl.classList.remove('hide-errors');
   formEl.classList.add('show-warnings');
 
-  cleanFormStyles(form);
+  // cleanFormStyles(form);
   if (!success && errorMessage) {
     error.textContent = errorMessage;
     error.classList.add('alert');
@@ -100,16 +100,20 @@ const readyForm = (error, form, formData) => {
   const errorMessage = formData[ERROR_MESSAGE];
 
   // Set row width of legal language, without knowing position
-  const formTexts = formEl.querySelectorAll('.mktoHtmlText');
-  formTexts[formTexts.length - 1].closest('.mktoFormRow').classList.add('marketo-privacy');
+  // const formTexts = formEl.querySelectorAll(".mktoHtmlText");
+  // formTexts[formTexts.length - 1].closest(".mktoFormRow").classList.add("marketo-privacy");
 
-  formEl.addEventListener('focus', (e) => {
-    if (e.target.type === 'submit') return;
-    const pageTop = document.querySelector('header')?.offsetHeight ?? 0;
-    const targetPosition = e.target?.getBoundingClientRect().top ?? 0;
-    const offsetPosition = targetPosition + window.pageYOffset - pageTop - window.innerHeight /2 ;
-    window.scrollTo(0, offsetPosition);
-  }, true);
+  formEl.addEventListener(
+    'focus',
+    (e) => {
+      if (e.target.type === 'submit') return;
+      const pageTop = document.querySelector('header')?.offsetHeight ?? 0;
+      const targetPosition = e.target?.getBoundingClientRect().top ?? 0;
+      const offsetPosition = targetPosition + window.pageYOffset - pageTop - window.innerHeight / 2;
+      window.scrollTo(0, offsetPosition);
+    },
+    true
+  );
   form.onValidate((success) => formValidate(form, success, error, errorMessage));
   form.onSuccess(() => formSuccess(form, redirectUrl));
 };
@@ -147,6 +151,10 @@ const init = (el) => {
       const error = createTag('p', { class: 'marketo-error', 'aria-live': 'polite' });
       const formWrapper = createTag('section', { class: 'marketo-form-wrapper' });
 
+      const span1 = createTag('span', { id: 'mktoForms2BaseStyle', style: 'display:none;' });
+      const span2 = createTag('span', { id: 'mktoForms2ThemeStyle', style: 'display:none;' });
+      formWrapper.append(span1, span2);
+
       if (formData.title) {
         const title = createTag('h3', { class: 'marketo-title' }, formData.title);
         formWrapper.append(title);
@@ -156,13 +164,18 @@ const init = (el) => {
         formWrapper.append(description);
       }
 
-      const marketoForm = createTag('form', { ID: `mktoForm_${formID}`, class: 'hide-errors' });
+      const marketoForm = createTag('form', { ID: `mktoForm_${formID}`, class: 'hide-errors', style: 'opacity:0; visibility:hidden' });
       formWrapper.append(marketoForm);
       fragment.append(error, formWrapper);
       el.replaceChildren(fragment);
 
-      MktoForms2.loadForm(baseURL, munchkinID, formID, (form) => { loadForm(form, formData); });
-      MktoForms2.whenReady((form) => { readyForm(error, form, formData); });
+      MktoForms2.loadForm(baseURL, munchkinID, formID, (form) => {
+        loadForm(form, formData);
+      });
+
+      MktoForms2.whenReady((form) => {
+        readyForm(error, form, formData);
+      });
     })
     .catch(() => {
       /* c8 ignore next */
