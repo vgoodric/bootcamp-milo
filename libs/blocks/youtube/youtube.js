@@ -1,4 +1,5 @@
-import { createIntersectionObserver, isInTextNode } from '../../utils/utils.js';
+import { isInTextNode } from '../../utils/utils.js';
+import createIntersectionObserver from '../../utils/io.js';
 
 export default function init(a) {
   const embedVideo = () => {

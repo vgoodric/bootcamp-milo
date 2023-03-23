@@ -1,5 +1,7 @@
 /* global _satellite */
 /* eslint-disable no-underscore-dangle */
+import { getConfig } from '../utils/utils.js';
+import loadScript from '../utils/script.js';
 
 function getDetails(env) {
   /* c8 ignore start */
@@ -16,7 +18,8 @@ function getDetails(env) {
   /* c8 ignore stop */
 }
 
-export default async function init(config, loadScript) {
+export default async function init() {
+  const config = getConfig();
   const { url, edgeConfigId } = getDetails(config.env);
   window.alloy_load ??= {};
   window.alloy_load.data ??= {};

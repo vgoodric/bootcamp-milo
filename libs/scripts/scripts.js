@@ -12,7 +12,6 @@
 
 import {
   loadArea,
-  loadDelayed,
   loadLana,
   setConfig,
 } from '../utils/utils.js';
@@ -126,5 +125,7 @@ const config = {
   setConfig(config);
   loadLana({ clientId: 'milo' });
   await loadArea();
+
+  const { default: loadDelayed } = await import('../utils/delayed.js');
   loadDelayed();
 }());

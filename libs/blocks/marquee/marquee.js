@@ -14,7 +14,6 @@
  * Marquee - v6.0
  */
 import { decorateButtons, getBlockSize } from '../../utils/decorate.js';
-import { decorateBlockAnalytics, decorateLinkAnalytics } from '../../martech/attributes.js';
 import { createTag } from '../../utils/utils.js';
 
 const decorateVideo = (container) => {
@@ -39,13 +38,8 @@ const decorateBlockBg = (block, node) => {
   }
 
   Array.from(children).forEach((child, index) => {
-    if (childCount === 3) {
-      child.classList.add(viewports[index]);
-    }
-
-    if (child.querySelector('a[href$=".mp4"]')) {
-      decorateVideo(child);
-    }
+    if (childCount === 3) child.classList.add(viewports[index]);
+    if (child.querySelector('a[href$=".mp4"]')) decorateVideo(child);
   });
 
   if (!node.querySelector(':scope img') && !node.querySelector(':scope video')) {
@@ -62,11 +56,16 @@ function decorateText(el, size) {
     headingEl.nextElementSibling?.classList.add(`body-${bodySize}`);
     const sib = headingEl.previousElementSibling;
     if (sib) {
-      sib.querySelector('img, .icon') ? sib.classList.add('icon-area') : sib.classList.add(`detail-${detailSize}`);
+      const sibClass = sib.querySelector('img, .icon') ? 'icon-area' : `detail-${detailSize}`;
+      sib.classList.add(sibClass);
       sib.previousElementSibling?.classList.add('icon-area');
     }
   };
-  size === 'large' ? decorate(heading, 'xxl', 'xl', 'l') : decorate(heading, 'xl', 'm', 'm');
+  if (size === 'large') {
+    decorate(heading, 'xxl', 'xl', 'l');
+  } else {
+    decorate(heading, 'xl', 'm', 'm');
+  }
 }
 
 function extendButtonsClass(text) {
@@ -76,7 +75,6 @@ function extendButtonsClass(text) {
 }
 
 export default function init(el) {
-  decorateBlockAnalytics(el);
   const isLight = el.classList.contains('light');
   if (!isLight) el.classList.add('dark');
   const children = el.querySelectorAll(':scope > div');
@@ -104,7 +102,6 @@ export default function init(el) {
   const size = getBlockSize(el);
   decorateButtons(text, size === 'large' ? 'button-xl' : 'button-l');
   const headings = text.querySelectorAll('h1, h2, h3, h4, h5, h6');
-  decorateLinkAnalytics(text, headings);
   decorateText(text, size);
   extendButtonsClass(text);
   if (el.classList.contains('split')) {
@@ -120,4 +117,9 @@ export default function init(el) {
       media.lastChild.remove();
     }
   }
+
+  import('../../martech/attributes.js').then((mod) => {
+    mod.decorateBlockAnalytics(el);
+    mod.decorateLinkAnalytics(text, headings);
+  });
 }

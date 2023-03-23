@@ -111,20 +111,14 @@ function getEnv(conf) {
   if (query) return { ...ENVS[query], consumer: conf[query] };
   if (host.includes('localhost:')) return { ...ENVS.local, consumer: conf.local };
   /* c8 ignore start */
-  if (host.includes('hlx.page')
-    || host.includes('hlx.live')
-    || host.includes('stage.adobe')
-    || host.includes('corp.adobe')) {
-    return { ...ENVS.stage, consumer: conf.stage };
-  }
+  const stage = host.includes('.hlx.') || host.includes('.stage.') || host.includes('.corp.');
+  if (stage) return { ...ENVS.stage, consumer: conf.stage };
   return { ...ENVS.prod, consumer: conf.prod };
   /* c8 ignore stop */
 }
 
 export function getLocale(locales, pathname = window.location.pathname) {
-  if (!locales) {
-    return { ietf: 'en-US', tk: 'hah7vzn.css', prefix: '' };
-  }
+  if (!locales) return { ietf: 'en-US', tk: 'hah7vzn.css', prefix: '' };
   const split = pathname.split('/');
   const localeString = split[1];
   const locale = locales[localeString] || locales[''];
@@ -198,24 +192,22 @@ function getExtension(path) {
 
 export function localizeLink(href, originHostName = window.location.hostname) {
   try {
-    const url = new URL(href);
-    const relative = url.hostname === originHostName;
-    const processedHref = relative ? href.replace(url.origin, '') : href;
-    const { hash } = url;
+    const { hostname, origin, hash, search, pathname } = new URL(href);
+    const relative = hostname === originHostName;
+    const processedHref = relative ? href.replace(origin, '') : href;
     if (hash === '#_dnt') return processedHref.split('#')[0];
-    const path = url.pathname;
+    const path = pathname;
     const extension = getExtension(path);
-    const allowedExts = ['', 'html', 'json'];
-    if (!allowedExts.includes(extension)) return processedHref;
+    if (!['', 'html', 'json'].includes(extension)) return processedHref;
     const { locale, locales, prodDomains } = getConfig();
     if (!locale || !locales) return processedHref;
-    const isLocalizable = relative || (prodDomains && prodDomains.includes(url.hostname));
+    const isLocalizable = relative || (prodDomains && prodDomains.includes(hostname));
     if (!isLocalizable) return processedHref;
     const isLocalizedLink = path.startsWith(`/${LANGSTORE}`) || Object.keys(locales)
       .some((loc) => loc !== '' && (path.startsWith(`/${loc}/`) || path.endsWith(`/${loc}`)));
     if (isLocalizedLink) return processedHref;
-    const urlPath = `${locale.prefix}${path}${url.search}${hash}`;
-    return relative ? urlPath : `${url.origin}${urlPath}`;
+    const urlPath = `${locale.prefix}${path}${search}${hash}`;
+    return relative ? urlPath : `${origin}${urlPath}`;
   } catch (error) {
     return href;
   }
@@ -252,7 +244,7 @@ export function appendHtmlPostfix(area = document) {
   const shouldNotConvert = (href) => {
     let url = { pathname: href };
 
-    try { url = new URL(href, pageUrl) } catch (e) {}
+    try { url = new URL(href, pageUrl); } catch {}
 
     if (!(href.startsWith('/') || href.startsWith(pageUrl.origin))
       || url.pathname?.endsWith('/')
@@ -384,37 +376,10 @@ export async function loadBlock(block) {
   return block;
 }
 
-export function decorateSVG(a) {
-  const { textContent, href } = a;
-  if (!(textContent.includes('.svg') || href.includes('.svg'))) return a;
-  try {
-    // Mine for URL and alt text
-    const splitText = textContent.split('|');
-    const textUrl = new URL(splitText.shift().trim());
-    const altText = splitText.join('|').trim();
-
-    // Relative link checking
-    const hrefUrl = a.href.startsWith('/')
-      ? new URL(`${window.location.origin}${a.href}`)
-      : new URL(a.href);
-
-    const src = textUrl.hostname.includes('.hlx.') ? textUrl.pathname : textUrl;
-
-    const img = createTag('img', { loading: 'lazy', src });
-    if (altText) img.alt = altText;
-    const pic = createTag('picture', null, img);
-
-    if (textUrl.pathname === hrefUrl.pathname) {
-      a.parentElement.replaceChild(pic, a);
-      return pic;
-    }
-    a.textContent = '';
-    a.append(pic);
-    return a;
-  } catch (e) {
-    console.log('Failed to create SVG.', e.message);
-    return a;
-  }
+export async function decorateSVG(a) {
+  if (!(a.textContent.includes('.svg') || a.href.includes('.svg'))) return a;
+  const { default: createSVG } = await import('./svg.js');
+  return createSVG(a);
 }
 
 export function decorateAutoBlock(a) {
@@ -449,9 +414,7 @@ export function decorateAutoBlock(a) {
       }
 
       // slack uploaded mp4s
-      if (key === 'video' && !a.textContent.match('media_.*.mp4')) {
-        return false;
-      }
+      if (key === 'video' && !a.textContent.match('media_.*.mp4')) return false;
 
       a.className = `${key} link-block`;
       return true;
@@ -473,9 +436,7 @@ export function decorateLinks(el) {
       a.href = a.href.replace('#_dnb', '');
     } else {
       const autoBlock = decorateAutoBlock(a);
-      if (autoBlock) {
-        rdx.push(a);
-      }
+      if (autoBlock) rdx.push(a);
     }
     return rdx;
   }, []);
@@ -492,10 +453,7 @@ function decorateContent(el) {
       break;
     }
   }
-  const block = document.createElement('div');
-  block.className = 'content';
-  block.append(...children);
-  return block;
+  return createTag('div', { class: 'content' }, children);
 }
 
 function decorateDefaults(el) {
@@ -546,18 +504,6 @@ async function decoratePlaceholders(area, config) {
   el.innerHTML = await replaceText(el.innerHTML, config, regex);
 }
 
-async function loadFooter() {
-  const footer = document.querySelector('footer');
-  if (!footer) return;
-  const footerMeta = getMetadata('footer');
-  if (footerMeta === 'off') {
-    footer.remove();
-    return;
-  }
-  footer.className = footerMeta || 'footer';
-  await loadBlock(footer);
-}
-
 function decorateSections(el, isDoc) {
   const selector = isDoc ? 'body > main > div' : ':scope > div';
   return [...el.querySelectorAll(selector)].map((section, idx) => {
@@ -588,71 +534,6 @@ async function loadPostLCP(config) {
   loadFonts(config.locale, loadStyle);
 }
 
-export async function loadDeferred(area, blocks, config) {
-  const event = new Event('milo:deferred');
-  area.dispatchEvent(event);
-  if (config.links === 'on') {
-    const path = `${config.contentRoot || ''}${getMetadata('links-path') || '/seo/links.json'}`;
-    import('../features/links.js').then((mod) => mod.default(path, area));
-  }
-
-  if (config.locale?.ietf === 'ja-JP') {
-    // Japanese word-wrap
-    import('../features/japanese-word-wrap.js').then(({ controlLineBreaksJapanese }) => {
-      controlLineBreaksJapanese(config, area);
-    });
-  }
-
-  import('./samplerum.js').then(({ sampleRUM }) => {
-    sampleRUM('lazy');
-    sampleRUM.observe(blocks);
-    sampleRUM.observe(area.querySelectorAll('picture > img'));
-  });
-}
-
-export function loadPrivacy() {
-  const domains = {
-    'adobe.com': '7a5eb705-95ed-4cc4-a11d-0cc5760e93db',
-    'hlx.live': '926b16ce-cc88-4c6a-af45-21749f3167f3',
-    'hlx.page': '3a6a37fe-9e07-4aa9-8640-8f358a623271',
-  };
-  const currentDomain = Object.keys(domains)
-    .find((domain) => window.location.host.includes(domain)) || domains[0];
-  let domainId = domains[currentDomain];
-  // Load Privacy in test mode to allow setting cookies on hlx.live and hlx.page
-  if (getConfig().env.name === 'stage') {
-    domainId += '-test';
-  }
-  window.fedsConfig = {
-    privacy: {
-      otDomainId: domainId,
-      documentLanguage: true,
-    },
-  };
-  loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/privacy-standalone.js');
-
-  const privacyTrigger = document.querySelector('footer a[href*="#openPrivacy"]');
-  privacyTrigger?.addEventListener('click', (event) => {
-    event.preventDefault();
-    window.adobePrivacy?.showPreferenceCenter();
-  });
-}
-
-function initSidekick() {
-  const initPlugins = async () => {
-    const { default: init } = await import('./sidekick.js');
-    init({ createTag, loadBlock, loadScript, loadStyle });
-  };
-
-  if (document.querySelector('helix-sidekick')) {
-    initPlugins();
-  } else {
-    document.addEventListener('sidekick-ready', () => {
-      initPlugins();
-    });
-  }
-}
-
 function decorateMeta() {
   const { origin } = window.location;
   const contents = document.head.querySelectorAll('[content*=".hlx."]');
@@ -665,8 +546,9 @@ function decorateMeta() {
       window.lana?.log(`Cannot make URL from metadata - ${meta.content}: ${e.toString()}`);
     }
   });
+}
 
-  // Event-based modal
+function decorateModal() {
   window.addEventListener('modal:open', async (e) => {
     const { miloLibs } = getConfig();
     const { findDetails, getModal } = await import('../blocks/modal/modal.js');
@@ -685,11 +567,9 @@ export async function loadArea(area = document) {
 
   if (isDoc) {
     decorateMeta();
+    decorateModal();
     decorateHeader();
-
-    import('./samplerum.js').then(({ addRumListeners }) => {
-      addRumListeners();
-    });
+    import('./samplerum.js').then(({ addRumListeners }) => { addRumListeners(); });
   }
 
   const sections = decorateSections(area, isDoc);
@@ -707,75 +587,17 @@ export async function loadArea(area = document) {
     // eslint-disable-next-line no-await-in-loop
     await decorateIcons(section.el, config);
 
-    // Post LCP operations.
-    if (isDoc && section.el.dataset.idx === '0') { loadPostLCP(config); }
-
     // Show the section when all blocks inside are done.
     delete section.el.dataset.status;
     delete section.el.dataset.idx;
-  }
 
-  // Post section loading on document
-  if (isDoc) {
-    const georouting = getMetadata('georouting') || config.geoRouting;
-    if (georouting === 'on') {
-      const { default: loadGeoRouting } = await import('../features/georoutingv2/georoutingv2.js');
-      loadGeoRouting(config, createTag, getMetadata, loadBlock, loadStyle);
-    }
-    const richResults = getMetadata('richresults');
-    if (richResults) {
-      const { default: addRichResults } = await import('../features/richresults.js');
-      addRichResults(richResults, { createTag, getMetadata });
-    }
-    loadFooter();
-    const { default: loadFavIcon } = await import('./favicon.js');
-    loadFavIcon(createTag, getConfig(), getMetadata);
-    initSidekick();
+    // Post LCP operations.
+    if (isDoc && section.el.dataset.idx === '0') { loadPostLCP(config); }
   }
 
   // Load everything that can be deferred until after all blocks load.
-  await loadDeferred(area, areaBlocks, config);
-}
-
-// Load everything that impacts performance later.
-export function loadDelayed(delay = 3000) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      loadPrivacy();
-      if (getMetadata('interlinks') === 'on') {
-        const path = `${getConfig().locale.contentRoot}/keywords.json`;
-        import('../features/interlinks.js').then((mod) => { mod.default(path); resolve(mod); });
-      } else {
-        resolve(null);
-      }
-      import('./samplerum.js').then(({ sampleRUM }) => sampleRUM('cwv'));
-    }, delay);
-  });
-}
-
-export const utf8ToB64 = (str) => window.btoa(unescape(encodeURIComponent(str)));
-export const b64ToUtf8 = (str) => decodeURIComponent(escape(window.atob(str)));
-
-export function parseEncodedConfig(encodedConfig) {
-  try {
-    return JSON.parse(b64ToUtf8(decodeURIComponent(encodedConfig)));
-  } catch (e) {
-    console.log(e);
-  }
-  return null;
-}
-
-export function createIntersectionObserver({ el, callback, once = true, options = {} }) {
-  const io = new IntersectionObserver((entries, observer) => {
-    entries.forEach(async (entry) => {
-      if (entry.isIntersecting) {
-        if (once) observer.unobserve(entry.target);
-        callback(entry.target, entry);
-      }
-    });
-  }, options);
-  io.observe(el);
-  return io;
+  const { default: loadDeferred } = await import('./deferred.js');
+  await loadDeferred(isDoc, area, areaBlocks, config);
 }
 
 export function loadLana(options = {}) {
