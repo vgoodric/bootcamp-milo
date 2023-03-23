@@ -1,7 +1,3 @@
-const MILO_TEMPLATES = [
-  '404',
-  'featured-story',
-];
 const MILO_BLOCKS = [
   'accordion',
   'adobetv',
@@ -154,10 +150,6 @@ export const [setConfig, getConfig] = (() => {
   ];
 })();
 
-export function isInTextNode(node) {
-  return node.parentElement.firstChild.nodeType === Node.TEXT_NODE;
-}
-
 export function getMetadata(name, doc = document) {
   const attr = name && name.includes(':') ? 'property' : 'name';
   const meta = doc.head.querySelector(`meta[${attr}="${name}"]`);
@@ -290,63 +282,6 @@ export function appendHtmlPostfix(area = document) {
   });
 }
 
-export const loadScript = (url, type) => new Promise((resolve, reject) => {
-  let script = document.querySelector(`head > script[src="${url}"]`);
-  if (!script) {
-    const { head } = document;
-    script = document.createElement('script');
-    script.setAttribute('src', url);
-    if (type) {
-      script.setAttribute('type', type);
-    }
-    head.append(script);
-  }
-
-  if (script.dataset.loaded) {
-    resolve(script);
-    return;
-  }
-
-  const onScript = (event) => {
-    script.removeEventListener('load', onScript);
-    script.removeEventListener('error', onScript);
-
-    if (event.type === 'error') {
-      reject(new Error(`error loading script: ${script.src}`));
-    } else if (event.type === 'load') {
-      script.dataset.loaded = true;
-      resolve(script);
-    }
-  };
-
-  script.addEventListener('load', onScript);
-  script.addEventListener('error', onScript);
-});
-
-export async function loadTemplate() {
-  const template = getMetadata('template');
-  if (!template) return;
-  const name = template.toLowerCase().replace(/[^0-9a-z]/gi, '-');
-  document.body.classList.add(name);
-  const { miloLibs, codeRoot } = getConfig();
-  const base = miloLibs && MILO_TEMPLATES.includes(name) ? miloLibs : codeRoot;
-  const styleLoaded = new Promise((resolve) => {
-    loadStyle(`${base}/templates/${name}/${name}.css`, resolve);
-  });
-  const scriptLoaded = new Promise((resolve) => {
-    (async () => {
-      try {
-        await import(`${base}/templates/${name}/${name}.js`);
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.log(`failed to load module for ${name}`, err);
-      }
-      resolve();
-    })();
-  });
-  await Promise.all([styleLoaded, scriptLoaded]);
-}
-
 export async function loadBlock(block) {
   const name = block.classList[0];
   const { miloLibs, codeRoot } = getConfig();
@@ -354,7 +289,6 @@ export async function loadBlock(block) {
   const styleLoaded = new Promise((resolve) => {
     loadStyle(`${base}/blocks/${name}/${name}.css`, resolve);
   });
-
   const scriptLoaded = new Promise((resolve) => {
     (async () => {
       try {
@@ -412,7 +346,6 @@ export function decorateAutoBlock(a) {
         a.className = 'modal link-block';
         return true;
       }
-
       // slack uploaded mp4s
       if (key === 'video' && !a.textContent.match('media_.*.mp4')) return false;
 
@@ -517,19 +450,23 @@ function decorateSections(el, isDoc) {
   });
 }
 
-async function loadMartech(config) {
+async function loadMartech() {
   const query = new URL(window.location.href).searchParams.get('martech');
   if (query !== 'off' && getMetadata('martech') !== 'off') {
     const { default: martech } = await import('../martech/martech.js');
-    martech(config, loadScript, getMetadata);
+    martech();
   }
 }
 
 async function loadPostLCP(config) {
-  loadMartech(config);
+  loadMartech();
   const header = document.querySelector('header');
   if (header) { loadBlock(header); }
-  loadTemplate();
+  const template = getMetadata('template');
+  if (template) {
+    const { default: loadTemplate } = await import('./template.js');
+    loadTemplate(template);
+  }
   const { default: loadFonts } = await import('./fonts.js');
   loadFonts(config.locale, loadStyle);
 }
@@ -587,12 +524,12 @@ export async function loadArea(area = document) {
     // eslint-disable-next-line no-await-in-loop
     await decorateIcons(section.el, config);
 
+    // Post LCP operations.
+    if (isDoc && section.el.dataset.idx === '0') { loadPostLCP(config); }
+
     // Show the section when all blocks inside are done.
     delete section.el.dataset.status;
     delete section.el.dataset.idx;
-
-    // Post LCP operations.
-    if (isDoc && section.el.dataset.idx === '0') { loadPostLCP(config); }
   }
 
   // Load everything that can be deferred until after all blocks load.

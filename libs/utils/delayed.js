@@ -1,4 +1,5 @@
-import { getConfig, getMetadata, loadScript } from './utils.js';
+import { getConfig, getMetadata } from './utils.js';
+import loadScript from './script.js';
 
 function loadPrivacy() {
   const domains = {

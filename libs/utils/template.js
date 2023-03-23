@@ -1,10 +1,8 @@
-import { getConfig, getMetadata, loadStyle } from './utils.js';
+import { getConfig, loadStyle } from './utils.js';
 
 const MILO_TEMPLATES = ['404', 'featured-story'];
 
-export default async function loadTemplate() {
-  const template = getMetadata('template');
-  if (!template) return;
+export default async function loadTemplate(template) {
   const name = template.toLowerCase().replace(/[^0-9a-z]/gi, '-');
   document.body.classList.add(name);
   const { miloLibs, codeRoot } = getConfig();

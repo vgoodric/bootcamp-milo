@@ -4,9 +4,9 @@ import {
   decorateLinks,
   getConfig,
   getMetadata,
-  loadScript,
   localizeLink,
 } from '../../utils/utils.js';
+import loadScript from '../../utils/script.js';
 
 import {
   analyticsDecorateList,

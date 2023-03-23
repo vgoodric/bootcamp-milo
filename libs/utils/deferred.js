@@ -1,4 +1,5 @@
-import { getMetadata, loadBlock, createTag, loadScript, loadStyle } from './utils.js';
+import { getMetadata, loadBlock, createTag, loadStyle } from './utils.js';
+import loadScript from './script.js';
 
 function initSidekick() {
   const initPlugins = async () => {
