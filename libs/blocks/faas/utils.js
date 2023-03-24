@@ -7,8 +7,22 @@ import {
   createTag,
 } from '../../utils/utils.js';
 
-const { env, miloLibs, codeRoot } = getConfig();
+const { env, miloLibs, codeRoot, locale } = getConfig();
 let state = {};
+
+const alloyScript = () => {
+  const alloyHead = `window.alloy_load = window.alloy_load || {};
+  window.alloy_load.data = window.alloy_load.data || {};
+  window.alloy_all = window.alloy_all || {};
+  window.alloy_all.data = window.alloy_all.data || {};
+  window.alloy_all.data._adobe_corpnew = window.alloy_all.data._adobe_corpnew || {};
+  window.alloy_all.data._adobe_corpnew.digitalData = window.alloy_all.data._adobe_corpnew.digitalData || {};
+  window.alloy_all.data._adobe_corpnew.digitalData.page = window.alloy_all.data._adobe_corpnew.digitalData.page || {};
+  window.alloy_all.data._adobe_corpnew.digitalData.page.pageInfo = window.alloy_all.data._adobe_corpnew.digitalData.page.pageInfo || {};
+  window.alloy_all.data._adobe_corpnew.digitalData.page.pageInfo.language = '${locale.ietf}';`
+  const script = createTag('script', { type: 'text/javascript' }, alloyHead);
+  document.head.append(script);
+}
 
 export const getFaasHostSubDomain = (environment) => {
   const faasEnv = environment ?? env.name;
@@ -338,6 +352,7 @@ export const makeFaasConfig = (targetState) => {
 };
 
 export const initFaas = (config, targetEl) => {
+  alloyScript();
   if (!targetEl || !config) return null;
   state = config;
   const appEl = targetEl.parentElement;
