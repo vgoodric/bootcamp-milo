@@ -181,6 +181,7 @@ const init = (el) => {
       formData[key] = value;
     }
   });
+  formData['style customTheme'] = el.classList;
   loadMarketoForm(el, formData);
 }
 
@@ -203,8 +204,8 @@ export const loadMarketoForm = (el, formData) => {
     return;
   }
 
-  const backgroundTheme = formData['style backgroundTheme'] || 'white';
-  const layout = formData['style layout'] || 'column1';
+  const backgroundTheme = formData['style backgroundTheme'] || '';
+  const layout = formData['style layout'] || '';
   const customTheme = formData['style customTheme'] || '';
 
   loadScript(`https:${baseURL}/js/forms2/js/forms2.min.js`)
@@ -235,7 +236,7 @@ export const loadMarketoForm = (el, formData) => {
       const marketoForm = createTag('form', { ID: `mktoForm_${formID}`, class: 'hide-errors', style: 'opacity:0; visibility:hidden' });
       formWrapper.append(marketoForm);
       form.append(error, formWrapper);
-      el.parentElement.replaceChildren(form);
+      el.replaceWith(form);
       console.log(form.parentElement);
 
       MktoForms2.loadForm(baseURL, munchkinID, formID, (form) => {
