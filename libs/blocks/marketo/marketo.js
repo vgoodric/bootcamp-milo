@@ -22,29 +22,80 @@ const FORM_ID = 'form id';
 const MUNCHKIN_ID = 'munchkin id';
 const ERROR_MESSAGE = 'error message';
 
-/* Marketo adds default styles that we want to remove */
-const cleanStyleSheets = (baseURL) => {
-  const { styleSheets } = document;
+const initMczDataLayer = () => {
+  window.mcz_marketoForm_pref = window.mcz_marketoForm_pref || {
+    profile: {
+      prefLanguage: '',
+      segLangCode: '',
+    },
+    form: {
+      type: 'marketo_form',
+      subType: 'formSubType',
+    },
+    program: {
+      prefLanguagePresent: true,
+      poi: '',
+      coPartnerNames: '',
+      submitButton: '',
+      campaignIds: {
+        sfdc: '',
+        external: '',
+        retouch: '',
+        onsite: '',
+      },
+    },
+    field_visibility: {
+      phone: 'required',
+      comments: 'visible',
+      functional_area: 'visible',
+      job_title: 'visible',
+      demo: 'visible',
+    },
+    field_filters: {
+      products: '',
+      job_role: '',
+      industry: '',
+      functional_area: '',
+    },
+  };
+}
 
-  [...styleSheets].forEach((sheet) => {
-    if (sheet.href?.includes(baseURL)) {
-      sheet.disabled = true;
-    }
-  });
+const mcz_marketoForm_pref_keys = {
+  'form channel': 'form.subType',
+  'hardcoded poi': 'program.poi',
+  'co-partner names': 'program.coPartnerNames',
+  'campaign id - sfdc': 'program.campaignIds.sfdc',
+  'campaign id - external': 'program.campaignIds.external',
+  'campaign id - retouch': 'program.campaignIds.retouch',
+  'campaign id - onsite': 'program.campaignIds.onsite',
+  'field - phone': 'field_visibility.phone',
+  'field - comments': 'field_visibility.comments',
+  'field - functional area': 'field_visibility.functional_area',
+  'field - job title': 'field_visibility.job_title',
+  'field - demo ': 'field_visibility.demo',
+  'filter - products': 'field_filters.products',
+  'filter - job role': 'field_filters.job_role',
+  'filter - industry': 'field_filters.industry',
+  'filter - functional area': 'field_filters.functional_area',
 };
 
-const cleanFormStyles = (form) => {
-  const formEl = form.getFormElem().get(0);
-
-  formEl?.querySelectorAll('style').forEach((e) => { e.remove(); });
-  formEl?.parentElement?.querySelectorAll('*[style]').forEach((e) => e.removeAttribute('style'));
-};
+const set_inDL = (key, value) => {
+  const dataLayerLocation = mcz_marketoForm_pref_keys[key];
+  if (dataLayerLocation) {
+    const path = dataLayerLocation.split('.');
+    path.reduce(function (prev, curr, index, array) {
+      if (index === array.length - 1) {
+        prev[curr] = value;
+      }
+      return prev ? prev[curr] : undefined;
+    }, window.mcz_marketoForm_pref || self.mcz_marketoForm_pref);
+  } else {
+    console.log('key not found: ', key, mcz_marketoForm_pref_keys[key]);
+  }
+}
 
 const loadForm = (form, formData) => {
   if (!form) return;
-
-  // cleanFormStyles(form);
-  // cleanStyleSheets(formData[BASE_URL]);
 
   if (formData[HIDDEN_FIELDS]) {
     const hiddenFields = {};
@@ -61,7 +112,6 @@ export const formValidate = (form, success, error, errorMessage) => {
   formEl.classList.remove('hide-errors');
   formEl.classList.add('show-warnings');
 
-  // cleanFormStyles(form);
   if (!success && errorMessage) {
     error.textContent = errorMessage;
     error.classList.add('alert');
@@ -99,10 +149,6 @@ const readyForm = (error, form, formData) => {
   const redirectUrl = formData[DESTINATION_URL];
   const errorMessage = formData[ERROR_MESSAGE];
 
-  // Set row width of legal language, without knowing position
-  // const formTexts = formEl.querySelectorAll(".mktoHtmlText");
-  // formTexts[formTexts.length - 1].closest(".mktoFormRow").classList.add("marketo-privacy");
-
   formEl.addEventListener(
     'focus',
     (e) => {
@@ -127,11 +173,23 @@ const init = (el) => {
     [MUNCHKIN_ID]: marketoMunchkinID,
   };
 
+  initMczDataLayer();
   children.forEach((element) => {
     const key = element.children[0]?.textContent.toLowerCase();
     const value = element.children[1]?.textContent;
-    if (key && value) { formData[key] = value; }
+    if (key && value) {
+      formData[key] = value;
+    }
   });
+  console.log('mcz_marketoForm_pref', window.mcz_marketoForm_pref);
+  loadMarketoForm(el, formData)
+}
+
+export const loadMarketoForm = (el, formData) => {
+  for(const key in mcz_marketoForm_pref_keys) {
+    if (formData[key])
+      set_inDL(key, formData[key]);
+  };
 
   const formID = formData[FORM_ID];
   const baseURL = formData[BASE_URL];

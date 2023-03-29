@@ -86,7 +86,7 @@ const init = (el) => {
   }
 
   function set_inDL(key, value) {
-    const dataLayerLocation = mcz_marketoForm_pref_keys[key.toLowerCase()];
+    const dataLayerLocation = mcz_marketoForm_pref_keys[key];
     if (dataLayerLocation) {
       const path = dataLayerLocation.split('.');
       path.reduce(function (prev, curr, index, array) {

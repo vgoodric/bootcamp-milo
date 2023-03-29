@@ -33,6 +33,7 @@
 
 .marketo .mktoForm .mktoFormCol {
   float: none;
+  border: none;
 }
 
 .marketo .mktoForm .mktoFieldWrap {
@@ -84,6 +85,22 @@
 .marketo .mktoForm .mktoField:focus-visible {
   outline: 0;
   box-shadow: inset 1px 1px 0 0 rgb(0 157 245 / 60%), inset -1px -1px 0 0 rgb(0 157 245 / 60%), inset 1px 1px 0 0 rgb(0 157 245 / 60%), inset -1px -1px 0 0 rgb(0 157 245 / 60%), 0 0 0.125rem rgb(82 168 236 / 60%);
+}
+
+.marketo .mktoForm .mktoCheckboxList {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.marketo .mktoForm .mktoCheckboxList .mktoField {
+  width: auto!important;
+}
+
+.marketo .mktoForm .mktoCheckboxList label {
+  /* width: 50%!important; */
 }
 
 .marketo .mktoForm select {
@@ -207,27 +224,36 @@
   background-color: var(--marketo-form-background);
 }
 
+.marketo.column2 .mktoForm > .mktoFormRow {
+  width: 100%;
+}
+
+.marketo.column2 .marketo-error.alert,
 .dialog-modal .marketo .marketo-error.alert {
   margin: 0 auto;
   padding: 40px 0 0;
 }
 
+.marketo.column2 .marketo-form-wrapper,
 .dialog-modal .marketo .marketo-form-wrapper {
   max-width: 800px;
   margin: 0 auto;
   padding: 56px 80px 80px;
 }
 
+.marketo.column2 .marketo-title,
 .dialog-modal .marketo .marketo-title {
   text-align: center;
 }
 
+.marketo.column2 .marketo-description,
 .dialog-modal .marketo .marketo-description {
   margin: 0 0 40px;
   font-size: 16px;
   text-align: center;
 }
 
+.marketo.column2 .mktoForm .mktoFormCol,
 .dialog-modal .marketo .mktoForm {
   display: flex;
   flex-flow: row wrap;
@@ -236,23 +262,28 @@
   width: 100%;
 }
 
+.marketo.column2 .mktoFormRow,
 .dialog-modal .marketo .mktoFormRow {
   width: 100%;
 }
 
+.marketo.column2 .mktoFormRow.marketo-privacy,
 .dialog-modal .marketo .mktoFormRow.marketo-privacy {
   width: 100%;
 }
 
+.marketo.column2 .mktoForm label,
 .dialog-modal .marketo .mktoForm label {
   padding-bottom: 6px;
 }
 
+.marketo.column2 .mktoForm.show-warnings .mktoError,
 .dialog-modal .marketo .mktoForm.show-warnings .mktoError {
   width: 100%;
   margin-left: 0;
 }
 
+.marketo.column2 .mktoForm .mktoField,
 .dialog-modal .marketo .mktoForm .mktoField {
   width: 100%!important;
 }
@@ -262,6 +293,7 @@
     width: 48%;
   }
 
+  .marketo.column2 .mktoFormRow:first-child .mktoFieldWrap,
   .dialog-modal .marketo .mktoFormRow:first-child .mktoFieldWrap {
     padding-top: 12px;
   }
@@ -300,6 +332,10 @@
 }
 
 @media screen and (min-width: 900px) {
+  .marketo.column2 .mktoFormRow {
+    width: 48%;
+  }
+
   .columns .marketo .mktoForm .mktoField {
     width: 50%!important;
   }
