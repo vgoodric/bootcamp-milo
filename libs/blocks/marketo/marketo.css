@@ -99,10 +99,6 @@
   width: auto!important;
 }
 
-.marketo .mktoForm .mktoCheckboxList label {
-  /* width: 50%!important; */
-}
-
 .marketo .mktoForm select {
   appearance: none;
   -webkit-appearance:none;
@@ -224,36 +220,41 @@
   background-color: var(--marketo-form-background);
 }
 
-.marketo.column2 .mktoForm > .mktoFormRow {
-  width: 100%;
-}
-
-.marketo.column2 .marketo-error.alert,
 .dialog-modal .marketo .marketo-error.alert {
   margin: 0 auto;
   padding: 40px 0 0;
 }
 
-.marketo.column2 .marketo-form-wrapper,
 .dialog-modal .marketo .marketo-form-wrapper {
   max-width: 800px;
   margin: 0 auto;
   padding: 56px 80px 80px;
 }
 
-.marketo.column2 .marketo-title,
 .dialog-modal .marketo .marketo-title {
   text-align: center;
 }
 
-.marketo.column2 .marketo-description,
 .dialog-modal .marketo .marketo-description {
   margin: 0 0 40px;
   font-size: 16px;
   text-align: center;
 }
 
-.marketo.column2 .mktoForm .mktoFormCol,
+.marketo.column2 .mktoFormRow,
+.marketo.two-column .mktoFormRow,
+.dialog-modal .marketo .mktoFormRow {
+  width: 100%;
+}
+
+.marketo.column2 .mktoForm .mktoFormRow {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 0 20px;
+}
+
+.marketo.two-column .mktoForm .mktoFormCol,
 .dialog-modal .marketo .mktoForm {
   display: flex;
   flex-flow: row wrap;
@@ -262,38 +263,52 @@
   width: 100%;
 }
 
-.marketo.column2 .mktoFormRow,
-.dialog-modal .marketo .mktoFormRow {
-  width: 100%;
-}
-
 .marketo.column2 .mktoFormRow.marketo-privacy,
+.marketo.two-column .mktoFormRow.marketo-privacy,
 .dialog-modal .marketo .mktoFormRow.marketo-privacy {
   width: 100%;
 }
 
 .marketo.column2 .mktoForm label,
+.marketo.two-column .mktoForm label,
 .dialog-modal .marketo .mktoForm label {
   padding-bottom: 6px;
 }
 
 .marketo.column2 .mktoForm.show-warnings .mktoError,
+.marketo.two-column .mktoForm.show-warnings .mktoError,
 .dialog-modal .marketo .mktoForm.show-warnings .mktoError {
   width: 100%;
   margin-left: 0;
 }
 
+.mktoForm fieldset legend {
+  margin: inherit !important;
+  display: none !important;
+}
+
+.mktoForm .mktoGutter {
+  display: none !important;
+}
+
+.marketo.column2 .mktoForm .mktoFormRow > .mktoFormCol,
+.marketo.two-column .mktoForm > .mktoFormRow {
+  width: 100%;
+}
+
 .marketo.column2 .mktoForm .mktoField,
+.marketo.two-column .mktoForm .mktoField,
 .dialog-modal .marketo .mktoForm .mktoField {
   width: 100%!important;
 }
 
 @media screen and (min-width: 1200px) {
+  .marketo.column2 .mktoFormRow,
   .dialog-modal .marketo .mktoFormRow {
     width: 48%;
   }
 
-  .marketo.column2 .mktoFormRow:first-child .mktoFieldWrap,
+  .marketo.two-column .mktoFormRow:first-child .mktoFieldWrap,
   .dialog-modal .marketo .mktoFormRow:first-child .mktoFieldWrap {
     padding-top: 12px;
   }
@@ -332,7 +347,8 @@
 }
 
 @media screen and (min-width: 900px) {
-  .marketo.column2 .mktoFormRow {
+  .marketo.column2 .mktoFormRow,
+  .marketo.two-column .mktoFormRow {
     width: 48%;
   }
 
@@ -360,4 +376,42 @@
 /* stylelint-disable-next-line selector-id-pattern */
 #mktoStyleLoaded {
   background-color: #123456
+}
+
+.marketo.mcz .mktoForm fieldset legend {
+  margin: inherit !important;
+  display: none !important;
+}
+
+.marketo.mcz .mktoForm .mktoGutter {
+  display: none !important;
+}
+
+.marketo.mcz .mktoForm .mktoField.mktoTextField,
+.marketo.mcz .mktoForm .mktoField.mktoEmailField,
+.marketo.mcz .mktoForm .mktoField.mktoTelField,
+.marketo.mcz .mktoForm textarea[rows="2"],
+.marketo.mcz .mktoForm select {
+  padding: 6px 13px 6px 0 !important;
+  font-size: 14px !important;
+}
+
+.marketo.mcz .mktoForm .mktoRadioList > label,
+.marketo.mcz .mktoForm .mktoCheckboxList > label {
+  width: 90%;
+}
+
+.marketo.mcz .mktoForm .mktoField {
+  line-height: 1.2em !important;
+  font-size: 1em !important;
+  float: left !important;
+  margin-right: 10px;
+  left: 0;
+  position: relative;
+}
+
+.marketo.mcz .mktoForm .mktoRadioList,
+.marketo.mcz .mktoForm .mktoCheckboxList {
+  padding: 0 !important;
+  min-width: 100% !important;
 }
