@@ -305,7 +305,7 @@
 @media screen and (min-width: 1200px) {
   .marketo.column2 .mktoFormRow,
   .dialog-modal .marketo .mktoFormRow {
-    width: 48%;
+    width: 45%;
   }
 
   .marketo.two-column .mktoFormRow:first-child .mktoFieldWrap,

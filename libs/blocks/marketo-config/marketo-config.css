@@ -1,3 +1,9 @@
+/* stylelint-disable selector-class-pattern */
+.marketo .mktoForm {
+  opacity: 1!important;
+  visibility: visible!important;
+}
+
 button {
   cursor: pointer;
 }

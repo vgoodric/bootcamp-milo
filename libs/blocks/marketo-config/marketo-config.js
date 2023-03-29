@@ -7,22 +7,21 @@ import {
   useReducer,
   useState,
 } from '../../deps/htm-preact.js';
-import { loadMarketoForm } from '../marketo/marketo.js';
+import { loadMarketoForm, initMczDataLayer } from '../marketo/marketo.js';
 import { loadStyle, parseEncodedConfig, utf8ToB64, getConfig } from '../../utils/utils.js';
 // import { Input, Select } from './configurator.js'
 import Accordion from '../../ui/controls/Accordion.js';
 
 const LS_KEY = 'marketoFormConfiguratorState';
 const ConfiguratorContext = createContext('marketoForm');
-// const { marketoBaseURL, marketoMunchkinID, marketoFormID } = getConfig();
-const { marketoBaseURL, marketoMunchkinID, marketoFormID } = ['//engage.adobe.com','360-KCI-804','1723']
+
 const defaultState = {
   title: '',
   description: '',
   error_message: '',
-  form_id: marketoFormID,
-  base_url: marketoBaseURL,
-  munchkin_id: marketoMunchkinID,
+  form_id: '1723',
+  base_url: '//engage.adobe.com',
+  munchkin_id: '360-KCI-804',
   destination_url: '',
   hidden_fields: '',
   'form.subType': '',
@@ -45,7 +44,7 @@ const defaultState = {
   style_layout: '',
   title_size: 'h3',
   title_align: 'center',
-style_customTheme: '',
+  style_customTheme: '',
 };
 
 const getHashConfig = () => {
@@ -264,12 +263,9 @@ const PrefPanel = () => html`
 const StylePanel = () => html`
   <${Select} label="Background Theme" prop="style_backgroundTheme" options="${{ white: 'White', dark: 'Dark' }}" />
   <${Select} label="Layout" prop="style_layout" options="${{ column1: '1 Column', column2: '2 Columns' }}" />
-  <${Select}
-    label="Title Size"
-    prop="title_size"
-    options="${{ h1: 'H1', h2: 'H2', h3: 'H3', h4: 'H4', h5: 'H5', h6: 'H6', p: 'P' }}" />
+  <${Select} label="Title Size" prop="title_size" options="${{ h1: 'H1', h2: 'H2', h3: 'H3', h4: 'H4', h5: 'H5', h6: 'H6', p: 'P' }}" />
   <${Select} label="Title Alignment" prop="title_align" options="${{ left: 'Left', center: 'Center', right: 'Right' }}" />
-  <${Select} label="Custom Theme" prop="style_customTheme" options="${{ none: 'None' }}" />
+  <${Select} label="Custom Theme" prop="style_customTheme" options="${{ none: 'None', mcz: 'MCZ' }}" />
 `;
 
 const Configurator = ({ rootEl }) => {
@@ -285,7 +281,7 @@ const Configurator = ({ rootEl }) => {
     title: 'Required',
     content: html`<${FieldsPanel}/>`,
   }, {
-    title: 'Pref',
+    title: 'Preferences',
     content: html`<${PrefPanel}/>`,
   },
   {
@@ -318,7 +314,7 @@ const Configurator = ({ rootEl }) => {
 export default async function init(el) {
   // const [state, dispatch] = useReducer(reducer, getInitialState() || defaultState);
   // const title = rootEl.querySelector('h1, h2, h3, h4, h5, h6, p').textContent || 'Configurator';
-
+  initMczDataLayer();
   loadStyle('/libs/ui/page/page.css');
   loadStyle('/libs/blocks/marketo/marketo.css');
   const app = html`<${Configurator} rootEl=${el} />`;
