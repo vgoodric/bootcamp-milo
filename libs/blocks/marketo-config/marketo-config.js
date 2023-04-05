@@ -1,12 +1,4 @@
-import {
-  createContext,
-  html,
-  render,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from '../../deps/htm-preact.js';
+import { createContext, html, render, useContext, useEffect, useReducer, useState } from '../../deps/htm-preact.js';
 import { loadMarketoForm, initMczDataLayer } from '../marketo/marketo.js';
 import { loadStyle, parseEncodedConfig, utf8ToB64, getConfig } from '../../utils/utils.js';
 // import { Input, Select } from './configurator.js'

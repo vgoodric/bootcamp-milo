@@ -296,12 +296,6 @@
   width: 100%;
 }
 
-.marketo.column2 .mktoForm .mktoField,
-.marketo.two-column .mktoForm .mktoField,
-.dialog-modal .marketo .mktoForm .mktoField {
-  width: 100%!important;
-}
-
 @media screen and (min-width: 1200px) {
   .marketo.column2 .mktoFormRow,
   .dialog-modal .marketo .mktoFormRow {
@@ -392,7 +386,7 @@
 .marketo.mcz .mktoForm .mktoField.mktoTelField,
 .marketo.mcz .mktoForm textarea[rows="2"],
 .marketo.mcz .mktoForm select {
-  padding: 6px 13px 6px 0 !important;
+  padding: 6px !important;
   font-size: 14px !important;
 }
 
