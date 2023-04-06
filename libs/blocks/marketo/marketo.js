@@ -25,37 +25,56 @@ const ERROR_MESSAGE = 'error message';
 export const initMczDataLayer = () => {
   window.mcz_marketoForm_pref = window.mcz_marketoForm_pref || {
     profile: {
-      prefLanguage: '',
-      segLangCode: '',
+      //Profile Settings
+      prefLanguage: "", //Preferred Language from browser
+      segLangCode: "", //Markto Segmentation Language
+      known_visitor: "X", //X,A,B,C - known visitor level
     },
     form: {
-      type: 'marketo_form',
-      subType: 'formSubType',
+      //form settings
+      type: "marketo_form", //This is a Marketo Form default value
+      subType: "seminar", //seminar, whitepaper_form, nurture, webinar, strategy_webinar, demo, etc
+      sucess: {
+        //success handling
+        type: "redirect", //redirect, msg, none
+        content: "https://www.adobe.com/redirect", //redirect url, message, none
+        delay: 5000, //delay in ms to wait for Marketo before fallback redirect
+        confirm: false, //true,false - form is is ready for redirect
+      },
+      version: "1.0.0", //version of the form from Marketo
     },
     program: {
-      prefLanguagePresent: true,
-      poi: '',
-      coPartnerNames: '',
-      submitButton: '',
+      //Marketo Program Settings
+      additional_form_id: "", //Additional Form ID to pull values from
+      poi: "", //MARKETOENGAGEMENTPLATFORM - hardcoded product poi will be hidden
+      coPartnerNames: "Partner1", //Partner1, Partner2
       campaignIds: {
-        sfdc: '',
-        external: '',
-        retouch: '',
-        onsite: '',
+        //Campaign IDs
+        sfdc: "7011212715TT41tEsT", //Salesforce Campaign ID
+        external: "7011212721TT41tEsT", //External Campaign ID
+        retouch: "a3Fa212725TT41tEsT", //Retouch Campaign ID
+        onsite: "a3Fa212731TT41tEsT", //Onsite Campaign ID
+        cgen: "ABBB", //CGEN ID
+        cuid: "ABBB", //CUID ID
+      },
+      content: {
+        //Content Definition
+        type: "pdf", //pdf, video, audio, none
+        content_id: "123456", //pdf id, video id, none
       },
     },
     field_visibility: {
-      phone: 'required',
-      comments: 'visible',
-      functional_area: 'visible',
-      job_title: 'visible',
-      demo: 'visible',
+      //These fields will be hidden or visible
+      phone: "required", //visible, hidden, required
+      comments: "visible", //visible, hidden
+      demo: "visible", //visible, hidden
     },
     field_filters: {
-      products: '',
-      job_role: '',
-      industry: '',
-      functional_area: '',
+      //These fields will be hidden or visible with specific values
+      products: "POI-Dxonly", //POI-Dxonly, hidden, all
+      job_role: "Job Role-HiLevel", //Job Role-HiLevel, hidden, all
+      industry: "Industry-Manufacturing", //Industry-Manufacturing, hidden, all
+      functional_area: "", //Functional Area-DX, hidden, all
     },
   };
 }
@@ -70,8 +89,6 @@ const mcz_marketoForm_pref_keys = {
   'campaign id - onsite': 'program.campaignIds.onsite',
   'field - phone': 'field_visibility.phone',
   'field - comments': 'field_visibility.comments',
-  'field - functional area': 'field_visibility.functional_area',
-  'field - job title': 'field_visibility.job_title',
   'field - demo ': 'field_visibility.demo',
   'filter - products': 'field_filters.products',
   'filter - job role': 'field_filters.job_role',
@@ -187,7 +204,7 @@ const init = (el) => {
 
 export const loadMarketoForm = (el, formData) => {
   console.log(formData);
-  for(const [key, value] of Object.entries(mcz_marketoForm_pref_keys)) {
+  for (const [key, value] of Object.entries(mcz_marketoForm_pref_keys)) {
     if (formData[key])
       set_inDL(key, formData[key]);
     if (formData[value])
