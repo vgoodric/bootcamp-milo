@@ -13,7 +13,7 @@
 /*
  * Marketo Form
  */
-import { loadScript, createTag, getConfig } from '../../utils/utils.js';
+import { loadScript, createTag } from '../../utils/utils.js';
 
 const DESTINATION_URL = 'destination url';
 const HIDDEN_FIELDS = 'hidden fields';
@@ -182,13 +182,8 @@ const readyForm = (error, form, formData) => {
 };
 
 const init = (el) => {
-  const { marketoBaseURL, marketoMunchkinID, marketoFormID } = getConfig();
   const children = Array.from(el.querySelectorAll(':scope > div'));
-  const formData = {
-    [FORM_ID]: marketoFormID,
-    [BASE_URL]: marketoBaseURL,
-    [MUNCHKIN_ID]: marketoMunchkinID,
-  };
+  const formData = {};
 
   initMczDataLayer();
   children.forEach((element) => {
@@ -224,50 +219,55 @@ export const loadMarketoForm = (el, formData) => {
   const backgroundTheme = formData['style backgroundTheme'] || '';
   const layout = formData['style layout'] || '';
   const customTheme = formData['style customTheme'] || '';
+  const styles = [backgroundTheme, layout, customTheme]
+  el.className = 'marketo';
+  styles.filter(Boolean).forEach(style => { el.classList.add(style) });
 
-  loadScript(`https:${baseURL}/js/forms2/js/forms2.min.js`)
-    .then(() => {
-      const { MktoForms2 } = window;
-      if (!MktoForms2) throw new Error('Marketo forms not loaded');
+  let marketoForm = el.querySelector('.mktoForm');
 
-      const form = createTag('div', {
-        class: `marketo ${backgroundTheme} ${layout} ${customTheme}`,
+  if (!marketoForm || marketoForm.id != `mktoForm_${formID}`) {
+    const formID = formData[FORM_ID];
+    const fragment = new DocumentFragment();
+    const error = createTag('p', { class: 'marketo-error', 'aria-live': 'polite' });
+    const formWrapper = createTag('section', { class: 'marketo-form-wrapper' });
+    const span1 = createTag('span', { id: 'mktoForms2BaseStyle', style: 'display:none;' });
+    const span2 = createTag('span', { id: 'mktoForms2ThemeStyle', style: 'display:none;' });
+
+    formWrapper.append(span1, span2);
+
+    if (formData.title) {
+      const title = createTag('h3', { class: 'marketo-title' }, formData.title);
+      formWrapper.append(title);
+    }
+    if (formData.description) {
+      const description = createTag('p', { class: 'marketo-description' }, formData.description);
+      formWrapper.append(description);
+    }
+
+    const marketoForm = createTag('form', { ID: `mktoForm_${formID}`, class: 'hide-errors', style: 'opacity:0; visibility:hidden' });
+    formWrapper.append(marketoForm);
+    fragment.append(error, formWrapper);
+    el.replaceChildren(fragment);
+    console.log(marketoForm);
+
+    loadScript(`https:${baseURL}/js/forms2/js/forms2.min.js`)
+      .then(() => {
+        const { MktoForms2 } = window;
+        if (!MktoForms2) throw new Error('Marketo forms not loaded');
+
+        MktoForms2.loadForm(baseURL, munchkinID, formID, (form) => {
+          loadForm(form, formData);
+        });
+
+        MktoForms2.whenReady((form) => {
+          readyForm(error, form, formData);
+        });
+      })
+      .catch(() => {
+        /* c8 ignore next */
+        el.style.display = 'none';
       });
-
-      const error = createTag('p', { class: 'marketo-error', 'aria-live': 'polite' });
-      const formWrapper = createTag('section', { class: 'marketo-form-wrapper' });
-
-      const span1 = createTag('span', { id: 'mktoForms2BaseStyle', style: 'display:none;' });
-      const span2 = createTag('span', { id: 'mktoForms2ThemeStyle', style: 'display:none;' });
-      formWrapper.append(span1, span2);
-
-      if (formData.title) {
-        const title = createTag('h3', { class: 'marketo-title' }, formData.title);
-        formWrapper.append(title);
-      }
-      if (formData.description) {
-        const description = createTag('p', { class: 'marketo-description' }, formData.description);
-        formWrapper.append(description);
-      }
-
-      const marketoForm = createTag('form', { ID: `mktoForm_${formID}`, class: 'hide-errors', style: 'opacity:0; visibility:hidden' });
-      formWrapper.append(marketoForm);
-      form.append(error, formWrapper);
-      el.replaceWith(form);
-      console.log(form.parentElement);
-
-      MktoForms2.loadForm(baseURL, munchkinID, formID, (form) => {
-        loadForm(form, formData);
-      });
-
-      MktoForms2.whenReady((form) => {
-        readyForm(error, form, formData);
-      });
-    })
-    .catch(() => {
-      /* c8 ignore next */
-      el.style.display = 'none';
-    });
+  }
 };
 
 export default init;
