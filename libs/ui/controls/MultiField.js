@@ -13,10 +13,6 @@ const FieldSet = ({ fields, onDelete }) => html`
   `;
 
 const getFieldNameOrId = (fields) => fields.map((field) => field.props.name || field.props.id);
-// const getFieldNameOrId = (fields) => fields.map((field) => {
-//   console.log(">>>",field)
-//   return field?.props?.name || field?.props?.id
-// });
 
 const getEmptyDataObj = (keys) => keys.reduce((obj, key) => {
   obj[key] = '';
@@ -54,7 +50,6 @@ const MultiField = ({ children, className = '', values = [], onChange, subTitle,
   );
 
   const addFields = () => {
-    console.log("addFields()",keys)
     onChange([...values, getEmptyDataObj(keys)]);
   };
 

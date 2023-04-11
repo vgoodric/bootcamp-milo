@@ -492,7 +492,7 @@ export const defaultState = {
   filterLogic: 'or',
   filters: [],
   filtersCustom: [],
-  filterCustomLabels: [],
+  s: [],
   filtersShowEmpty: false,
   gutter: '4x',
   includeTags: [],
