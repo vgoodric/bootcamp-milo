@@ -187,30 +187,38 @@ const getLocalTitle = (tag, country, lang) => tag[`title.${lang}_${country}`]
   || tag[`title.${lang}`]
   || tag.title;
 
-const getFilterObj = ({ excludeTags, filterTag, icon, openedOnLoad }, tags, state) => {
-  if (!filterTag?.[0]) return null;
-  const tagId = filterTag[0];
+const getFilterObj = ({ excludeTags, filterTag, filterCustomTag, icon, openedOnLoad, label }, tags, state, useCustomFilters, strs) => {
+  if (!filterTag?.[0] && !filterCustomTag?.[0]) return null;
+  const tagId = useCustomFilters ? filterCustomTag[0] : filterTag[0];
   const tag = findTagById(tagId, tags);
   if (!tag) return null;
   const country = state.country.split('/')[1];
   const lang = state.language.split('/')[1];
   const items = Object.values(tag.tags)
-    .map((itemTag) => {
-      if (excludeTags.includes(itemTag.tagID)) return null;
-      const label = getLocalTitle(itemTag, country, lang);
-      return {
-        id: itemTag.tagID,
-        label: label.replace('&amp;', '&'),
-      };
-    })
-    .filter((i) => i !== null)
-    .sort(alphaSort);
+  .map((itemTag) => {
+    if (excludeTags?.includes(itemTag.tagID)) return null;
+    const label = getLocalTitle(itemTag, country, lang);
+    return {
+      id: itemTag.tagID,
+      label: label.replace('&amp;', '&'),
+    };
+  })
+  .filter((i) => i !== null)
+  .sort(alphaSort);
 
+  const getLocalLabel = label => {
+    console.log("getLocalLabel()", label, strs);
+    if (!label) return;
+    if (!strs) return label;
+
+    return label.match(/^{.*}$/) ? strs[label.replace('{','').replace('}','')] : label;
+  }
+    
   const filterObj = {
     id: tagId,
     openedOnLoad: !!openedOnLoad,
     items,
-    group: getLocalTitle(tag, country, lang),
+    group: useCustomFilters && label ? getLocalLabel(label) : getLocalTitle(tag, country, lang)
   };
 
   if (icon) {
@@ -220,14 +228,17 @@ const getFilterObj = ({ excludeTags, filterTag, icon, openedOnLoad }, tags, stat
   return filterObj;
 };
 
-const getFilterArray = async (state) => {
-  if (!state.showFilters || state.filters.length === 0) {
+const getFilterArray = async (state, strs) => {
+  if (!state.showFilters || state.filters.length === 0 && state.filtersCustom.length === 0) {
     return [];
   }
 
   const { tags } = await getTags(state.tagsUrl);
-  const filters = state.filters
-    .map((filter) => getFilterObj(filter, tags, state))
+  const useCustomFilters = state.filterBuildPanel === 'custom';
+  const selectedFilters = useCustomFilters ? state.filtersCustom : state.filters;
+  const customLabels = useCustomFilters ? state.customLabels : state.filters;
+  const filters = selectedFilters
+    .map((filter) => getFilterObj(filter, tags, state, useCustomFilters, strs))
     .filter((filter) => filter !== null);
   return filters;
 };
@@ -319,7 +330,7 @@ export const getConfig = async (state, strs = {}) => {
       eventFilter: state.filterEvent,
       type: state.showFilters ? state.filterLocation : 'left',
       showEmptyFilters: state.filtersShowEmpty,
-      filters: await getFilterArray(state),
+      filters: await getFilterArray(state, strs),
       filterLogic: state.filterLogic,
       i18n: {
         leftPanel: {
@@ -476,9 +487,12 @@ export const defaultState = {
   fallbackEndpoint: '',
   featuredCards: [],
   filterEvent: '',
+  filterBuildPanel: 'automatic',
   filterLocation: 'left',
   filterLogic: 'or',
   filters: [],
+  filtersCustom: [],
+  filterCustomLabels: [],
   filtersShowEmpty: false,
   gutter: '4x',
   includeTags: [],
