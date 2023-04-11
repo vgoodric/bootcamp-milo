@@ -235,6 +235,7 @@ const getFilterArray = async (state, strs) => {
   const { tags } = await getTags(state.tagsUrl);
   const useCustomFilters = state.filterBuildPanel === 'custom';
   const selectedFilters = useCustomFilters ? state.filtersCustom : state.filters;
+  const customLabels = useCustomFilters ? state.customLabels : state.filters;
   const filters = selectedFilters
     .map((filter) => getFilterObj(filter, tags, state, useCustomFilters, strs))
     .filter((filter) => filter !== null);
@@ -490,6 +491,7 @@ export const defaultState = {
   filterLogic: 'or',
   filters: [],
   filtersCustom: [],
+  filterCustomLabels: [],
   filtersShowEmpty: false,
   gutter: '4x',
   includeTags: [],

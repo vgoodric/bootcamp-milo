@@ -480,6 +480,7 @@ const FilterPanel = ({ tagsData }) => {
   const allTags = getTagTree(tagsData);
 
   const onChange = (prop) => (values) => {
+    console.log("onChange()", values)
     context.dispatch({
       type: 'SELECT_CHANGE',
       prop,
@@ -524,6 +525,23 @@ const FilterPanel = ({ tagsData }) => {
       <${TagSelect} id="filterCustomTag" options=${allTags} label="Main Tag" />
       <${FormInput} label="Icon Path" name="icon" />
       <${FormInput} label="Opened on load" name="openedOnLoad" type="checkbox" />
+
+
+      <!-- NESTED MULTIFIELD -->
+      <${MultiField}
+        onChange=${onChange('filterCustomLabel')}
+        className="filterCustoms"
+        values=${context.state.filterCustomLabel}
+        title="Custom Label"
+        subTitle=""
+      >
+        <${FormInput} label="Add a custom filter label" name="label" />
+        <${TagSelect} id="filterCustomLabel" options=${allTags} label="Filter Tag" />
+        <${FormInput} label="Icon Path" name="icon" />
+        <${FormInput} label="Opened on load" name="openedOnLoad" type="checkbox" />
+      <//>
+
+
     <//>
   `;
 
