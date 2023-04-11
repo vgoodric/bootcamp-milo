@@ -66,6 +66,7 @@ const AUTO_BLOCKS = [
   { faas: '/tools/faas' },
   { fragment: '/fragments/' },
   { instagram: 'https://www.instagram.com' },
+  { marketo: '/tools/marketo'},
   { slideshare: 'https://www.slideshare.net' },
   { tiktok: 'https://www.tiktok.com' },
   { twitter: 'https://twitter.com' },
