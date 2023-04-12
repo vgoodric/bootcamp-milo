@@ -57,6 +57,7 @@ const loadForm = (form, formData) => {
 };
 
 export const formValidate = (form, success, error, errorMessage) => {
+  console.log('formValidate', window.mcz_marketoForm_pref?.form)
   const formEl = form.getFormElem().get(0);
   formEl.classList.remove('hide-errors');
   formEl.classList.add('show-warnings');
@@ -71,7 +72,28 @@ export const formValidate = (form, success, error, errorMessage) => {
   }
 };
 
+const waitForDataLayerUpdate = (confirmFlag, delay, maxRetries = 10) => {
+  if (!delay) return Promise.reject(new Error('Invalid delay parameter'));
+  return new Promise((resolve, reject) => {
+    let retries = 0;
+
+    const checkConfirmFlag = () => {
+      if (confirmFlag()) {
+        resolve();
+      } else if (retries < maxRetries) {
+        retries++;
+        setTimeout(checkConfirmFlag, delay / maxRetries);
+      } else {
+        reject(new Error('Max delay reached. Proceeding without data layer.'));
+      }
+    };
+
+    checkConfirmFlag();
+  });
+};
+
 export const formSuccess = (form, redirectUrl) => {
+  console.log('formSuccess', window.mcz_marketoForm_pref?.form)
   const formEl = form.getFormElem().get(0);
   const parentModal = formEl.closest('.dialog-modal');
   const mktoSubmit = new Event('mktoSubmit');
@@ -79,24 +101,31 @@ export const formSuccess = (form, redirectUrl) => {
   window.dispatchEvent(mktoSubmit);
   window.mktoSubmitted = true;
 
-  /* c8 ignore next 5 */
-  if (parentModal && !redirectUrl) {
+  if (parentModal) {
     const closeButton = parentModal.querySelector('.dialog-close');
     closeButton.click();
-    return false;
   }
-  /* c8 ignore next 4 */
-  if (redirectUrl) {
-    window.location.href = redirectUrl;
-    return false;
-  }
+  const delay = window.mcz_marketoForm_pref?.form?.sucess?.delay ?? 5000;
+  const confirm = window.mcz_marketoForm_pref?.form?.sucess?.confirm ?? false;
 
-  return true;
+  waitForDataLayerUpdate(() => confirm, delay)
+    .then(() => {
+      /* c8 ignore next 1 */
+      window.location.href = redirectUrl;
+    })
+    .catch((error) => {
+      /* c8 ignore next 2 */
+      console.warn(error.message);
+      window.location.href = redirectUrl;
+    });
+
+  return false;
 };
 
 const readyForm = (error, form, formData) => {
+  console.log('readyForm', window.mcz_marketoForm_pref?.form)
   const formEl = form.getFormElem().get(0);
-  const redirectUrl = formData[DESTINATION_URL];
+  const destinationUrl = formData[DESTINATION_URL];
   const errorMessage = formData[ERROR_MESSAGE];
 
   // Set row width of legal language, without knowing position
@@ -107,11 +136,11 @@ const readyForm = (error, form, formData) => {
     if (e.target.type === 'submit') return;
     const pageTop = document.querySelector('header')?.offsetHeight ?? 0;
     const targetPosition = e.target?.getBoundingClientRect().top ?? 0;
-    const offsetPosition = targetPosition + window.pageYOffset - pageTop - window.innerHeight /2 ;
+    const offsetPosition = targetPosition + window.pageYOffset - pageTop - window.innerHeight / 2;
     window.scrollTo(0, offsetPosition);
   }, true);
   form.onValidate((success) => formValidate(form, success, error, errorMessage));
-  form.onSuccess(() => formSuccess(form, redirectUrl));
+  form.onSuccess(() => formSuccess(form, destinationUrl));
 };
 
 const init = (el) => {
