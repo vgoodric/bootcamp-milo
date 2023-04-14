@@ -21,12 +21,12 @@ const getImsToken = async () => {
 };
 
 export default async function init() {
-  const ostAosAccessToken = await getImsToken();
-  const ostCountry = 'US';
-  const ostLanguage = 'en';
-  const ostEnvironment = 'PROD';
-  const ostWcsApiKey = 'wcms-commerce-ims-ro-user-cc';
-  const ostAosApiKey = 'wcms-commerce-ims-user-prod';
+  const aosAccessToken = await getImsToken();
+  const country = 'US';
+  const language = 'en';
+  const environment = 'PROD';
+  const wcsApiKey = 'wcms-commerce-ims-ro-user-cc';
+  const aosApiKey = 'wcms-commerce-ims-user-prod';
   const checkoutClientId = 'creative';
   const rootContainer = document.querySelector('.ost');
   const searchParameters = new URLSearchParams(window.location.search);
@@ -36,12 +36,12 @@ export default async function init() {
     await loadScript(OST_SCRIPT_URL);
   }
   window.ost.openOfferSelectorTool({
-    ostCountry,
-    ostLanguage,
-    ostEnvironment,
-    ostWcsApiKey,
-    ostAosApiKey,
-    ostAosAccessToken,
+    country,
+    language,
+    environment,
+    wcsApiKey,
+    aosApiKey,
+    aosAccessToken,
     checkoutClientId,
     searchParameters,
   });
