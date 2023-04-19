@@ -17,8 +17,8 @@ export default async function init(el) {
   window.require(['vs/editor/editor.main'], async () => {
     const diffEditor = window.monaco.editor.createDiffEditor(el);
 
-    const originalMd = getMd('/libs/blocks/amt/original.md');
-    const modifiedMd = getMd('/libs/blocks/amt/modified.md');
+    const originalMd = getMd('/drafts/cmillar/adobe-digital-experiences-case-study-de.md');
+    const modifiedMd = getMd('/drafts/cmillar/adobe-digital-experiences-case-study.md');
 
     Promise.all([originalMd, modifiedMd]).then((result) => {
       const original = window.monaco.editor.createModel(result[0], 'markdown');
