@@ -1,5 +1,11 @@
 import { getConfig, loadScript } from '../../utils/utils.js';
 
+async function getMd(path) {
+  const resp = await fetch(path);
+  if (!resp.ok) return null;
+  return resp.text();
+}
+
 export default async function init(el) {
   const config = getConfig();
   const base = config.miloLibs || config.codeRoot;
@@ -8,51 +14,16 @@ export default async function init(el) {
 
   require.config({ paths: { vs: `${base}/deps/amt/vs` } });
 
-  require([`vs/editor/editor.main`], async function () {
+  window.require(['vs/editor/editor.main'], async () => {
+    const diffEditor = window.monaco.editor.createDiffEditor(el);
 
-    var diffEditor = monaco.editor.createDiffEditor(el);
+    const originalMd = getMd('/libs/blocks/amt/original.md');
+    const modifiedMd = getMd('/libs/blocks/amt/modified.md');
 
-    Promise.all([xhr('/libs/blocks/amt/original.md'), xhr('/libs/blocks/amt/modified.md')]).then(function (r) {
-      var originalTxt = r[0].responseText;
-      var modifiedTxt = r[1].responseText;
-
-      diffEditor.setModel({
-        original: monaco.editor.createModel(originalTxt, 'javascript'),
-        modified: monaco.editor.createModel(modifiedTxt, 'javascript')
-      });
+    Promise.all([originalMd, modifiedMd]).then((result) => {
+      const original = window.monaco.editor.createModel(result[0], 'markdown');
+      const modified = window.monaco.editor.createModel(result[1], 'markdown');
+      diffEditor.setModel({ original, modified });
     });
   });
-
-  function xhr(url) {
-    var req = null;
-    return new Promise(
-      function (c, e) {
-        req = new XMLHttpRequest();
-        req.onreadystatechange = function () {
-          if (req._canceled) {
-            return;
-          }
-
-          if (req.readyState === 4) {
-            if ((req.status >= 200 && req.status < 300) || req.status === 1223) {
-              c(req);
-            } else {
-              e(req);
-            }
-            req.onreadystatechange = function () {};
-          }
-        };
-
-        req.open('GET', url, true);
-        req.responseType = '';
-
-        req.send(null);
-      },
-      function () {
-        req._canceled = true;
-        req.abort();
-      }
-    );
-  }
-
 }
