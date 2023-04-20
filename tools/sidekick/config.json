@@ -28,8 +28,7 @@
       "title": "Diff",
       "environments": [ "edit" ],
       "url": "/drafts/sarangi/amt",
-      "excludePaths": [ "/**" ],
-      "includePaths": [ "**/:x**" ]
+      "includePaths": [ "**.docx**" ]
     },
     {
       "containerId": "tools",
