@@ -3,3 +3,7 @@
   width: 100%;
   border: 1px solid grey
 }
+
+.amt .context-view.monaco-menu-container {
+  background: #FFF;
+}

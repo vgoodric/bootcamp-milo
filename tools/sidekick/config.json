@@ -24,6 +24,15 @@
     },
     {
       "containerId": "tools",
+      "id": "diff",
+      "title": "Diff",
+      "environments": [ "edit" ],
+      "url": "/drafts/sarangi/amt",
+      "excludePaths": [ "/**" ],
+      "includePaths": [ "**/:x**" ]
+    },
+    {
+      "containerId": "tools",
       "id": "localize",
       "title": "Localize",
       "environments": [ "edit" ],

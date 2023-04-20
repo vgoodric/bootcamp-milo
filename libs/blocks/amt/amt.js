@@ -15,7 +15,7 @@ export default async function init(el) {
   require.config({ paths: { vs: `${base}/deps/amt/vs` } });
 
   window.require(['vs/editor/editor.main'], async () => {
-    const diffEditor = window.monaco.editor.createDiffEditor(el);
+    const diffEditor = window.monaco.editor.createDiffEditor(el, { renderSideBySide: false });
 
     const originalMd = getMd('/drafts/cmillar/adobe-digital-experiences-case-study-de.md');
     const modifiedMd = getMd('/drafts/cmillar/adobe-digital-experiences-case-study.md');
