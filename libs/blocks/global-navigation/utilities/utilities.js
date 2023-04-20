@@ -27,10 +27,10 @@ export const getFedsPlaceholderConfig = () => {
   }
 
   if (window.location.origin.includes('.hlx.')) {
-    const baseMiloUrl = env.name === 'prod'
+    const baseMiloUrl = () => (env.name === 'prod'
       ? 'https://main--milo--adobecom.hlx.live'
-      : 'https://main--milo--adobecom.hlx.page';
-    libOrigin = miloLibs || `${baseMiloUrl}/libs`;
+      : 'https://main--milo--adobecom.hlx.page');
+    libOrigin = miloLibs || `${baseMiloUrl()}/libs`;
   }
 
   return {
