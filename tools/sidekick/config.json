@@ -92,7 +92,7 @@
       "environments": [ "edit", "dev", "preview" ],
       "url": "/tools/ost",
       "includePaths": [ "**.docx**" ]
-    }
+    },
     {
       "containerId": "tools",
       "id": "offerpreview",
