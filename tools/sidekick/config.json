@@ -98,6 +98,10 @@
       "id": "offerpreview",
       "title": "Offer preview",
       "environments": [ "edit", "dev", "preview" ],
+      "isPalette": true,
+      "passConfig": true,
+      "passReferrer": true,
+      "paletteRect": "top: auto; bottom: 25px; left: 75px; height: 388px; width: 360px;",
       "url": "/tools/commerce",
       "includePaths": [ "**.docx**" ]
     }
