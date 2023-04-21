@@ -84,6 +84,14 @@
       "paletteRect": "top: auto; bottom: 25px; left: 75px; height: 388px; width: 360px;",
       "url": "/tools/locale-nav",
       "includePaths": [ "**.docx**" ]
+    },
+    {
+      "containerId": "tools",
+      "id": "ost",
+      "title": "Use offer",
+      "environments": [ "edit", "dev", "preview" ],
+      "url": "/tools/ost",
+      "includePaths": [ "**.docx**" ]
     }
   ]
 }
