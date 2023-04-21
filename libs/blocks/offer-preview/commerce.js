@@ -33,21 +33,13 @@ const getDetails = async (path) => {
   }
 };
 
-const getCurrentDetails = async () => {
-  const { origin, pathname } = new URL(referrer);
-  const split = origin.split('.');
-  const topLevel = split.slice(Math.max(split.length - 2, 1)).join('.');
-  const isEdit = topLevel === 'google.com' || topLevel === 'sharepoint.com';
-  return isEdit ? getDetails() : getDetails(pathname);
-}
-
 const getStatus = async (li, localePath) => {
   const page = await getDetails(localePath);
   const actions = createTag('div', { class: 'actions' }, [page.edit, page.preview, page.live]);
   li.append(actions);
 };
 
-const decorateLocales = (current) => {
+const decorateOfferDetails = (current) => {
   const currLocale = current.locale.prefix.replace('/', '');
   delete locales[currLocale];
   return Object.keys(locales).map((key) => {
@@ -72,27 +64,21 @@ const handleSearch = (e, els) => {
   });
 };
 
-const decorateSearch = (el, current) => {
-  const search = createTag('input', { class: 'locale-search', placeholder: 'Locales' });
+const decorateSearch = (el) => {
+  const search = createTag('input', { class: 'locale-search', placeholder: 'Search offer' });
   const icon = createTag('div', { class: 'locale-search-icon' });
   const wrapper = createTag('div', { class: 'locale-search-wrapper' }, [search, icon]);
-  const localeEls = decorateLocales(current);
-  const list = createTag('ul', { class: 'locales' }, localeEls);
-  search.addEventListener('keyup', (e) => { handleSearch(e, localeEls); });
+  const offerDetails = decorateOfferDetails();
+  const list = createTag('ul', { class: 'locales' }, offerDetails);
+  search.addEventListener('keyup', (e) => { handleSearch(e, offerDetails); });
   el.append(wrapper, list);
 };
 
-const decorateHeader = (el, page) => {
-  const currentHeading = createTag('span', null, 'Current');
-  const actionsText = '<span>Edit</span><span>Preview</span><span>Live</span>';
-  const actionsHeading = createTag('div', { class: 'actions' }, actionsText);
+const decorateHeader = (el) => {
   const header = createTag('div', { class: 'sk-header' });
-  header.append(currentHeading, actionsHeading);
-  const currentLocale = page.locale.prefix.replace('/', '') || 'us';
-  const currentPage = createTag('div', { class: 'current-page detail' }, `<span>${currentLocale}</span>`);
-  const currentActions = createTag('div', { class: 'actions' }, [page.edit, page.preview, page.live]);
-  currentPage.append(currentActions);
-  el.append(header, currentPage);
+  const heading = createTag('span', null, 'Offer details');
+  header.append(heading);
+  el.append(header);
 };
 
 function detectContext() {
@@ -101,7 +87,6 @@ function detectContext() {
 
 export default async function init(el) {
   detectContext();
-  const current = await getCurrentDetails();
-  decorateHeader(el, current);
-  decorateSearch(el, current);
+  decorateHeader(el);
+  decorateSearch(el);
 }
