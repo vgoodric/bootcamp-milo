@@ -93,5 +93,13 @@
       "url": "/tools/ost",
       "includePaths": [ "**.docx**" ]
     }
+    {
+      "containerId": "tools",
+      "id": "offerpreview",
+      "title": "Offer preview",
+      "environments": [ "edit", "dev", "preview" ],
+      "url": "/tools/commerce",
+      "includePaths": [ "**.docx**" ]
+    }
   ]
 }
