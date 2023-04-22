@@ -176,4 +176,4 @@ export default async function init(el) {
   return price;
 }
 
-export { getTacocatEnv, initTacocat };
+export { getTacocatEnv, initTacocat, loadTacocat };

@@ -50,14 +50,6 @@ Common styles for the block region selector loader
   text-indent: -1000px;
 }
 
-.action.edit {
-  background: url('./img/word-icon.svg') center / 26px no-repeat;
-}
-
-.action.preview, .action.live {
-  background: url('./img/aec-icon.svg') center / 26px no-repeat;
-}
-
 .status-404 {
   opacity: 0.25;
   pointer-events: none;
