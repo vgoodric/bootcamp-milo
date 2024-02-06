@@ -132,6 +132,6 @@ export default async function init(el) {
     await loadMnemonicList(foreground);
   }
   if (el.classList.contains('new-variant')) {
-    console.log('new variant');
+    console.log('newer variant message');
   }
 }
