@@ -131,4 +131,7 @@ export default async function init(el) {
   if (el.classList.contains('mnemonic-list') && foreground) {
     await loadMnemonicList(foreground);
   }
+  if (el.classList.contains('new-variant')) {
+    console.log('new variant');
+  }
 }
