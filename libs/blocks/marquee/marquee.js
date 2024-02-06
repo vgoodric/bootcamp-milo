@@ -81,7 +81,7 @@ export async function loadMnemonicList(foreground) {
 export default async function init(el) {
 
   if (el.classList.contains('new-variant')) {
-    console.log('blah blah blah');
+    console.log('blah blah blah NEW NEW NEW');
   }
 
   const excDark = ['light', 'quiet'];
