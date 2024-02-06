@@ -107,7 +107,7 @@ export default async function init(el) {
   text.classList.add('text');
   const media = foreground.querySelector(':scope > div:not([class])');
   if (el.classList.contains('new-variant')) {
-    console.log('peanut');
+    console.log('tiny');
   }
   if (media) {
     media.classList.add('media');
