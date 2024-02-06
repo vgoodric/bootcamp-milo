@@ -79,7 +79,7 @@ export async function loadMnemonicList(foreground) {
 }
 
 export default async function init(el) {
-  if(el.classList.contains("new-variant")){
+  if(el.classList.contains('new-variant')){
     console.log('has new element33');
   }else{
     console.log('not here23')
