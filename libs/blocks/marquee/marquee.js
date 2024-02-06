@@ -81,7 +81,7 @@ export async function loadMnemonicList(foreground) {
 export default async function init(el) {
 
   if (el.classList.contains('new-variant')) {
-    console.log('aivanov-main-2');
+    console.log('aivanov-main-2-new');
   }
 
   const excDark = ['light', 'quiet'];
