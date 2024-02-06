@@ -94,7 +94,7 @@ export async function loadMnemonicList(foreground) {
 
 export default async function init(el) {
   if (el.classList.contains('new-variant')) {
-    console.log('new variant added to marquee');
+    console.log('third different message');
   }
   console.log(el.classList);
   const excDark = ['light', 'quiet'];
