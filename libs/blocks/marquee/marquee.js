@@ -79,7 +79,7 @@ export async function loadMnemonicList(foreground) {
 }
 
 export default async function init(el) {
-  if (el.classList.contains('new-variant')) console.log('new is in classname'); 
+  if (el.classList.contains('new-variant')) console.log('bootcamp check COMING FROM BRANCH 2'); 
 
   const excDark = ['light', 'quiet'];
   if (!excDark.some((s) => el.classList.contains(s))) el.classList.add('dark');
