@@ -82,7 +82,7 @@ export default async function init(el) {
   if(el.classList.contains('new-variant')){
     console.log('has new element33');
   }else{
-    console.log('not here23')
+    console.log('not here-23')
   }
   const excDark = ['light', 'quiet'];
   if (!excDark.some((s) => el.classList.contains(s))) el.classList.add('dark');
