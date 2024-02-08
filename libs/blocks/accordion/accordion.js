@@ -7,10 +7,27 @@ const faq = {
   '@type': 'FAQPage',
   mainEntity: [],
 };
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [],
+};
 const mediaCollection = {};
 
-//NEW COMMENT JS
+//NEW NEW COMMENT JS
 function setSEO(questions) {
+  faq.mainEntity.push(
+    questions.map(({ name, text }) => ({
+      '@type': 'Question',
+      name,
+      acceptedAnswer: { text, '@type': 'Answer' },
+    }))
+  );
+  const script = createTag(
+    'script',
+    { type: 'application/ld+json' },
+    JSON.stringify(faq)
+  );
   faq.mainEntity.push(
     questions.map(({ name, text }) => ({
       '@type': 'Question',
