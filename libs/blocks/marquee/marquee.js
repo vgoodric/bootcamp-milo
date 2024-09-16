@@ -2,7 +2,11 @@
  * Marquee - v6.0
  */
 
-import { decorateButtons, getBlockSize, decorateBlockBg } from '../../utils/decorate.js';
+import {
+  decorateButtons,
+  getBlockSize,
+  decorateBlockBg,
+} from '../../utils/decorate.js';
 import { createTag, getConfig, loadStyle } from '../../utils/utils.js';
 
 // [headingSize, bodySize, detailSize]
@@ -24,7 +28,9 @@ function decorateText(el, size) {
     headingEl.nextElementSibling?.classList.add(`body-${typeSize[1]}`);
     const sib = headingEl.previousElementSibling;
     if (sib) {
-      const className = sib.querySelector('img, .icon') ? 'icon-area' : `detail-${typeSize[2]}`;
+      const className = sib.querySelector('img, .icon')
+        ? 'icon-area'
+        : `detail-${typeSize[2]}`;
       sib.classList.add(className);
       sib.previousElementSibling?.classList.add('icon-area');
     }
@@ -43,13 +49,16 @@ function decorateMultipleIconArea(iconArea) {
       a.appendChild(picture);
     }
   });
-  if (iconArea.childElementCount > 1) iconArea.classList.add('icon-area-multiple');
+  if (iconArea.childElementCount > 1)
+    iconArea.classList.add('icon-area-multiple');
 }
 
 function extendButtonsClass(text) {
   const buttons = text.querySelectorAll('.con-button');
   if (buttons.length === 0) return;
-  buttons.forEach((button) => { button.classList.add('button-justified-mobile'); });
+  buttons.forEach((button) => {
+    button.classList.add('button-justified-mobile');
+  });
 }
 
 const decorateImage = (media) => {
@@ -58,7 +67,11 @@ const decorateImage = (media) => {
   const imageLink = media.querySelector('a');
   const picture = media.querySelector('picture');
 
-  if (imageLink && picture && !imageLink.parentElement.classList.contains('modal-img-link')) {
+  if (
+    imageLink &&
+    picture &&
+    !imageLink.parentElement.classList.contains('modal-img-link')
+  ) {
     imageLink.textContent = '';
     imageLink.append(picture);
   }
@@ -70,8 +83,9 @@ export async function loadMnemonicList(foreground) {
     const stylePromise = new Promise((resolve) => {
       loadStyle(`${base}/blocks/mnemonic-list/mnemonic-list.css`, resolve);
     });
-    const loadModule = import('../mnemonic-list/mnemonic-list.js')
-      .then(({ decorateMnemonicList }) => decorateMnemonicList(foreground));
+    const loadModule = import('../mnemonic-list/mnemonic-list.js').then(
+      ({ decorateMnemonicList }) => decorateMnemonicList(foreground)
+    );
     await Promise.all([stylePromise, loadModule]);
   } catch (err) {
     window.lana?.log(`Failed to load mnemonic list module: ${err}`);
@@ -92,14 +106,17 @@ export default async function init(el) {
   const text = headline.closest('div');
   text.classList.add('text');
   const media = foreground.querySelector(':scope > div:not([class])');
-
+  if (el.classList.contains('new-variant')) {
+    console.log('tiny');
+  }
   if (media) {
     media.classList.add('media');
     if (!media.querySelector('video, a[href*=".mp4"]')) decorateImage(media);
   }
 
   const firstDivInForeground = foreground.querySelector(':scope > div');
-  if (firstDivInForeground?.classList.contains('media')) el.classList.add('row-reversed');
+  if (firstDivInForeground?.classList.contains('media'))
+    el.classList.add('row-reversed');
 
   const size = getBlockSize(el);
   decorateButtons(text, size === 'large' ? 'button-xl' : 'button-l');
@@ -122,7 +139,11 @@ export default async function init(el) {
     }
 
     if (mediaCreditInner) {
-      const mediaCredit = createTag('div', { class: 'media-credit container' }, mediaCreditInner);
+      const mediaCredit = createTag(
+        'div',
+        { class: 'media-credit container' },
+        mediaCreditInner
+      );
       el.appendChild(mediaCredit);
       el.classList.add('has-credit');
       media?.lastChild.remove();
